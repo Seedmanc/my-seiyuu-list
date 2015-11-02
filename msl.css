@@ -1,0 +1,159 @@
+html {
+	min-width: 300px;
+}
+.under768 {
+	display:flex;
+	margin-top:auto;
+	margin-bottom:auto !important;
+	min-height:235px; 
+	top: -5px;
+}  
+.main {
+	font-weight:bold;
+}
+#msl-logo {
+	position:relative;
+	top:3px;
+	vertical-align: text-bottom !important;
+}
+.general {
+	margin-top: 10px;
+}
+td {
+	vertical-align:middle !important;
+}
+td,th {
+	padding-right:0 !important;
+}
+thead {
+	font-size:16px !important;
+}
+.alert {
+	font-family: monospace;
+}
+.well {
+	padding:0;
+	padding-top:2px;
+	margin-bottom:5px;
+}
+a.name {
+	font-size :18px;
+}
+div.seiyuu {
+	padding-left:10px;
+	padding-right:7px;
+}
+.btn-success {
+	background-color: #00a060;
+}
+.btn-success:hover,.btn-success:active,.btn-success:focus { 
+    background-color: #289060;
+}
+.btn-success:hover:active { 
+    background-color: #008840;
+}
+.btn-success:active { 
+    background-color: #20744d;
+}
+
+.btn-default:hover {
+	background-color: #e1f5e7;
+}
+pre {	
+	text-align:center;
+	font-size: 16px;
+	border: 0;
+	background-color: #00a060;
+	color: #e1f5e7;
+	margin:0;
+	padding: 7px;
+	font-family: arial;
+}
+table.text-center {
+	margin-left: auto;
+	margin-right: auto;
+	min-height: 100px !important;
+}
+input{ 
+	text-align:center;  
+	font-size: 16px;
+	margin-left: -6px;
+}
+#input-holder {	
+	padding:0;
+}
+#search-row{
+	background-color: #00a060;
+	padding-top: 5px;
+	padding-right:0;
+	padding-left: 12px;
+}
+i {
+	opacity: 0.5;
+}
+.btn {
+	font-size: 15px;
+}
+.has-feedback .form-control { 
+	padding-right: 25px;
+	font-size: 16px;
+}
+.form-group {
+	margin-bottom: 7px;
+}
+div.remove {
+	position: absolute;
+	top: 0px;
+	right: 5px;
+}
+img.vapic {
+	width:auto; 
+	max-height: 185px;
+	max-width:180px; 
+}
+.item:hover{
+	border: 1px black solid;
+}
+span.thumb {
+	display:inline-block;
+	width:160px;
+	height:160px; 
+	text-align:center; 
+	margin: 2px;
+}
+.thumb:before {
+	content: "";
+	display: inline-block;
+	height: 100%;
+	vertical-align: middle;
+}
+#thumbContainer {
+	padding-top:5px;
+	min-height: 660px;
+	margin-bottom: 10px;
+	text-align:center;
+}
+ 
+.sp-circle {
+	border: 3px rgba(0, 0, 0, 0.25) solid;
+	border-top: 3px white solid;
+	border-radius: 50%; 
+	animation: spCircRot 1s infinite linear; 
+}
+.sp {
+	float:left;
+	width: 28px;
+	height: 28px; 
+	display: inline-block;
+	position: relative;
+	top: 3px;
+} 
+@keyframes spCircRot {
+	from { transform: rotate(0deg); }
+	to { transform: rotate(359deg); }
+} 
+button {
+	top:-6px;
+	position:relative;
+	opacity:0.5;
+}
