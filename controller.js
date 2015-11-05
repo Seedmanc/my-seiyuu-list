@@ -260,7 +260,19 @@
 	}); 
 	
 	function db2seiyuu(name){
-		var _id = ($scope.vanames[name] || $scope.vanames[name.split(' ').reverse().join(' ')])._id;		
+		var _id = ($scope.vanames[name] || $scope.vanames[name.split(' ').reverse().join(' ')])._id;	
+		
+		mongoCall("anime",
+			"GET",
+			undefined,
+			{q:{
+				"vas": _id
+			 },
+			 c: true
+			},
+			function(response){
+				if (response)
+									
 		mongoCall(
 			'seiyuu',
 			'runCommand',
@@ -293,6 +305,13 @@
 				}		
 			}
 		);
+				else {
+					fetchSearch('http://'+$scope.theSite+'/people/'+result.value._id, '', true);
+					return;
+				}
+			}
+		);
+
 	}
 	function fetchSearch(url, name, overwrite){
 		$('#spinner').show(); to = setTimeout(function(){$('#spinner').hide();}, 10000);
@@ -513,23 +532,7 @@
 			$('#rolesTable').show();
 			
 		$('.table-responsive').css('max-height', Math.max(850, $(window).height()-130));	
-		
-						/*mongoCall("anime",
-							"GET",
-							undefined,
-							{q:{
-								"vas": $scope.vanames[$scope.searchQuery]._id
-							 },
-							 c: true
-							},
-							function(response){
-								if (response)
-									db2seiyuu($searchQuery)
-								else
-									fetchSearch('http://'+$scope.theSite+'/people.php', $scope.searchQuery);
-							}
-						);			*/
-		
+
 		test = $.grep(Object.keys(out),  function(v,i){return !out[v].pic;});
 		if (!test.length)
 			return;
