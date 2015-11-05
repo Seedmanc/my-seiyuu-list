@@ -271,8 +271,17 @@
 			 c: true
 			},
 			function(response){
-				if (response)
-									
+				if (response)	
+					loadFromDB(name, _id)
+				else {
+					fetchSearch('http://'+$scope.theSite+'/people/'+_id, '', true);
+					return;
+				}
+			}
+		);
+	}
+	
+	function loadFromDB(name, _id) {
 		mongoCall(
 			'seiyuu',
 			'runCommand',
@@ -305,14 +314,8 @@
 				}		
 			}
 		);
-				else {
-					fetchSearch('http://'+$scope.theSite+'/people/'+_id, '', true);
-					return;
-				}
-			}
-		);
-
 	}
+	
 	function fetchSearch(url, name, overwrite){
 		$('#spinner').show(); to = setTimeout(function(){$('#spinner').hide();}, 10000);
 		if (name) 
