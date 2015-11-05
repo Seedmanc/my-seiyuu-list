@@ -306,7 +306,7 @@
 			}
 		);
 				else {
-					fetchSearch('http://'+$scope.theSite+'/people/'+result.value._id, '', true);
+					fetchSearch('http://'+$scope.theSite+'/people/'+_id, '', true);
 					return;
 				}
 			}
