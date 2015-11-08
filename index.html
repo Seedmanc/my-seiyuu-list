@@ -4,13 +4,13 @@
 	<meta charset = "utf-8" >
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>MySeiyuuList</title>
-	<script src="//seedmanc.github.io/myseiyuulist/lib/jquery.min.js"></script> 
-	<script src="//seedmanc.github.io/myseiyuulist/lib/angular.min.js"></script>
-	<script src="//seedmanc.github.io/myseiyuulist/controller.js"></script>
-	<link href="//seedmanc.github.io/myseiyuulist/lib/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-	<link href="//seedmanc.github.io/myseiyuulist/msl.css" rel="stylesheet"> 
+	<script src="lib/jquery.min.js"></script> 
+	<script src="lib/angular.min.js"></script>
+	<script src="controller.js"></script>
+	<link href="lib/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+	<link href="msl.css" rel="stylesheet"> 
 	
-	<link rel="icon" type="image/png" href="//seedmanc.github.io/myseiyuulist/favicon.ico">
+	<link rel="icon" type="image/png" href="favicon.ico">
 </head>
 
 <body ng-app="myApp" ng-controller="myCtrl" ng-cloak>
@@ -27,7 +27,7 @@
 			<div class="sp sp-circle" id="spinner"></div><pre id="info" ng-cloak ng-bind="status"></pre>
 		</div>
 		<div class="col-lg-3 col-md-4 col-sm-5 text-center" style="padding-right:0;padding-left:0;">
-		 <a href="#" alt="search" title="search">	<img src="//seedmanc.github.io/myseiyuulist/msl-logo-200-white.png" id="msl-logo"></a>
+		 <a href="#" alt="search" title="search">	<img src="msl-logo-200-white.png" id="msl-logo"></a>
 		</div>
 	</div></div>
 	
@@ -48,7 +48,7 @@
 			    <table class="text-center">
 				<tr><td colspan=2>
 				<b><a href="http://[[theSite+'/people/'+pair[0]._id]]" class="name">[[pair[0].name]]</a> </b></td>
-				<tr><td colspan=2><img class="vapic img-rounded" ng-src="[[pics[pair[0].key] ]]"></td></tr>
+				<tr><td colspan=2><img class="vapic img-rounded" ng-src="http://[[theSite+pair[0].pic]]"></td></tr>
 				<tr><td><b>titles</b>: [[pair[0].count]]</td><td>&nbsp;<b>views</b>: [[pair[0].hits]]</td></tr>
 				</table>
 			  </div> 
@@ -58,7 +58,7 @@
 			    <table class="text-center">
 				<tr><td colspan=2>
 				<b><a href="http://[[theSite+'/people/'+pair[1]._id]]" class="name">[[pair[1].name]]</a> </b></td>
-				<tr><td colspan=2><img class="vapic img-rounded" ng-src="[[pics[pair[1].key] ]]"></td></tr>
+				<tr><td colspan=2><img class="vapic img-rounded" ng-src="http://[[theSite+pair[1].pic]]"></td></tr>
 				<tr><td><b>titles</b>: [[pair[1].count]]</td><td>&nbsp;<b>views</b>: [[pair[1].hits]]</td></tr>
 				</table>
 			  </div> 

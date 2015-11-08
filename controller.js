@@ -21,7 +21,6 @@
 	$scope.seiyuu = {};
 	$scope.searchQuery = '';
 	$scope.status = '';
-	$scope.pics = {};
 	$scope.vanames = {};
 	$scope.debug = '';
 	var recycle = {};
@@ -244,8 +243,7 @@
 				if ((!recycle[$scope.searchQuery]) && (!recycle[$scope.searchQuery.split(' ').reverse().join(' ')])) { 
 					if (!$scope.vanames[$scope.searchQuery] && !$scope.vanames[$scope.searchQuery.split(' ').reverse().join(' ')]) {
 						fetchSearch('http://'+$scope.theSite+'/people.php', $scope.searchQuery);
-					} else {	
-			
+					} else {				
 						db2seiyuu($scope.searchQuery);
 					}
 				} else {	
@@ -271,7 +269,7 @@
 			 c: true
 			},
 			function(response){
-				if (response)	
+				if (Number(response) > 0)	
 					loadFromDB(name, _id)
 				else {
 					fetchSearch('http://'+$scope.theSite+'/people/'+_id, '', true);
@@ -306,12 +304,6 @@
 				});
 				delete result.value.roles;
 				$scope.seiyuu[result.value.name.toLowerCase()] = result.value;
-				if (!$scope.pics[$scope.searchQuery]) {
-					if (result.value.pic) 
-						$scope.pics[$scope.searchQuery] = 'http://'+$scope.theSite+result.value.pic
-					else 
-						getPics($scope.searchQuery);		
-				}		
 			}
 		);
 	}
@@ -334,8 +326,8 @@
 			}, 
 		dataType:	"json", 
 		type:		'GET'
-	   }).done(function(result){$scope.parseResults(result, overwrite);})
-	    .fail(function(response){ $scope.debug = JSON.stringify(response); })
+	   }).done(function(result){ $scope.parseResults(result, overwrite);})
+	    .fail(function(response){$scope.debug = JSON.stringify(response); })
 	   .always(function(){ $scope.disabled = false; $scope.$apply(); });
 	
 	   $scope.disabled = true; $scope.$apply();
@@ -379,58 +371,14 @@
 				var count= Object.keys(titles).length;
 				$scope.searchQuery = name.toLowerCase();
 				var hits = $scope.vanames[$scope.searchQuery] && $scope.vanames[$scope.searchQuery].hits;
-				$scope.seiyuu[$scope.searchQuery] = {'_id':va_id, name:name, titles:titles, count:count, hits:hits || 1}; 
-				
+				$scope.seiyuu[$scope.searchQuery] = {'_id':va_id, name:name, pic:pic, titles:titles, count:count, hits:hits || 1};  
 				$scope.status = 'found '+count+' title(s)'; 
-				if ($scope.pics[$scope.searchQuery]) {
-					seiyuu2db($scope.searchQuery, roles, overwrite);
-				} else
-					getPics($scope.searchQuery, pic, roles, overwrite);	
+				seiyuu2db($scope.searchQuery, roles, overwrite);
 			}
 		}
 	}
-
-	function getPics(name, fallback, roles, overwrite){
-		if ($scope.pics[name] || $scope.pics[name] === false)
-			return;
-		fallback = 'http://'+$scope.theSite+fallback;
-		var query = 'div.content span.thumb img';
-		var tags = '~'+name.replace(/\s/g, '_')+'+~'+name.split(' ').reverse().join('_')+'+'+'-drawing';
-		if (~name.search(/ou\s|ou$/i))
-			tags += '+~'+name.replace(/ou\s|ou$/i,'o ').trim().replace(/\s/g, '_');
-		if (~name.search(/uu/i))
-			tags += '+~'+name.replace(/uu/i, 'u').replace(/\s/g, '_');
-		if ((~name.search(/ou\s|ou$/i))&&(~name.search(/uu/i)))
-			tags += '+~'+name.replace(/ou\s|ou$/i,'o ').trim().replace(/uu/i, 'u').replace(/\s/g, '_');
-		$.get('http://crossorigin.me/http://koe.booru.org/index.php?page=post&s=list&tags='+tags)
-			.done(function(result){
-				thumbs = $(result).find(query);   
-				if (!thumbs.length) 
-					$scope.pics[name] = fallback || false
-				else {
-					solo = thumbs.filter('[title*="solo"]:first');
-					if (solo.length)
-						$scope.pics[name] = solo[0].src
-					else
-						$scope.pics[name] = thumbs[0].src;
-				}
-				$scope.pics[name.split(' ').reverse().join(' ')] = $scope.pics[name];
-				if (roles)
-					seiyuu2db(name, roles, overwrite);
-			})
-			.fail(function(error){
-				$scope.debug += JSON.stringify(error);
-				$scope.pics[name] = fallback;
-				$scope.pics[name.split(' ').reverse().join(' ')] = $scope.pics[name];				
-			})
-			.always(function(){
-				$scope.$apply();
-			});
-	}
-	
 	
 	function seiyuu2db(name, roles, overwrite){		
-		var pic = (~$scope.pics[name].indexOf($scope.theSite))?$scope.pics[name].split($scope.theSite)[1]:'';
 		if ($scope.vanames[name] && !overwrite){		
 			mongoCall(
 				'seiyuu',
@@ -443,13 +391,13 @@
 			mongoCall(
 				'seiyuu',
 				'POST',
-				{_id:toSave._id, name:toSave.name, pic:pic, count:toSave.count, hits: 1, roles:roles, updated:new Date().toUTCString()},
+				{_id:toSave._id, name:toSave.name, pic:toSave.pic, count:toSave.count, hits: 1, roles:roles, updated:new Date().toUTCString()},
 				function(result) {$scope.vanames[result.name.toLowerCase()] = {_id:result._id, hits:result.hits};}
 			)
 			anime2db(name);
 		}
 	}
-	
+	//pics
 	function anime2db(name){
 		var currentA = $.map($scope.seiyuu[name].titles, function(v,i){return Number(i);});		
 		mongoCall(
@@ -572,9 +520,8 @@
 		});
 	}
 }).config(['$compileProvider', function ($compileProvider) {
-	$compileProvider.debugInfoEnabled(false);
-}]);
- //TODO add referer hiding?
+	$compileProvider.debugInfoEnabled(true);
+}]); 
  //todo add characters to output?
  //todo nglist with looping over several names
  //todo ngPluralize?
