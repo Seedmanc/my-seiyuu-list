@@ -29,8 +29,9 @@
 	$scope.seiOut = [];
 	var to;
 	var disqusLoaded = false;
+	$scope.mainOnly = localStorage.mainOnly == "true";
 
-	$('#ld')[0].addEventListener('click',loadDisqus,false);
+	$('#ld')[0].addEventListener('click', loadDisqus, false);
 	$('#msl-logo').on('click', function(){ $('input#name').trigger('change');});
 	
 	function loadDisqus(){
@@ -186,6 +187,11 @@
 		return $scope.disabled || (Object.keys($scope.seiyuu).length >= 4);
 	}
 
+	$scope.$watch("mainOnly", function(){ 
+		localStorage.mainOnly = $scope.mainOnly;
+		$scope.updateRoles();
+	});
+	
 	$scope.$watchCollection("seiyuu", function(){ 
 		$scope.searchQuery = ''; $('#name').removeAttr('list'); 
 		pid = 0;
@@ -397,7 +403,7 @@
 			anime2db(name);
 		}
 	}
-	//pics
+ 
 	function anime2db(name){
 		var currentA = $.map($scope.seiyuu[name].titles, function(v,i){return Number(i);});		
 		mongoCall(
@@ -474,21 +480,34 @@
 				tier[ix] = vl.titles[i].main;
 			});
 			tiers[i] = tier;
-			v.title = i;
+			v.title = v.title || i;
 		});
 		var len = Object.keys(out).length;
 		$scope.status = 'found '+len+' common title(s)';
-		$scope.commonRoles = out; 
+		
+		if ($scope.mainOnly) {
+			$scope.commonRoles = {};  
+			$.each(Object.keys(out), function(i, v){
+				var isMain = true;
+				$.each(tiers[out[v]._id], function(ix, vl){
+					return isMain = vl;
+				})
+				if (isMain)
+					$scope.commonRoles[v] = out[v];
+			});
+		} else
+			$scope.commonRoles = out;
+		
 		if (len)			
 			$('#rolesTable').show();
 			
 		$('.table-responsive').css('max-height', Math.max(850, $(window).height()-130));	
 
-		test = $.grep(Object.keys(out),  function(v,i){return !out[v].pic;});
+		test = $.grep(Object.keys(out),  function(v, i){return !out[v].pic;});
 		if (!test.length)
 			return;
 		
-		var s_ids = $.map($scope.seiyuu, function(v,i){
+		var s_ids = $.map($scope.seiyuu, function(v, i){
 			return Number(v._id);
 		});
 		
@@ -499,9 +518,11 @@
 			{	q: {vas: {$all:s_ids}},
 				f: {"title":1, "pic":1}},
 			function(result){
-				$.each(result, function(i,v){
-					$scope.commonRoles[v._id].title = v.title;
-					$scope.commonRoles[v._id].pic = v.pic;
+				$.each(result, function(i, v){
+					if ($scope.commonRoles[v._id]) { 
+						$scope.commonRoles[v._id].title = v.title;
+						$scope.commonRoles[v._id].pic = v.pic;
+					}
 					$.each($scope.seiyuu, function(i,v){
 						if (v.titles[v.id]) {
 							v.titles[v.id].title = v.title;
@@ -514,6 +535,8 @@
 	}
 		
 	$scope.select = function(that){ 
+		if ($scope.mainOnly)
+			return;
 		var selected = that.target.id || $(that.target).parents('.item').attr('id');
 		$.each($scope.commonRoles, function(i,v){
 			v.main = tiers[v._id][selected];

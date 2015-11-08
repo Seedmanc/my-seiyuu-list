@@ -78,11 +78,12 @@
 				  <thead><tr>
 					<th>#</th>
 					<th> &nbsp; <a href="#" ng-click="orderByField = 'title'; reverseSort = !reverseSort">▴title▾</a></th>
-					<th class="text-center "> <a href="##" ng-click="orderByField = 'main'; reverseSort = !reverseSort">▴role tier▾</a></th>		
+					<th class="text-center"> <label class="checkbox-inline"><input type="checkbox" ng-model="mainOnly">main only</label></th>
+					<th class="text-center"> <a href="##" ng-click="orderByField = 'main'; reverseSort = !reverseSort">▴role tier▾</a></th>		
 				  </tr></thead>
 				  <tbody><tr ng-repeat="show in commonRoles | object2Array | orderBy:orderByField:reverseSort">
 					<td>[[$index + 1]]</td>
-					<td><a href="http://[[theSite+'/anime/'+show._id]]"><img ng-if="show.pic" ng-src="http://[[theSite+show.pic]]"/></a> &nbsp; <a href="http://[[theSite+'/anime/'+show._id]]">[[show.title]]</a> </td>
+					<td colspan=2><a href="http://[[theSite+'/anime/'+show._id]]"><img ng-if="show.pic" ng-src="http://[[theSite+show.pic]]"/></a> &nbsp; <a href="http://[[theSite+'/anime/'+show._id]]">[[show.title]]</a> </td>
 					<td class="[[show.main?'main':'supporting']] text-center"> [[show.main?'main':'supporting']] </td>
 				   </tr></tbody>
 				</table></div>
