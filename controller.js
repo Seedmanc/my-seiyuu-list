@@ -547,7 +547,7 @@
 		});
 	}
 }).config(['$compileProvider', function ($compileProvider) {
-	$compileProvider.debugInfoEnabled(true);
+	$compileProvider.debugInfoEnabled(false);
 }]); 
  //todo add characters to output?
  //todo nglist with looping over several names
