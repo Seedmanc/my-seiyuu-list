@@ -78,7 +78,7 @@
 				  <thead><tr>
 					<th>#</th>
 					<th> &nbsp; <a href="#" ng-click="orderByField = 'title'; reverseSort = !reverseSort">▴title▾</a></th>
-					<th class="text-center"> <label class="checkbox-inline"><input type="checkbox" ng-model="mainOnly">main only</label></th>
+					<th class="text-center"> <label class="checkbox-inline [[mainOnly?'main':'']]"><input type="checkbox" ng-model="mainOnly">main only</label></th>
 					<th class="text-center"> <a href="##" ng-click="orderByField = 'main'; reverseSort = !reverseSort">▴role tier▾</a></th>		
 				  </tr></thead>
 				  <tbody><tr ng-repeat="show in commonRoles | object2Array | orderBy:orderByField:reverseSort">

@@ -222,8 +222,10 @@
 		else 
 			$scope.updateRoles();
 
-		$scope.$apply(mobileSize()); 
-		window.dispatchEvent(new Event('resize'));			
+		setTimeout(function(){
+			$scope.$apply(mobileSize);
+			window.dispatchEvent(new Event('resize'));
+		}, 0);	
 	});
 	
 	$scope.$watch('status', function(){  
@@ -453,6 +455,8 @@
 	$scope.updateRoles = function (){
 		var out = {}; tiers = {}; var tier;
 		var keys = Object.keys($scope.seiyuu);
+		if (!keys.length)
+			return;
 		var selected = keys[0];
 		var min = $scope.seiyuu[selected].count;
 		$.each(keys, function(i, v){
