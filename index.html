@@ -72,18 +72,21 @@
 			<a href="#" class="toggleTabs btn btn-success" id="anime"><b> titles </b></a> 
 			<a href="#" class="toggleTabs btn btn-default  " id="photos"><b> photos </b></a> 
 		</div>
-		<div class="row"><div class="col-sm-12">			
-			<div id="roles" class="row"><div class="col-md-12 table-responsive">
+		<div class="row"><div class="col-sm-12">	
+			<div id="roles" class="row">
+			  <div class="col-md-12 table-responsive">
+			    <div style="height:0; position:relative; top:9px; text-align:center; z-index:99;">
+					<label class="checkbox-inline [[mainOnly?'main':'']]"><input type="checkbox" ng-model="mainOnly" class="form-control" style="width:17px; height:17px;margin-top:2px;">&nbsp;main only</label>
+				</div>
 				<table class="table table-striped  header-fixed" id="rolesTable" style="display:none;">
 				  <thead><tr>
 					<th>#</th>
-					<th> &nbsp; <a href="#" ng-click="orderByField = 'title'; reverseSort = !reverseSort">▴title▾</a></th>
-					<th class="text-center"> <label class="checkbox-inline [[mainOnly?'main':'']]"><input type="checkbox" ng-model="mainOnly">main only</label></th>
+					<th> &nbsp; <a href="#" ng-click="orderByField = 'title'; reverseSort = !reverseSort">▴title▾</a></th> 
 					<th class="text-center"> <a href="##" ng-click="orderByField = 'main'; reverseSort = !reverseSort">▴role tier▾</a></th>		
 				  </tr></thead>
 				  <tbody><tr ng-repeat="show in commonRoles | object2Array | orderBy:orderByField:reverseSort">
 					<td>[[$index + 1]]</td>
-					<td colspan=2><a href="http://[[theSite+'/anime/'+show._id]]"><img ng-if="show.pic" ng-src="http://[[theSite+show.pic]]"/></a> &nbsp; <a href="http://[[theSite+'/anime/'+show._id]]">[[show.title]]</a> </td>
+					<td><a href="http://[[theSite+'/anime/'+show._id]]"><img ng-if="show.pic" ng-src="http://[[theSite+show.pic]]"/></a> &nbsp; <a href="http://[[theSite+'/anime/'+show._id]]">[[show.title]]</a> </td>
 					<td class="[[show.main?'main':'supporting']] text-center"> [[show.main?'main':'supporting']] </td>
 				   </tr></tbody>
 				</table></div>
