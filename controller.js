@@ -246,17 +246,17 @@
 		
 		if (($scope.searchQuery.length > 2)&&(Object.keys($scope.seiyuu).length < 4)) {
 			
-			if ((!$scope.seiyuu[$scope.searchQuery]) && (!$scope.seiyuu[$scope.searchQuery.split(' ').reverse().join(' ')])) {
+			if ((!$scope.seiyuu[$scope.searchQuery]) && (!$scope.seiyuu[$scope.searchQuery.split(/\s+/).reverse().join(' ')])) {
 			
-				if ((!recycle[$scope.searchQuery]) && (!recycle[$scope.searchQuery.split(' ').reverse().join(' ')])) { 
-					if (!$scope.vanames[$scope.searchQuery] && !$scope.vanames[$scope.searchQuery.split(' ').reverse().join(' ')]) {
+				if ((!recycle[$scope.searchQuery]) && (!recycle[$scope.searchQuery.split(/\s+/).reverse().join(' ')])) { 
+					if (!$scope.vanames[$scope.searchQuery] && !$scope.vanames[$scope.searchQuery.split(/\s+/).reverse().join(' ')]) {
 						fetchSearch('http://'+$scope.theSite+'/people.php', $scope.searchQuery);
 					} else {				
 						db2seiyuu($scope.searchQuery);
 					}
 				} else {	
-					if (recycle[$scope.searchQuery.split(' ').reverse().join(' ')])
-						$scope.searchQuery = $scope.searchQuery.split(' ').reverse().join(' ');
+					if (recycle[$scope.searchQuery.split(/\s+/).reverse().join(' ')])
+						$scope.searchQuery = $scope.searchQuery.split(/\s+/).reverse().join(' ');
 					$scope.seiyuu[$scope.searchQuery] = recycle[$scope.searchQuery];
 					$scope.$apply();
 				}
@@ -266,7 +266,7 @@
 	}); 
 	
 	function db2seiyuu(name){
-		var _id = ($scope.vanames[name] || $scope.vanames[name.split(' ').reverse().join(' ')])._id;	
+		var _id = ($scope.vanames[name] || $scope.vanames[name.split(/\s+/).reverse().join(' ')])._id;	
 		
 		mongoCall("anime",
 			"GET",
@@ -350,7 +350,7 @@
 				$.each(tr, function(i, v){
 					if (i === 0) return true;
 					var foundName  =  v.td[1].a.content.replace(',', '').trim().toLowerCase();
-					if ((foundName == $scope.searchQuery)||(foundName == $scope.searchQuery.split(' ').reverse().join(' '))) {
+					if ((foundName == $scope.searchQuery)||(foundName == $scope.searchQuery.split(/\s+/).reverse().join(' '))) {
 						$scope.status = '';
 						fetchSearch('http://'+$scope.theSite+'/'+v.td[0].div.a.href);
 						return false;
