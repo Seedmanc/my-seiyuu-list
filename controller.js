@@ -301,7 +301,7 @@
 				$scope.searchQuery = result.value.name.toLowerCase();				
 				var updated = Date.parse(result.value.updated)/1000;
 				var now = Date.parse(new Date().toUTCString())/1000;
-				if ((Math.abs(now - updated) > 2592000) || over) {//30 days
+				if ((Math.abs(now - updated) > 2592000) && false) {//30 days
 					fetchSearch('http://'+$scope.theSite+'/people/'+result.value._id, '', true);
 					return;
 				};				
