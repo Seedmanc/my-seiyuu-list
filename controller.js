@@ -327,7 +327,7 @@
 				'//div[@id = \"contentWrapper\"]//h1[1]', \
 				'//div[@id = \"content\"]//form[@name = \"searchVA\"]/following::table[1]//tr', \
 				'//div[@id = \"content\"]/table/tbody/tr/td[2]/div[@class = \"normal_header\"][1]/following-sibling::*[1]//tr', \
-				'//div[@id = \"content\"]/table/tbody/tr/td/div/img', \
+				'//div[@id = \"content\"]/table/tbody/tr/td/div/a/img', \
 				'//div[@id = \"content\"]/table/tbody/tr/td[2]/div[2]/div[3]/a'\
 			)", 
 			format:	"json"
