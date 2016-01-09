@@ -324,7 +324,7 @@
 		url: 'https://query.yahooapis.com/v1/public/yql', 
 		data:   {		
 			q:	"SELECT * FROM html WHERE url = '"+url+"' AND xpath IN (\
-				'//div[@id = \"contentWrapper\"]/h1[1]', \
+				'//div[@id = \"contentWrapper\"]//h1[1]', \
 				'//div[@id = \"content\"]//form[@name = \"searchVA\"]/following::table[1]//tr', \
 				'//div[@id = \"content\"]/table/tbody/tr/td[2]/div[@class = \"normal_header\"][1]/following-sibling::*[1]//tr', \
 				'//div[@id = \"content\"]/table/tbody/tr/td/div/img', \
