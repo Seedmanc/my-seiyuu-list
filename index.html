@@ -29,7 +29,7 @@
 			<div class="sp sp-circle" id="spinner"></div><pre id="info" ng-cloak ng-bind="status"></pre>
 		</div>
 		<div class="col-lg-3 col-md-4 col-sm-5 text-center" style="padding-right:0;padding-left:0;">
-		 <a href="#" alt="search" title="search">	<img src="msl-logo-200-white.png" id="msl-logo"></a>
+		 <a href="#" title="search"><img src="msl-logo-200-white.png" alt="search" id="msl-logo"></a>
 		</div>
 	</div></div>
 	
@@ -88,8 +88,8 @@
 				  </tr></thead>
 				  <tbody><tr ng-repeat="show in commonRoles | object2Array | orderBy:orderByField:reverseSort">
 					<td>[[$index + 1]]</td>
-					<td><a href="http://[[theSite+'/anime/'+show._id]]"><img ng-if="show.pic" ng-src="http://[[theSite+show.pic]]"/></a> &nbsp; <a href="http://[[theSite+'/anime/'+show._id]]">[[show.title]]</a> </td>
-					<td class="[[show.main?'main':'supporting']] text-center"> [[show.main?'main':'supporting']] </td>
+					<td><a href="http://[[theSite+'/anime/'+show._id]]"><img ng-if="show.pic" ng-src="http://cdn.[[theSite+show.pic]]"/></a> &nbsp; <a href="http://[[theSite+'/anime/'+show._id]]">[[show.title]]</a> </td>
+					<td class="[[tiers[show._id][selectedSeiyuu] || mainOnly?'main':'supporting']] text-center"> [[tiers[show._id][selectedSeiyuu] || mainOnly?'main':'supporting']] </td>
 				   </tr></tbody>
 				</table></div>
 			</div>
