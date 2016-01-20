@@ -116,7 +116,7 @@ angular.module('myApp', [])
 				$.each(result, function (i, v) {
 					$scope.vanames[v.name.toLowerCase()] = {_id: Number(v._id)};
 				});
-				$scope.status = result.length + ' records in the database';
+				$scope.status = result.length + ' records cached';
 			}
 		);
 
