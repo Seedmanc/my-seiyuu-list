@@ -1,130 +1,191 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset = "utf-8" >
+	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="description" content="It allows you to search anime titles by providing a list of voice actors dubbing characters in them. Additionally you can get HQ photos of said actors as well." />
-    	<meta name="keywords" content="anime, seiyuu, voice actor, VA, search, service, photo, 声優" />
+	<meta name="description"
+		  content="It allows you to search anime titles by providing a list of voice actors dubbing characters in them. Additionally you can get HQ photos of said actors as well."/>
+	<meta name="keywords" content="anime, seiyuu, voice actor, VA, search, service, photo, 声優"/>
 	<title>MySeiyuuList</title>
-	<script src="lib/jquery.min.js"></script> 
+	<script src="lib/jquery.min.js"></script>
 	<script src="lib/angular.min.js"></script>
 	<script src="controller.js"></script>
 	<link href="lib/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-	<link href="msl.css" rel="stylesheet"> 
-	
+	<link href="msl.css" rel="stylesheet">
+
 	<link rel="icon" type="image/png" href="favicon.ico">
 </head>
 
 <body ng-app="myApp" ng-controller="myCtrl" ng-cloak>
 <div class="container">
-<div class="row"><div id="search-row" class="col-sm-12">
-	<div class="col-sm-2" id="input-holder"><form><div class="form-group  has-feedback">
-		<input type="text" id="name" placeholder="seiyuu name" ng-model="searchQuery" ngTrim="true" ng-disabled="disable()" autofocus ng-change="inputChange()" class=" form-control  input-md">  <i class="glyphicon glyphicon-search form-control-feedback"></i>	</div>	</form>		 
-		<datalist id="vanames">
-			<option ng-value="vaname" ng-repeat="(vaname,vadata) in vanames"></option>
-		</datalist>
-	</div>
-	<div class="col-sm-10" style="padding-right:0;padding-left:0">
-		<div class="col-lg-9 col-md-8 col-sm-7 " style="padding-left:0;" >
-			<div class="sp sp-circle" id="spinner"></div><pre id="info" ng-cloak ng-bind="status"></pre>
+	<div class="row">
+		<div id="search-row" class="col-sm-12">
+			<div class="col-sm-2" id="input-holder">
+				<form>
+					<div class="form-group  has-feedback">
+						<input type="text" id="name" placeholder="seiyuu name" ng-model="searchQuery" ngTrim="true"
+							   ng-disabled="disable()" autofocus ng-change="inputChange()"
+							   class=" form-control  input-md"> <i
+							class="glyphicon glyphicon-search form-control-feedback"></i></div>
+				</form>
+				<datalist id="vanames">
+					<option ng-value="vaname" ng-repeat="(vaname,vadata) in vanames"></option>
+				</datalist>
+			</div>
+			<div class="col-sm-10" style="padding-right:0;padding-left:0">
+				<div class="col-lg-9 col-md-8 col-sm-7 " style="padding-left:0;">
+					<div class="sp sp-circle" id="spinner"></div>
+					<pre id="info" ng-cloak ng-bind="status"></pre>
+				</div>
+				<div class="col-lg-3 col-md-4 col-sm-5 text-center" style="padding-right:0;padding-left:0;">
+					<a href="#" title="search"><img src="msl-logo-200-white.png" alt="search" id="msl-logo"></a>
+				</div>
+			</div>
 		</div>
-		<div class="col-lg-3 col-md-4 col-sm-5 text-center" style="padding-right:0;padding-left:0;">
-		 <a href="#" title="search"><img src="msl-logo-200-white.png" alt="search" id="msl-logo"></a>
-		</div>
-	</div></div>
-	
-</div>
-<div class="row" ng-show="debug" ng-cloak ng-if="debug">
-	<div class="col-sm-12">
-		<div class="alert alert-danger text-justify"><a href="#" class="close" data-dismiss="alert" aria-label="close" ng-click="debug=''">&times;</a>
-			<strong>Error:</strong> <p ng-bind="debug"></p>
-		</div> 
+
 	</div>
-</div>
-<div class="row general"> <div class="col-md-2 col-sm-3" id="seiyuu" >
-	 
+	<div class="row" ng-show="debug" ng-cloak ng-if="debug">
+		<div class="col-sm-12">
+			<div class="alert alert-danger text-justify"><a href="#" class="close" data-dismiss="alert"
+															aria-label="close" ng-click="debug=''">&times;</a>
+				<strong>Error:</strong>
+				<p ng-bind="debug"></p>
+			</div>
+		</div>
+	</div>
+	<div class="row general">
+		<div class="col-md-2 col-sm-3" id="seiyuu">
+
 			<div class="row seiyuu" ng-repeat="pair in seiOut ">
-			
-			  <div class="col-lg-12 col-xs-6 col-sm-12 item well well-sm" id="[[pair[0].key]]" ng-mouseenter="select($event)">
-			   <div class="remove"><a href="" class="remove close" ng-click="removeVA($event)">&times;</a></div>
-			    <table class="text-center">
-				<tr><td colspan=2>
-				<b><a href="http://[[theSite+'/people/'+pair[0]._id]]" class="name">[[pair[0].name]]</a> </b></td>
-				<tr><td colspan=2><img class="vapic img-rounded" ng-src="http://[[theSite+pair[0].pic]]"></td></tr>
-				<tr><td><b>titles</b>: [[pair[0].count]]</td><td>&nbsp;<b>views</b>: [[pair[0].hits]]</td></tr>
-				</table>
-			  </div> 
-			  
-			  <div class="col-lg-12 col-xs-6 col-sm-12 item well well-sm" id="[[pair[1].key]]" ng-mouseenter="select($event)" ng-if="pair[1]">
-			   <div class="remove"><a href="" class="remove close" ng-click="removeVA($event)">&times;</a></div>
-			    <table class="text-center">
-				<tr><td colspan=2>
-				<b><a href="http://[[theSite+'/people/'+pair[1]._id]]" class="name">[[pair[1].name]]</a> </b></td>
-				<tr><td colspan=2><img class="vapic img-rounded" ng-src="http://[[theSite+pair[1].pic]]"></td></tr>
-				<tr><td><b>titles</b>: [[pair[1].count]]</td><td>&nbsp;<b>views</b>: [[pair[1].hits]]</td></tr>
-				</table>
-			  </div> 
-			  
+
+				<div class="col-lg-12 col-xs-6 col-sm-12 item well well-sm" id="[[pair[0].key]]"
+					 ng-mouseenter="select($event)">
+					<div class="remove"><a href="" class="remove close" ng-click="removeVA($event)">&times;</a></div>
+					<table class="text-center">
+						<tr>
+							<td colspan=2>
+								<b><a href="http://[[theSite+'/people/'+pair[0]._id]]" class="name">[[pair[0].name]]</a>
+								</b></td>
+						<tr>
+							<td colspan=2><img class="vapic img-rounded" ng-src="http://[[theSite+pair[0].pic]]"></td>
+						</tr>
+						<tr>
+							<td><b>titles</b>: [[pair[0].count]]</td>
+							<td>&nbsp;<b>views</b>: [[pair[0].hits]]</td>
+						</tr>
+					</table>
+				</div>
+
+				<div class="col-lg-12 col-xs-6 col-sm-12 item well well-sm" id="[[pair[1].key]]"
+					 ng-mouseenter="select($event)" ng-if="pair[1]">
+					<div class="remove"><a href="" class="remove close" ng-click="removeVA($event)">&times;</a></div>
+					<table class="text-center">
+						<tr>
+							<td colspan=2>
+								<b><a href="http://[[theSite+'/people/'+pair[1]._id]]" class="name">[[pair[1].name]]</a>
+								</b></td>
+						<tr>
+							<td colspan=2><img class="vapic img-rounded" ng-src="http://[[theSite+pair[1].pic]]"></td>
+						</tr>
+						<tr>
+							<td><b>titles</b>: [[pair[1].count]]</td>
+							<td>&nbsp;<b>views</b>: [[pair[1].hits]]</td>
+						</tr>
+					</table>
+				</div>
+
 			</div>
-		 
-	</div>
-	<div class="col-md-10 col-sm-9" id="details" style="display:none;">
-	
-		<div class=" btn-group btn-group-justified"  > 
-			<a href="#" class="toggleTabs btn btn-success" id="anime"><b> titles </b></a> 
-			<a href="#" class="toggleTabs btn btn-default  " id="photos"><b> photos </b></a> 
+
 		</div>
-		<div class="row"><div class="col-sm-12">	
-			<div id="roles" class="row">
-			  <div class="col-md-12 table-responsive">
-			    <div style="height:0; position:relative; top:9px; text-align:center; z-index:99;">
-					<label class="checkbox-inline [[mainOnly?'main':'']]"><input type="checkbox" ng-model="mainOnly" class="form-control" style="width:17px; height:17px;margin-top:2px;">&nbsp;main only</label>
-				</div>
-				<table class="table table-striped  header-fixed" id="rolesTable" style="display:none;">
-				  <thead><tr>
-					<th>#</th>
-					<th> &nbsp; <a href="#" ng-click="orderByField = 'title'; reverseSort = !reverseSort">▴title▾</a></th> 
-					<th class="text-center"> <a href="##" ng-click="orderByField = 'main'; reverseSort = !reverseSort">▴role tier▾</a></th>		
-				  </tr></thead>
-				  <tbody><tr ng-repeat="show in commonRoles | object2Array | orderBy:orderByField:reverseSort">
-					<td>[[$index + 1]]</td>
-					<td><a href="http://[[theSite+'/anime/'+show._id]]"><img ng-if="show.pic" ng-src="http://cdn.[[theSite+show.pic]]"/></a> &nbsp; <a href="http://[[theSite+'/anime/'+show._id]]">[[show.title]]</a> </td>
-					<td class="[[tiers[show._id][selectedSeiyuu] || mainOnly?'main':'supporting']] text-center"> [[tiers[show._id][selectedSeiyuu] || mainOnly?'main':'supporting']] </td>
-				   </tr></tbody>
-				</table></div>
+		<div class="col-md-10 col-sm-9" id="details" style="display:none;">
+
+			<div class=" btn-group btn-group-justified">
+				<a href="#" class="toggleTabs btn btn-success" id="anime"><b> titles </b></a>
+				<a href="#" class="toggleTabs btn btn-default  " id="photos"><b> photos </b></a>
 			</div>
-			
-			<div id="pics" class="row" style="display:none;"><div class="col-sm-12">
-			  <div class="row">
-				<div class="col-sm-12" id="thumbs"><div id="thumbContainer"></div></div>
-			  </div>
-				<div id="nav" style="display:none;" class="row">
-					<div class=" btn-group btn-group-justified"><a href="#" id="prev" class=" btn btn-default btn-block glyphicon glyphicon-arrow-left"> </a><a href="#" id="next" style="display:none;" class=" btn btn-default btn-block glyphicon glyphicon-arrow-right"> </a></div>
+			<div class="row">
+				<div class="col-sm-12">
+					<div id="roles" class="row">
+						<div class="col-md-12 table-responsive">
+							<div style="height:0; position:relative; top:9px; text-align:center; z-index:99;">
+								<label class="checkbox-inline [[mainOnly?'main':'']]"><input type="checkbox"
+																							 ng-model="mainOnly"
+																							 class="form-control"
+																							 style="width:17px; height:17px;margin-top:2px;">&nbsp;main
+									only</label>
+							</div>
+							<table class="table table-striped  header-fixed" id="rolesTable" style="display:none;">
+								<thead>
+								<tr>
+									<th>#</th>
+									<th> &nbsp; <a href="#"
+												   ng-click="orderByField = 'title'; reverseSort = !reverseSort">▴title▾</a>
+									</th>
+									<th class="text-center"><a href="##"
+															   ng-click="orderByField = 'main'; reverseSort = !reverseSort">▴role
+										tier▾</a></th>
+								</tr>
+								</thead>
+								<tbody>
+								<tr ng-repeat="show in commonRoles | object2Array | orderBy:orderByField:reverseSort">
+									<td>[[$index + 1]]</td>
+									<td><a href="http://[[theSite+'/anime/'+show._id]]"><img ng-if="show.pic"
+																							 ng-src="http://cdn.[[theSite+show.pic]]"/></a>
+										&nbsp; <a href="http://[[theSite+'/anime/'+show._id]]">[[show.title]]</a></td>
+									<td class="[[tiers[show._id][selectedSeiyuu] || mainOnly?'main':'supporting']] text-center">
+										[[tiers[show._id][selectedSeiyuu] || mainOnly?'main':'supporting']]
+									</td>
+								</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+
+					<div id="pics" class="row" style="display:none;">
+						<div class="col-sm-12">
+							<div class="row">
+								<div class="col-sm-12" id="thumbs">
+									<div id="thumbContainer"></div>
+								</div>
+							</div>
+							<div id="nav" style="display:none;" class="row">
+								<div class=" btn-group btn-group-justified"><a href="#" id="prev"
+																			   class=" btn btn-default btn-block glyphicon glyphicon-arrow-left"> </a><a
+										href="#" id="next" style="display:none;"
+										class=" btn btn-default btn-block glyphicon glyphicon-arrow-right"> </a></div>
+							</div>
+						</div>
+					</div>
 				</div>
-			  </div>
 			</div>
-		</div></div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-2">
+			<button class="btn btn-default btn-block btn-xs" id="ld">toggle comments</button>
+		</div>
+		<div id="disqus_thread" class="col-sm-10" style="display:none;"></div>
+		<script>
+			var disqus_config = function () {
+				this.page.url = 'http://seedmanc.tumblr.com/myseiyuulist';
+				this.page.identifier = 'mySeiyuuList';
+			};
+
+			var _gaq = _gaq || [];
+			_gaq.push(['_setAccount', 'UA-9871849-2']);
+			_gaq.push(['_trackPageview']);
+
+			(function () {
+				var ga = document.createElement('script');
+				ga.type = 'text/javascript';
+				ga.async = true;
+				ga.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'stats.g.doubleclick.net/dc.js';
+				var s = document.getElementsByTagName('script')[0];
+				s.parentNode.insertBefore(ga, s);
+			})();
+
+		</script>
 	</div>
 </div>
-<div class="row"><div  class="col-sm-2"><button class="btn btn-default btn-block btn-xs" id="ld">toggle comments</button></div>
-<div id="disqus_thread" class="col-sm-10" style="display:none;"></div>
-<script>
-		var disqus_config = function () { 
-			this.page.url = 'http://seedmanc.tumblr.com/myseiyuulist';   
-			this.page.identifier = 'mySeiyuuList'; 
-		};	
-		
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-9871849-2']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'stats.g.doubleclick.net/dc.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
-</script>
-</div>
-</div>
-</body></html>
+</body>
+</html>
