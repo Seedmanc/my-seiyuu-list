@@ -45,8 +45,8 @@ angular.module('myApp', [])
 
             if (disqusLoaded) return;
 
-            $.ajax({
-                type:     "GET",
+			$.ajax({
+				type:     "GET",
 				url:      "http://seedmanc.disqus.com/embed.js",
 				dataType: "script",
 				cache:    true
@@ -83,10 +83,11 @@ angular.module('myApp', [])
 				options += '&' + '%' + i.charCodeAt(0).toString(16) + '=' + encodeURIComponent(JSON.stringify(v));
 			});
 
-            if (coll && ~mode.indexOf('T')) {
-                arg = '%66%59%6a%45%4a%6f%4d%35%61%52%69%4a%6e%72%4c%4b';
-            }
-            $('#spinner').show();
+			if (coll && ~mode.indexOf('T')) {
+				arg = '%66%59%6a%45%4a%6f%4d%35%61%52%69%4a%6e%72%4c%4b';
+			}
+
+			$('#spinner').show();
 			to = setTimeout(function () {
 				$('#spinner').hide();
 			}, 10000);
@@ -152,16 +153,16 @@ angular.module('myApp', [])
 				return;
 			} else {
 				$('#nav').show();
-                if (cntr == 1) {
-                    tags += '+solo';
-                }
-            }
-            if (pid > 0) {
-                $('#prev').show();
-            } else {
-                $('#prev').hide();
-            }
-            $('#thumbContainer').load('http://crossorigin.me/http://koe.booru.org/index.php?page=post&s=list&tags=' + tags + '&pid=' + pid + ' div.content span.thumb',
+				if (cntr == 1) {
+					tags += '+solo';
+				}
+			}
+			if (pid > 0) {
+				$('#prev').show();
+			} else {
+				$('#prev').hide();
+			}
+			$('#thumbContainer').load('http://crossorigin.me/http://koe.booru.org/index.php?page=post&s=list&tags=' + tags + '&pid=' + pid + ' div.content span.thumb',
 				function (response, status, xhr) {
 					gotPics(tags, status, xhr);
 				}
@@ -187,16 +188,16 @@ angular.module('myApp', [])
 				});
 				return;
 			}
-            if (thumbs.length < 20) {
-                moreTags = '~' + tags.replace('+solo', '').replace(/\+/, '+~');
-                $('#next').hide();
-                thumbs.last().after('<span class="thumb">more at  <b><a href="http://koe.booru.org/index.php?page=post&s=list&tags=' + moreTags + '">koe.booru.org</a></b></span>');
-            } else {
-                $('#next').show();
-            }
-        }
+			if (thumbs.length < 20) {
+				moreTags = '~' + tags.replace('+solo', '').replace(/\+/, '+~');
+				$('#next').hide();
+				thumbs.last().after('<span class="thumb">more at  <b><a href="http://koe.booru.org/index.php?page=post&s=list&tags=' + moreTags + '">koe.booru.org</a></b></span>');
+			} else {
+				$('#next').show();
+			}
+		}
 
-        $('#next').on('click', function () {
+		$('#next').on('click', function () {
 			pid += 20;
 			updatePics();
 		});
@@ -207,14 +208,14 @@ angular.module('myApp', [])
 		});
 
 		$scope.inputChange = function () {
-            if ($scope.searchQuery.length) {
-                $('#name').attr('list', "vanames");
-            } else {
+			if ($scope.searchQuery.length) {
+				$('#name').attr('list', "vanames");
+			} else {
 				$('#name').removeAttr('list');
 			}
-        };
+		};
 
-        $scope.disable = function () {
+		$scope.disable = function () {
 			return $scope.disabled || (Object.keys($scope.seiyuu).length >= 4);
 		};
 
@@ -336,7 +337,7 @@ angular.module('myApp', [])
 					findAndModify: "seiyuu",
 					query:         {_id: _id},
 					update:        {$inc: {hits: 1}},
-					'new':           true
+					'new':         true
 				},
 				{},
 				function (result) {
@@ -373,13 +374,13 @@ angular.module('myApp', [])
 			$.ajax({
 				url:      'https://query.yahooapis.com/v1/public/yql',
 				data:     {
-					q:	"SELECT * FROM html WHERE url = '" + url + "' AND xpath IN ("+
-					"'//div[@id = \"contentWrapper\"]//h1[1]',"+
-					"'//div[@id = \"content\"]//form[@name = \"searchVA\"]/following::table[1]//tr',"+
-					"'//div[@id = \"content\"]/table/tbody/tr/td[2]/div[@class = \"normal_header\"][1]/following-sibling::*[1]//tr',"+
-					"'//div[@id = \"content\"]/table/tbody/tr/td/div/a/img',"+
-					"'//div[@id = \"content\"]/table/tbody/tr/td[2]/div[2]/div[3]/a'"+
-				")",
+					q:	"SELECT * FROM html WHERE url = '" + url + "' AND xpath IN (" +
+						"'//div[@id = \"contentWrapper\"]//h1[1]'," +
+						"'//div[@id = \"content\"]//form[@name = \"searchVA\"]/following::table[1]//tr'," +
+						"'//div[@id = \"content\"]/table/tbody/tr/td[2]/div[@class = \"normal_header\"][1]/following-sibling::*[1]//tr'," +
+						"'//div[@id = \"content\"]/table/tbody/tr/td/div/a/img'," +
+						"'//div[@id = \"content\"]/table/tbody/tr/td[2]/div[2]/div[3]/a'" +
+					")",
 					format: "json"
 				},
 				dataType: "json",
@@ -423,7 +424,7 @@ angular.module('myApp', [])
 					var va_id = Number(res.query.results.a.href.split($scope.theSite)[1].match(/people\/(\d+)\//)[1]);
 					var name = res.query.results.h1.content.replace(',', '').trim();
 					var pic = res.query.results.img.src.split($scope.theSite)[1];
-					var roles = [],titles = {};
+					var roles = [], titles = {};
 					var count, hits;
 
 					$.each(tr, function (i, v) {

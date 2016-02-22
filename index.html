@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="description"
-		  content="It allows you to search anime titles by providing a list of voice actors dubbing characters in them. Additionally you can get HQ photos of said actors as well."/>
+	      content="It allows you to search anime titles by providing a list of voice actors dubbing characters in them. Additionally you can get HQ photos of said actors as well."/>
 	<meta name="keywords" content="anime, seiyuu, voice actor, VA, search, service, photo, 声優"/>
 	<title>MySeiyuuList</title>
 	<script src="lib/jquery.min.js"></script>
@@ -24,8 +24,8 @@
 				<form>
 					<div class="form-group  has-feedback">
 						<input type="text" id="name" placeholder="seiyuu name" ng-model="searchQuery" ngTrim="true"
-							   ng-disabled="disable()" autofocus ng-change="inputChange()"
-							   class=" form-control  input-md"> <i
+						       ng-disabled="disable()" autofocus ng-change="inputChange()"
+						       class=" form-control  input-md"> <i
 							class="glyphicon glyphicon-search form-control-feedback"></i></div>
 				</form>
 				<datalist id="vanames">
@@ -35,7 +35,9 @@
 			<div class="col-sm-10" style="padding-right:0;padding-left:0">
 				<div class="col-lg-9 col-md-8 col-sm-7 " style="padding-left:0;">
 					<div class="sp sp-circle" id="spinner"></div>
-					<a href="#you can find any seiyuu here" title="You can still look up any seiyuu regardless of cached records #" style="cursor: help; border-bottom: 1px dotted #dfe;">
+					<a href="#you can find any seiyuu here"
+					   title="You can still look up any seiyuu regardless of cached records #"
+					   style="cursor: help; border-bottom: 1px dotted #dfe;">
 						<pre id="info" ng-cloak ng-bind="status"></pre>
 					</a>
 				</div>
@@ -48,8 +50,8 @@
 	</div>
 	<div class="row" ng-show="debug" ng-cloak ng-if="debug">
 		<div class="col-sm-12">
-			<div class="alert alert-danger text-justify"><a href="#" class="close" data-dismiss="alert"
-															aria-label="close" ng-click="debug=''">&times;</a>
+			<div class="alert alert-danger text-justify">
+				<a href="#" class="close" data-dismiss="alert" aria-label="close" ng-click="debug=''">&times;</a>
 				<strong>Error:</strong>
 				<p ng-bind="debug"></p>
 			</div>
@@ -57,11 +59,10 @@
 	</div>
 	<div class="row general">
 		<div class="col-md-2 col-sm-3" id="seiyuu">
-
 			<div class="row seiyuu" ng-repeat="pair in seiOut ">
 
 				<div class="col-lg-12 col-xs-6 col-sm-12 item well well-sm" id="[[pair[0].key]]"
-					 ng-mouseenter="select($event)">
+				     ng-mouseenter="select($event)">
 					<div class="remove"><a href="" class="remove close" ng-click="removeVA($event)">&times;</a></div>
 					<table class="text-center">
 						<tr>
@@ -79,7 +80,7 @@
 				</div>
 
 				<div class="col-lg-12 col-xs-6 col-sm-12 item well well-sm" id="[[pair[1].key]]"
-					 ng-mouseenter="select($event)" ng-if="pair[1]">
+				     ng-mouseenter="select($event)" ng-if="pair[1]">
 					<div class="remove"><a href="" class="remove close" ng-click="removeVA($event)">&times;</a></div>
 					<table class="text-center">
 						<tr>
@@ -110,11 +111,10 @@
 					<div id="roles" class="row">
 						<div class="col-md-12 table-responsive">
 							<div style="height:0; position:relative; top:9px; text-align:center; z-index:99;">
-								<label class="checkbox-inline [[mainOnly?'main':'']]"><input type="checkbox"
-																							 ng-model="mainOnly"
-																							 class="form-control"
-																							 style="width:17px; height:17px;margin-top:2px;">&nbsp;main
-									only</label>
+								<label class="checkbox-inline [[mainOnly?'main':'']]">
+									<input type="checkbox" ng-model="mainOnly" class="form-control" style="width:17px; height:17px;margin-top:2px;">
+									&nbsp;main only
+								</label>
 							</div>
 							<table class="table table-striped  header-fixed" id="rolesTable" style="display:none;">
 								<thead>
