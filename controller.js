@@ -47,7 +47,7 @@ angular.module('myApp', [])
 
 			$.ajax({
 				type:     "GET",
-				url:      "http://seedmanc.disqus.com/embed.js",
+				url:      "//seedmanc.disqus.com/embed.js",
 				dataType: "script",
 				cache:    true
 			}).done(function () {
@@ -162,7 +162,7 @@ angular.module('myApp', [])
 			} else {
 				$('#prev').hide();
 			}
-			$('#thumbContainer').load('http://crossorigin.me/http://koe.booru.org/index.php?page=post&s=list&tags=' + tags + '&pid=' + pid + ' div.content span.thumb',
+			$('#thumbContainer').load('//crossorigin.me/http://koe.booru.org/index.php?page=post&s=list&tags=' + tags + '&pid=' + pid + ' div.content span.thumb',
 				function (response, status, xhr) {
 					gotPics(tags, status, xhr);
 				}
