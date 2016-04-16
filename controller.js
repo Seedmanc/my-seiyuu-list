@@ -162,18 +162,31 @@ angular.module('myApp', [])
 			} else {
 				$('#prev').hide();
 			}
-			$('#thumbContainer').load('//crossorigin.me/http://koe.booru.org/index.php?page=post&s=list&tags=' + tags + '&pid=' + pid + ' div.content span.thumb',
+
+			$.getJSON(location.protocol + '//www.whateverorigin.org/get?url=http://koe.booru.org/index.php?page=post&s=list&tags=' + tags + '&pid=' + pid + '&callback=?')
+				.done(function(data){
+					if (data.contents){
+						var ths = $(contents).find('div.content span.thumb');
+						$('#thumbContainer').html(ths.contents());
+						gotPics(tags, data.status);
+					}
+				})
+				.fail(function(response){
+					console.log(response);
+				});
+
+			/*$('#thumbContainer').load('//crossorigin.me/http://koe.booru.org/index.php?page=post&s=list&tags=' + tags + '&pid=' + pid + ' div.content span.thumb',
 				function (response, status, xhr) {
 					gotPics(tags, status, xhr);
 				}
-			);
+			);*/
 		}
 
-		function gotPics(tags, status, xhr) {
+		function gotPics(tags, status) {
 			var thumbs = $('span.thumb'), moreTags;
 
 			if (status == 'error') {
-				$scope.debug += xhr.status + " " + xhr.statusText;
+				$scope.debug += status.http_code + " " + status.url;
 				return;
 			}
 
