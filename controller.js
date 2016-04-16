@@ -163,7 +163,7 @@ angular.module('myApp', [])
 				$('#prev').hide();
 			}
 
-			$.getJSON(location.protocol + '//www.whateverorigin.org/get?url=http://koe.booru.org/index.php?page=post&s=list&tags=' + tags + '&pid=' + pid + '&callback=?')
+			$.getJSON(location.protocol + '//anyorigin.com/get?url=http://koe.booru.org/index.php?page=post&s=list&tags=' + tags + '&pid=' + pid + '&callback=?')
 				.done(function(data){
 					if (data.contents){
 						var ths = $(data.contents).find('div.content span.thumb');
