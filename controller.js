@@ -166,7 +166,7 @@ angular.module('myApp', [])
 			$.getJSON(location.protocol + '//www.whateverorigin.org/get?url=http://koe.booru.org/index.php?page=post&s=list&tags=' + tags + '&pid=' + pid + '&callback=?')
 				.done(function(data){
 					if (data.contents){
-						var ths = $(contents).find('div.content span.thumb');
+						var ths = $(data.contents).find('div.content span.thumb');
 						$('#thumbContainer').html(ths.contents());
 						gotPics(tags, data.status);
 					}
@@ -174,12 +174,6 @@ angular.module('myApp', [])
 				.fail(function(response){
 					console.log(response);
 				});
-
-			/*$('#thumbContainer').load('//crossorigin.me/http://koe.booru.org/index.php?page=post&s=list&tags=' + tags + '&pid=' + pid + ' div.content span.thumb',
-				function (response, status, xhr) {
-					gotPics(tags, status, xhr);
-				}
-			);*/
 		}
 
 		function gotPics(tags, status) {
