@@ -87,6 +87,7 @@ input{
 	padding-top: 5px;
 	padding-right:0;
 	padding-left: 12px;
+	border-radius: 0 0 4px 4px;
 }
 i {
 	opacity: 0.5;
