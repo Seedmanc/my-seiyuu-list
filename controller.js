@@ -1,4 +1,4 @@
-﻿/* global angular, $ */
+/* global angular, $ */
 angular.module('myApp', [])
 	.config(['$interpolateProvider', function ($interpolateProvider) {
 		$interpolateProvider.startSymbol('[[');
@@ -15,7 +15,7 @@ angular.module('myApp', [])
 		};
 	})
 	.controller('myCtrl', function ($scope) {
-		//$scope.orderByField = 'title';
+		$scope.orderByField = 'title';
 		$scope.reverseSort = false;
 		$scope.theSite = '\x6d\x79\x61\x6e\x69\x6d\x65\x6c\x69\x73\x74\x2e\x6e\x65\x74';
 		$scope.commonRoles = {};
@@ -28,16 +28,6 @@ angular.module('myApp', [])
 		$scope.mainOnly = localStorage.mainOnly == "true";
 		$scope.selectedSeiyuu = '';
 		$scope.tiers = {};
-		
-				
-		$scope.compareByTitle = function (a, b) {
-			return $scope.commonRoles[a].title.localeCompare($scope.commonRoles[b].title);
-		}
-		$scope.compareByTier = function (a, b) {
-			return tiers[a][selectedSeiyuu] > tiers[b][selectedSeiyuu] ? 1 : -1;
-		}
-		
-		$scope.comparator = $scope.compareByTitle;
 
 		var recycle = {};
 		//var over = false;
@@ -666,4 +656,3 @@ angular.module('myApp', [])
 //todo add characters to output?
 //todo nglist with looping over several names
 //todo ngPluralize?
-//todo fix error getting title names and pics when adding a new seiyuu?
