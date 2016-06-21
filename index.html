@@ -130,15 +130,15 @@
 								<tr>
 									<th>#</th>
 									<th> &nbsp; <a href="#"
-												   ng-click="orderByField = 'title'; reverseSort = !reverseSort">▴title▾</a>
+												   ng-click="comparator = compareByTitle; reverseSort = !reverseSort">▴title▾</a>
 									</th>
 									<th class="text-center"><a href="##"
-															   ng-click="orderByField = 'tiers[show._id][selectedSeiyuu]'; reverseSort = !reverseSort">▴role
+															   ng-click="comparator = compareByTier; reverseSort = !reverseSort">▴role
 										tier▾</a></th>
 								</tr>
 								</thead>
 								<tbody>
-								<tr ng-repeat="show in commonRoles | object2Array | orderBy:orderByField:reverseSort">
+								<tr ng-repeat="show in commonRoles | object2Array | orderBy:'_id':reverseSort | comparator">
 									<td>[[$index + 1]]</td>
 									<td><a href="http://[[theSite+'/anime/'+show._id]]"><img ng-if="show.pic"
 																							 ng-src="http://cdn.[[theSite+show.pic]]"/></a>
