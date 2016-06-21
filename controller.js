@@ -28,6 +28,16 @@ angular.module('myApp', [])
 		$scope.mainOnly = localStorage.mainOnly == "true";
 		$scope.selectedSeiyuu = '';
 		$scope.tiers = {};
+		
+				
+		$scope.compareByTitle = function (a, b) {
+			return $scope.commonRoles[a].title.localeCompare($scope.commonRoles[b].title);
+		}
+		$scope.compareByTier = function (a, b) {
+			return tiers[a][selectedSeiyuu] > tiers[b][selectedSeiyuu] ? 1 : -1;
+		}
+		
+		$scope.comparator = $scope.compareByTitle;
 
 		var recycle = {};
 		//var over = false;
@@ -648,15 +658,6 @@ angular.module('myApp', [])
 
 			$scope.selectedSeiyuu = that.target.id || $(that.target).parents('.item').attr('id');
 		};
-		
-		$scope.compareByTitle = function (a, b) {
-			return $scope.commonRoles[a].title.localeCompare($scope.commonRoles[b].title);
-		}
-		$scope.compareByTier = function (a, b) {
-			return tiers[a][selectedSeiyuu] > tiers[b][selectedSeiyuu] ? 1 : -1;
-		}
-		
-		$scope.comparator = $scope.compareByTitle;
 
 	}).config(['$compileProvider', function ($compileProvider) {
 		$compileProvider.debugInfoEnabled(false);
