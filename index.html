@@ -138,7 +138,7 @@
 								</tr>
 								</thead>
 								<tbody>
-								<tr ng-repeat="show in commonRoles | object2Array | orderBy:'_id':reverseSort | comparator">
+								<tr ng-repeat="show in commonRoles | object2Array | orderBy:'_id':reverseSort:comparator">
 									<td>[[$index + 1]]</td>
 									<td><a href="http://[[theSite+'/anime/'+show._id]]"><img ng-if="show.pic"
 																							 ng-src="http://cdn.[[theSite+show.pic]]"/></a>
