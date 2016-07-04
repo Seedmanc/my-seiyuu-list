@@ -612,7 +612,7 @@ angular.module('myApp', [])
 						return isMain = vl;
 					});
 					if (isMain) {
-						$scope.commonRoles[v] = out[v];//$.extend({}, out[v]);
+						$scope.commonRoles[v] = $.extend({}, out[v]);
 					}
 				});
 			} else {
