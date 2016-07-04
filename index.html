@@ -39,7 +39,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr ng-repeat="seiyuu in rankedSeiyuu orderBy:orderByFieldR:reverseSort">
+				<tr ng-repeat="seiyuu in rankedSeiyuu | orderBy:orderByFieldR:reverseSort">
 					<td><b><a href="http://[[theSite+'/people/'+seiyuu._id">[[seiyuu.name]]</a></b></td><td>[[seiyuu.hits]]</td><td>[[seiyuu.accessedText]]</td>
 				</tr>
 			</tbody>
