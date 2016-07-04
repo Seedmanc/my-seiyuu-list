@@ -442,7 +442,7 @@ angular.module('myApp', [])
 
 						entry._id = character._id;
 						entry.title = v.td[1].a.content;
-						entry.pic = v.td[0].div.a.img.src.split($scope.theSite)[1];
+						entry.pic = (v.td[0].div.a.img.src || v.td[0].div.a.img['data-src']).split($scope.theSite)[1];
 						entry.main = character.main;
 
 						if (!titles[entry._id] || entry.main) {
