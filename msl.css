@@ -187,6 +187,11 @@ button {
 #ranking, #ranking th {
 	text-align: center;
 }
+.ranking-spinner {
+	width: 0;
+	margin-left: auto;
+	margin-right: auto;
+}
 caption {
 	text-align: center;
 	font-weight: bold;
