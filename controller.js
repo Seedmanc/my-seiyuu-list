@@ -595,7 +595,10 @@ angular.module('myApp', [])
 
 				$.each($scope.seiyuu, function (name, person) {
 					tier[name] = person.titles[i].main;
+					v.title = v.title || person.titles[i].title;
+					v.pic = v.pic || person.titles[i].pic;
 				});
+
 				$scope.tiers[i] = tier;
 				v.title = v.title || i;
 			});
