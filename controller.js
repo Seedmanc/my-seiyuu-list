@@ -586,7 +586,7 @@ angular.module('myApp', [])
 					}
 				});
 				if (common) {
-					out[title._id] = title;//$.extend({}, title);
+					out[title._id] = $.extend({}, title);
 				}
 			});
 
@@ -612,11 +612,11 @@ angular.module('myApp', [])
 						return isMain = vl;
 					});
 					if (isMain) {
-						$scope.commonRoles[v] = $.extend({}, out[v]);
+						$scope.commonRoles[v] = out[v];//$.extend({}, out[v]);
 					}
 				});
 			} else {
-				$scope.commonRoles = $.extend({}, out);
+				$scope.commonRoles = out;//$.extend({}, out);
 			}
 
 			if (len) {
