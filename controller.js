@@ -1,4 +1,4 @@
-/* global angular, $ */
+﻿/* global angular, $ */
 angular.module('myApp', [])
 	.config(['$interpolateProvider', function ($interpolateProvider) {
 		$interpolateProvider.startSymbol('[[');
@@ -101,7 +101,7 @@ angular.module('myApp', [])
 				$scope.debug += result.error || '';
 				(callback || angular.noop)(result);
 			}).fail(function (error) {
-				$scope.debug += JSON.stringify(error);
+				$scope.debug += '\n\r' + JSON.stringify(error) + ' Error accessing database.';
 			}).always(function () {
 				$scope.$apply();
 				$('#spinner').hide();
@@ -173,7 +173,10 @@ angular.module('myApp', [])
 			var thumbs = $('span.thumb'), moreTags;
 
 			if (status == 'error') {
-				$scope.debug += xhr.status + " " + xhr.statusText;
+				$scope.debug += '\n\r' + xhr.status + " " + xhr.statusText +
+					' Pictures could not be retrieved now. You can see them <a href="http://koe.booru.org/index.php?page=post&s=list&tags=' + tags + '" target="_blank">here</a> instead.';
+				$scope.$apply();
+
 				return;
 			}
 
@@ -186,6 +189,7 @@ angular.module('myApp', [])
 				$('#thumbContainer').load('http://crossorigin.me/http://koe.booru.org/index.php?page=post&s=list&tags=' + tags.replace('+solo', '') + '&pid=' + pid + ' div.content span.thumb', function (response, status, xhr) {
 					gotPics(tags.replace('+solo', ''), status, xhr);
 				});
+
 				return;
 			}
 			if (thumbs.length < 20) {
@@ -281,8 +285,8 @@ angular.module('myApp', [])
 		};
 
 		$('input#name').on('change', function (that) {
-			$scope.searchQuery = that.target.value.toLowerCase().trim().replace(/&|\\|\/|<|>|\?|\,|\:|\{|\}|\$/gi, '');//todo encodeURI?
-
+			$scope.searchQuery = that.target.value.toLowerCase().trim().replace(/&|\\|\/|<|>|\?|\,|\:|\{|\}|\$/gi, '').replace(/\s+/, ' ');
+			//todo encodeURI?
 			if (($scope.searchQuery.length > 2) && (Object.keys($scope.seiyuu).length < 4)) {
 
 				if ((!$scope.seiyuu[$scope.searchQuery]) && (!$scope.seiyuu[$scope.searchQuery.split(/\s+/).reverse().join(' ')])) {
@@ -389,7 +393,7 @@ angular.module('myApp', [])
 					$scope.parseResults(result, overwrite);
 				})
 				.fail(function (response) {
-					$scope.debug = JSON.stringify(response);
+					$scope.debug = JSON.stringify(response) + ' Error searching for ' + name;
 				})
 				.always(function () {
 					$scope.disabled = false;
@@ -650,7 +654,7 @@ angular.module('myApp', [])
 		};
 
 	}).config(['$compileProvider', function ($compileProvider) {
-		$compileProvider.debugInfoEnabled(false);
+		$compileProvider.debugInfoEnabled(true);
 	}
 ]);
 //todo add characters to output?
