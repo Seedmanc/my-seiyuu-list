@@ -612,11 +612,11 @@ angular.module('myApp', [])
 						return isMain = vl;
 					});
 					if (isMain) {
-						$scope.commonRoles[v] = out[v];//$.extend({}, out[v]);
+						$scope.commonRoles[v] = out[v];
 					}
 				});
 			} else {
-				$scope.commonRoles = out;//$.extend({}, out);
+				$scope.commonRoles = out;
 			}
 
 			if (len) {
@@ -647,7 +647,11 @@ angular.module('myApp', [])
 						if ($scope.commonRoles[v._id]) {
 							$scope.commonRoles[v._id].title = v.title;
 							$scope.commonRoles[v._id].pic = v.pic;
-							$scope.seiyuu[selected].titles[v._id].pic = v.pic;
+
+							$.each($scope.seiyuu, function (name, person) {
+								person.titles[v._id].pic = v.pic;
+								person.titles[v._id].title = v.title;
+							});
 						}
 					});
 				}
