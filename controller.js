@@ -16,6 +16,7 @@ angular.module('myApp', [])
 	})
 	.controller('myCtrl', function ($scope) {
 		$scope.orderByField = ['-main', '+title'];
+		$scope.orderByFieldR = 'name';
 		$scope.reverseSort = false;
 		$scope.theSite = '\x6d\x79\x61\x6e\x69\x6d\x65\x6c\x69\x73\x74\x2e\x6e\x65\x74';
 		$scope.commonRoles = {};
@@ -28,6 +29,7 @@ angular.module('myApp', [])
 		$scope.mainOnly = localStorage.mainOnly == "true";
 		$scope.selectedSeiyuu = '';
 		$scope.tiers = {};
+		$scope.rankedSeiyuu = [];
 
 		var recycle = {};
 		//var over = false;
@@ -145,7 +147,7 @@ angular.module('myApp', [])
 
 			tags = $.map($scope.seiyuu, function (v, i) {
 				cntr++;
-				return i.replace(/ou\s|ou$/i, 'o ').trim().replace(/uu/i, 'u').replace(' ', '_');
+				return i.replace(/ou\s|ou$/i, 'o ').trim().replace(/uu/gi, 'u').replace(/\s+/g, '_');
 			}).join('+');
 
 			if (!cntr) {
@@ -194,7 +196,7 @@ angular.module('myApp', [])
 				return;
 			}
 			if (thumbs.length < 20) {
-				moreTags = '~' + tags.replace('+solo', '').replace(/\+/, '+~');
+				moreTags = '~' + tags.replace('+solo', '').replace(/\+/g, '+~');
 				$('#next').hide();
 				thumbs.last().after('<span class="thumb">more at  <b><a href="http://koe.booru.org/index.php?page=post&s=list&tags=' + moreTags + '">koe.booru.org</a></b></span>');
 			} else {
@@ -286,7 +288,7 @@ angular.module('myApp', [])
 		};
 
 		$('input#name').on('change', function (that) {
-			$scope.searchQuery = that.target.value.toLowerCase().trim().replace(/&|\\|\/|<|>|\?|\,|\:|\{|\}|\$/gi, '').replace(/\s+/, ' ');
+			$scope.searchQuery = that.target.value.toLowerCase().trim().replace(/&|\\|\/|<|>|\?|\,|\:|\{|\}|\$/gi, '').replace(/\s+/g, ' ');
 			//todo encodeURI?
 			if (($scope.searchQuery.length > 2) && (Object.keys($scope.seiyuu).length < 4)) {
 
@@ -310,7 +312,6 @@ angular.module('myApp', [])
 				$scope.status = "maximum of 4 persons allowed";
 			}
 		});
-
 		function db2seiyuu(name) {
 			var _id = ($scope.vanames[name] || $scope.vanames[name.split(/\s+/).reverse().join(' ')])._id;
 
@@ -341,7 +342,10 @@ angular.module('myApp', [])
 				{
 					findAndModify: "seiyuu",
 					query:         {_id: _id},
-					update:        {$inc: {hits: 1}},
+					update:        {
+										$inc: {hits: 1},
+										$set: {accessed: Number(new Date())}
+									},
 					'new':         true
 				},
 				{},
@@ -489,7 +493,8 @@ angular.module('myApp', [])
 						count:   toSave.count,
 						hits:    1,
 						roles:   roles,
-						updated: new Date().toUTCString()
+						updated: new Date().toUTCString(),
+						accessed: Number(new Date())
 					},
 					function (result) {
 						$scope.vanames[result.name.toLowerCase()] = {_id: result._id, hits: result.hits};
@@ -670,6 +675,39 @@ angular.module('myApp', [])
 				v.main = $scope.seiyuu[$scope.selectedSeiyuu].titles[i].main;
 			});
 		};
+
+		$scope.showRanking = function () {
+			$('.ranking-curtain').show();
+			$('.ranking-spinner').show();
+
+			$scope.rankedSeiyuu = [];
+
+			mongoCall(
+				'seiyuu',
+				'GET',
+				undefined,
+				{f: {"name": 1, "hits":1, "updated": 1, "accessed": 1}},
+				function (result) {
+					$.each(result, function (i, v) {
+						var accessed = new Date(v.accessed || v.updated);
+
+
+						$scope.rankedSeiyuu.push(
+							{
+								_id: v._id,
+								name: v.name,
+								hits: v.hits,
+								accessedText: accessed.toLocaleDateString(),
+								accessed: Number(accessed)
+							}
+						);
+					});
+
+					$('#ranking tbody').show();
+					$('#ranking-spinner').hide();
+				}
+			);
+		}
 
 	}).config(['$compileProvider', function ($compileProvider) {
 		$compileProvider.debugInfoEnabled(true);

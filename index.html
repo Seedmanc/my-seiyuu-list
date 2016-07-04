@@ -26,6 +26,27 @@
 </head>
 
 <body ng-app="myApp" ng-controller="myCtrl" ng-cloak>
+<div class="ranking-curtain">
+	<div class="ranking-container">
+		<div class="remove"><a href="" class="remove close" ng-click="$('.ranking-curtain,#ranking tbody').hide();">&times;</a></div>
+		<table id="ranking" class="table table-striped  header-fixed">
+			<caption>Seiyuu popularity rankings</caption>
+			<thead>
+				<tr>
+					<th><a href="#" ng-click="reverseSort = !reverseSort; orderByFieldR='name';">▴name▾</a></th>
+					<th><a href="#" ng-click="reverseSort = !reverseSort; orderByFieldR='hits';">▴hits▾</a></th>
+					<th><a href="#" ng-click="reverseSort = !reverseSort; orderByFieldR='accessed';">▴last accessed▾</a></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="seiyuu in rankedSeiyuu orderBy:orderByFieldR:reverseSort">
+					<td><b><a href="http://[[theSite+'/people/'+seiyuu._id">[[seiyuu.name]]</a></b></td><td>[[seiyuu.hits]]</td><td>[[seiyuu.accessedText]]</td>
+				</tr>
+			</tbody>
+		</table>
+		<div class="sp sp-circle" id="ranking-spinner"></div>
+	</div>
+</div>
 <div class="container">
 	<div class="row">
 		<div id="search-row" class="col-sm-12">
@@ -52,7 +73,7 @@
 					</a>
 				</div>
 				<div class="col-lg-3 col-md-4 col-sm-5 text-center" style="padding-right:0;padding-left:0;">
-					<a href="#" title="search"><img src="msl-logo-200-white.png" alt="search" id="msl-logo"></a>
+					<a href="#" ng-click="showRankings()" title="search"><img src="msl-logo-200-white.png" alt="search" id="msl-logo"></a>
 				</div>
 			</div>
 		</div>
@@ -87,8 +108,7 @@
 					</table>
 				</div>
 
-				<div class="col-lg-12 col-xs-6 col-sm-12 item well well-sm" id="[[pair[1].key]]"
-				     ng-mouseenter="select($event)" ng-if="pair[1]">
+				<div class="col-lg-12 col-xs-6 col-sm-12 item well well-sm" id="[[pair[1].key]]" ng-mouseenter="select($event)" ng-if="pair[1]">
 					<div class="remove"><a href="" class="remove close" ng-click="removeVA($event)">&times;</a></div>
 					<table class="text-center">
 						<tr>
@@ -111,7 +131,7 @@
 		</div>
 		<div class="col-md-10 col-sm-9" id="details" style="display:none;">
 
-			<div class=" btn-group btn-group-justified">
+			<div class="btn-group btn-group-justified">
 				<a href="#" class="toggleTabs btn btn-success" id="anime"><b> titles </b></a>
 				<a href="#" class="toggleTabs btn btn-default" id="photos"><b> photos </b></a>
 			</div>
