@@ -138,7 +138,7 @@
 								</tr>
 								</thead>
 								<tbody>
-								<tr ng-repeat="show in commonRoles | object2Array | orderBy:orderByField:reverseSort">
+								<tr ng-repeat="show in commonRoles | object2Array | orderBy:orderByField:reverseSort | groupBy:'main'">
 									<td>[[$index + 1]]</td>
 									<td>
 										<a href="http://[[theSite+'/anime/'+show._id]]">
