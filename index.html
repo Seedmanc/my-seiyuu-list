@@ -129,7 +129,9 @@
 								<thead>
 								<tr>
 									<th>#</th>
-									<th> &nbsp; <a href="#" ng-click="reverseSort = !reverseSort">▴title▾</a>
+									<th> &nbsp;
+										<a href="#" ng-click="reverseSort = !reverseSort; orderByField='[\'-main\',\'' + (reverseSort?'-':'+') + 'title\']'">
+										▴title▾</a>
 									</th>
 									<th class="text-center">
 										<b>role tier</b>
@@ -137,7 +139,7 @@
 								</tr>
 								</thead>
 								<tbody>
-								<tr ng-repeat="show in commonRoles | object2Array | orderBy:['+main','title']:reverseSort">
+								<tr ng-repeat="show in commonRoles | object2Array | orderBy:orderByField">
 									<td>[[$index + 1]]</td>
 									<td>
 										<a href="http://[[theSite+'/anime/'+show._id]]">
