@@ -34,8 +34,9 @@
 					<div class="form-group  has-feedback">
 						<input type="text" id="name" placeholder="seiyuu name" ng-model="searchQuery" ngTrim="true"
 						       ng-disabled="disable()" autofocus ng-change="inputChange()"
-						       class=" form-control  input-md"> <i
-							class="glyphicon glyphicon-search form-control-feedback"></i></div>
+						       class=" form-control  input-md">
+						<i class="glyphicon glyphicon-search form-control-feedback"></i>
+					</div>
 				</form>
 				<datalist id="vanames">
 					<option ng-value="vaname" ng-repeat="(vaname,vadata) in vanames"></option>
@@ -69,7 +70,6 @@
 	<div class="row general">
 		<div class="col-md-2 col-sm-3" id="seiyuu">
 			<div class="row seiyuu" ng-repeat="pair in seiOut ">
-
 				<div class="col-lg-12 col-xs-6 col-sm-12 item well well-sm" id="[[pair[0].key]]"
 				     ng-mouseenter="select($event)">
 					<div class="remove"><a href="" class="remove close" ng-click="removeVA($event)">&times;</a></div>
@@ -95,7 +95,8 @@
 						<tr>
 							<td colspan=2>
 								<b><a href="http://[[theSite+'/people/'+pair[1]._id]]" class="name">[[pair[1].name]]</a>
-								</b></td>
+								</b>
+							</td>
 						<tr>
 							<td colspan=2><img class="vapic img-rounded" ng-src="http://[[theSite+pair[1].pic]]"></td>
 						</tr>
@@ -113,7 +114,7 @@
 
 			<div class=" btn-group btn-group-justified">
 				<a href="#" class="toggleTabs btn btn-success" id="anime"><b> titles </b></a>
-				<a href="#" class="toggleTabs btn btn-default  " id="photos"><b> photos </b></a>
+				<a href="#" class="toggleTabs btn btn-default" id="photos"><b> photos </b></a>
 			</div>
 			<div class="row">
 				<div class="col-sm-12">
@@ -129,22 +130,26 @@
 								<thead>
 								<tr>
 									<th>#</th>
-									<th> &nbsp; <a href="#"
-												   ng-click="orderByField = 'title'; reverseSort = !reverseSort">▴title▾</a>
+									<th> &nbsp; <a href="#" ng-click="orderByField = 'title'; reverseSort = !reverseSort">▴title▾</a>
 									</th>
-									<th class="text-center"><a href="##"
-															   ng-click="orderByField = 'main'; reverseSort = !reverseSort">▴role
-										tier▾</a></th>
+									<th class="text-center">
+										<a href="##" ng-click="orderByField = 'main'; reverseSort = !reverseSort">
+										▴role tier▾</a>
+									</th>
 								</tr>
 								</thead>
 								<tbody>
 								<tr ng-repeat="show in commonRoles | object2Array | orderBy:orderByField:reverseSort">
 									<td>[[$index + 1]]</td>
-									<td><a href="http://[[theSite+'/anime/'+show._id]]"><img ng-if="show.pic"
-																							 ng-src="http://cdn.[[theSite+show.pic]]"/></a>
-										&nbsp; <a href="http://[[theSite+'/anime/'+show._id]]">[[show.title]]</a></td>
-									<td class="[[tiers[show._id][selectedSeiyuu] || mainOnly?'main':'supporting']] text-center">
-										[[tiers[show._id][selectedSeiyuu] || mainOnly?'main':'supporting']]
+									<td>
+										<a href="http://[[theSite+'/anime/'+show._id]]">
+											<img ng-if="show.pic" ng-src="http://cdn.[[theSite+show.pic]]"/>
+										</a>
+										&nbsp;
+										<a href="http://[[theSite+'/anime/'+show._id]]">[[show.title]]</a>
+									</td>
+									<td class="[[show.main || mainOnly ? 'main':'supporting']] text-center">
+										[[show.main || mainOnly ? 'main':'supporting']]
 									</td>
 								</tr>
 								</tbody>
@@ -160,10 +165,10 @@
 								</div>
 							</div>
 							<div id="nav" style="display:none;" class="row">
-								<div class=" btn-group btn-group-justified"><a href="#" id="prev"
-																			   class=" btn btn-default btn-block glyphicon glyphicon-arrow-left"> </a><a
-										href="#" id="next" style="display:none;"
-										class=" btn btn-default btn-block glyphicon glyphicon-arrow-right"> </a></div>
+								<div class=" btn-group btn-group-justified">
+									<a href="#" id="prev" class="btn btn-default btn-block glyphicon glyphicon-arrow-left"> </a>
+									<a href="#" id="next" style="display:none;" class="btn btn-default btn-block glyphicon glyphicon-arrow-right"> </a>
+								</div>
 							</div>
 						</div>
 					</div>
