@@ -559,7 +559,7 @@ angular.module('myApp', [])
 		}
 
 		$scope.updateRoles = function () {
-			var out = {}, tier;
+			var out = {}, tier, len;
 			var keys = Object.keys($scope.seiyuu);
 			var selected = keys[0];
 			var min;
@@ -574,6 +574,7 @@ angular.module('myApp', [])
 					selected = v;
 				}
 			});
+
 			$.each($scope.seiyuu[selected].titles, function (_id, title) {
 				var common = true;
 				$.each($scope.seiyuu, function (name, person) {
@@ -584,9 +585,10 @@ angular.module('myApp', [])
 					}
 				});
 				if (common) {
-					out[title._id] = title;
+					out[title._id] = $.extend({}, title);
 				}
 			});
+
 			$.each(out, function (i, v) {
 				tier = {};
 				$.each($scope.seiyuu, function (name, person) {
@@ -595,7 +597,8 @@ angular.module('myApp', [])
 				$scope.tiers[i] = tier;
 				v.title = v.title || i;
 			});
-			var len = Object.keys(out).length;
+
+			len = Object.keys(out).length;
 			$scope.status = 'found ' + len + ' common title(s)';
 
 			if ($scope.mainOnly) {
@@ -607,11 +610,11 @@ angular.module('myApp', [])
 						return isMain = vl;
 					});
 					if (isMain) {
-						$scope.commonRoles[v] = out[v];
+						$scope.commonRoles[v] = $.extend({}, out[v]);
 					}
 				});
 			} else {
-				$scope.commonRoles = out;
+				$scope.commonRoles = $.extend({}, out);
 			}
 
 			if (len) {
@@ -652,6 +655,12 @@ angular.module('myApp', [])
 			if ($scope.mainOnly) return;
 
 			$scope.selectedSeiyuu = that.target.id || $(that.target).parents('.item').attr('id');
+
+			$.each($scope.commonRoles, function (i, v) {
+				v.main = $scope.seiyuu[$scope.selectedSeiyuu].titles[i].main;
+			});
+
+			$scope.$apply();
 		};
 
 	}).config(['$compileProvider', function ($compileProvider) {
