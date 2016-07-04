@@ -93,7 +93,7 @@ angular.module('myApp', [])
 			}, 10000);
 
 			$.ajax({
-				url:         "https://api.mongolab.com/api/1/databases/myseiyuulist/" + path + "\x3f%61%70\x69%4b%65%79\x3d%52%34\x6a\x67%38\x71%71%68\x70%54%49%36\x38%6c\x52%59" + arg + (options),
+				url:         "https://fapi.mongolab.com/api/1/databases/myseiyuulist/" + path + "\x3f%61%70\x69%4b%65%79\x3d%52%34\x6a\x67%38\x71%71%68\x70%54%49%36\x38%6c\x52%59" + arg + (options),
 				data:        JSON.stringify(data),
 				type:        mode,
 				contentType: "application/json"
@@ -174,8 +174,9 @@ angular.module('myApp', [])
 
 			if (status == 'error') {
 				$scope.debug += '\n\r' + xhr.status + " " + xhr.statusText +
-					' Pictures could not be retrieved now. You can see them <a href="http://koe.booru.org/index.php?page=post&s=list&tags=' + tags + '" target="_blank">here</a> instead.';
+					' Pictures could not be retrieved now. You can see them here: ';
 				$scope.$apply();
+				$('#debug').append('<a href="http://koe.booru.org/index.php?page=post&s=list&tags=' + tags + '" target="_blank">Koebooru</a>');
 
 				return;
 			}

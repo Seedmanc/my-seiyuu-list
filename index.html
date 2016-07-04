@@ -63,15 +63,14 @@
 			<div class="alert alert-danger text-justify">
 				<a href="#" class="close" data-dismiss="alert" aria-label="close" ng-click="debug=''">&times;</a>
 				<strong>Error:</strong>
-				<p ng-bind="debug"></p>
+				<p id="debug" ng-bind="debug"></p>
 			</div>
 		</div>
 	</div>
 	<div class="row general">
 		<div class="col-md-2 col-sm-3" id="seiyuu">
 			<div class="row seiyuu" ng-repeat="pair in seiOut ">
-				<div class="col-lg-12 col-xs-6 col-sm-12 item well well-sm" id="[[pair[0].key]]"
-				     ng-mouseenter="select($event)">
+				<div class="col-lg-12 col-xs-6 col-sm-12 item well well-sm" id="[[pair[0].key]]" ng-mouseenter="select($event)">
 					<div class="remove"><a href="" class="remove close" ng-click="removeVA($event)">&times;</a></div>
 					<table class="text-center">
 						<tr>
