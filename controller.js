@@ -162,7 +162,7 @@ angular.module('myApp', [])
 			} else {
 				$('#prev').hide();
 			}
-			$('#thumbContainer').load('//crossorigin.me/http://koe.booru.org/index.php?page=post&s=list&tags=' + tags + '&pid=' + pid + ' div.content span.thumb',
+			$('#thumbContainer').load('https://crossorigin.me/http://koe.booru.org/index.php?page=post&s=list&tags=' + tags + '&pid=' + pid + ' div.content span.thumb',
 				function (response, status, xhr) {
 					gotPics(tags, status, xhr);
 				}
@@ -187,7 +187,7 @@ angular.module('myApp', [])
 				v.target = "_blank";
 			});
 			if (thumbs.length == 0 && ~tags.indexOf('solo')) {
-				$('#thumbContainer').load('http://crossorigin.me/http://koe.booru.org/index.php?page=post&s=list&tags=' + tags.replace('+solo', '') + '&pid=' + pid + ' div.content span.thumb', function (response, status, xhr) {
+				$('#thumbContainer').load('https://crossorigin.me/http://koe.booru.org/index.php?page=post&s=list&tags=' + tags.replace('+solo', '') + '&pid=' + pid + ' div.content span.thumb', function (response, status, xhr) {
 					gotPics(tags.replace('+solo', ''), status, xhr);
 				});
 
