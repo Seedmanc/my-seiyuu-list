@@ -559,7 +559,7 @@ angular.module('myApp', [])
 		}
 
 		$scope.updateRoles = function () {
-			var out = {}, tier, len;
+			var out = {}, len;
 			var keys = Object.keys($scope.seiyuu);
 			var selected = keys[0];
 			var min;
@@ -577,8 +577,9 @@ angular.module('myApp', [])
 
 			$.each($scope.seiyuu[selected].titles, function (_id, title) {
 				var common = true;
+
 				$.each($scope.seiyuu, function (name, person) {
-					if (name == selected )return true;
+					if (name == selected) return true;
 
 					if (!person.titles[_id]) {
 						common = false;
@@ -590,7 +591,8 @@ angular.module('myApp', [])
 			});
 
 			$.each(out, function (i, v) {
-				tier = {};
+				var tier = {};
+
 				$.each($scope.seiyuu, function (name, person) {
 					tier[name] = person.titles[i].main;
 				});
@@ -659,8 +661,6 @@ angular.module('myApp', [])
 			$.each($scope.commonRoles, function (i, v) {
 				v.main = $scope.seiyuu[$scope.selectedSeiyuu].titles[i].main;
 			});
-
-			$scope.$apply();
 		};
 
 	}).config(['$compileProvider', function ($compileProvider) {
@@ -668,5 +668,7 @@ angular.module('myApp', [])
 	}
 ]);
 //todo add characters to output?
-//todo nglist with looping over several names
+//todo show all roles for single seiyuu
+//todo nglist with looping over several names?
 //todo ngPluralize?
+//todo error reporting to db
