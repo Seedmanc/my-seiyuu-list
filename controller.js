@@ -616,7 +616,7 @@ angular.module('myApp', [])
 					}
 				});
 			} else {
-				$scope.commonRoles = out;//$.extend({}, out);
+				$scope.commonRoles = $.extend({}, out);
 			}
 
 			if (len) {
