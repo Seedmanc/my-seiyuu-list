@@ -180,17 +180,21 @@ button {
 	min-width: 300px;
 
 	background: white;
-	border-radius: 4px;
+	border-radius: 5px;
 
 	text-align: center;
 }
-#ranking, #ranking th {
+.ranking, .ranking th {
 	text-align: center;
 }
 .ranking-spinner {
 	width: 0;
 	margin-left: auto;
 	margin-right: auto;
+}
+.table-container {
+	max-height: 100%;
+	overflow-y: auto;
 }
 caption {
 	text-align: center;

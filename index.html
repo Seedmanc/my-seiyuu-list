@@ -29,8 +29,13 @@
 <div class="ranking-curtain">
 	<div class="ranking-container">
 		<div class="remove"><a href="" class="remove close" onclick="$('.ranking-curtain,#ranking tbody').hide();">&times;</a></div>
-		<table id="ranking" class="table table-striped  header-fixed">
+		<table class="ranking table table-striped header-fixed">
 			<caption>Seiyuu popularity rankings</caption>
+			<colgroup>
+				<col width="50%">
+				<col width="20%">
+				<col width="30%">
+			</colgroup>
 			<thead>
 				<tr>
 					<th><a href="#" ng-click="reverseSort = !reverseSort; orderByFieldR='name';">▴name▾</a></th>
@@ -38,12 +43,23 @@
 					<th><a href="#" ng-click="reverseSort = !reverseSort; orderByFieldR='accessed';">▴last accessed▾</a></th>
 				</tr>
 			</thead>
-			<tbody>
-				<tr ng-repeat="seiyuu in rankedSeiyuu | orderBy:orderByFieldR:reverseSort">
-					<td><a href="http://[[theSite+'/people/'+seiyuu._id]]">[[seiyuu.name]]</a></td><td>[[seiyuu.hits]]</td><td>[[seiyuu.accessedText]]</td>
-				</tr>
-			</tbody>
 		</table>
+		<div class="table-container">
+			<table class="ranking">
+				<colgroup>
+					<col width="50%">
+					<col width="20%">
+					<col width="30%">
+				</colgroup>
+				<tbody>
+					<tr ng-repeat="seiyuu in rankedSeiyuu | orderBy:orderByFieldR:reverseSort">
+						<td><a href="http://[[theSite+'/people/'+seiyuu._id]]">[[seiyuu.name]]</a></td>
+						<td>[[seiyuu.hits]]</td>
+						<td>[[seiyuu.accessedText]]</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 		<div class="ranking-spinner"><div class="sp sp-circle" id="ranking-spinner"></div></div>
 	</div>
 </div>
