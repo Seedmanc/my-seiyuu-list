@@ -61,12 +61,15 @@ div.seiyuu {
 }
 pre {	
 	text-align:center;
-	font-size: 16px;
 	border: 0;
+
 	background-color: #00a060;
 	color: #e1f5e7;
+
 	margin:0;
 	padding: 7px;
+
+	font-size: 16px;
 	font-family: arial;
 }
 table.text-center {
@@ -77,6 +80,7 @@ table.text-center {
 input{ 
 	text-align:center;  
 	font-size: 16px;
+
 	margin-left: -6px;
 }
 #input-holder {	
@@ -84,9 +88,11 @@ input{
 }
 #search-row{
 	background-color: #00a060;
+
 	padding-top: 5px;
 	padding-right:0;
 	padding-left: 12px;
+
 	border-radius: 0 0 4px 4px;
 }
 i {
@@ -97,6 +103,7 @@ i {
 }
 .has-feedback .form-control { 
 	padding-right: 25px;
+
 	font-size: 16px;
 }
 .form-group {
@@ -118,12 +125,14 @@ img.vapic {
 span.thumb {
 	display:inline-block;
 	width:160px;
-	height:160px; 
+	height:160px;
+
 	text-align:center; 
 	margin: 2px;
 }
 .thumb:before {
 	content: "";
+
 	display: inline-block;
 	height: 100%;
 	vertical-align: middle;
@@ -132,22 +141,26 @@ span.thumb {
 	padding-top:5px;
 	min-height: 660px;
 	margin-bottom: 10px;
+
 	text-align:center;
 }
  
 .sp-circle {
 	border: 3px rgba(0, 0, 0, 0.25) solid;
 	border-top: 3px white solid;
-	border-radius: 50%; 
+	border-radius: 50%;
+
 	animation: spCircRot 1s infinite linear; 
 }
 .sp {
-	float:left;
-	width: 28px;
-	height: 28px; 
-	display: inline-block;
 	position: relative;
 	top: 3px;
+	float:left;
+
+	width: 28px;
+	height: 28px;
+
+	display: inline-block;
 } 
 @keyframes spCircRot {
 	from { transform: rotate(0deg); }
@@ -156,7 +169,10 @@ span.thumb {
 button {
 	top:-6px;
 	position:relative;
-	opacity:0.5;
+}
+
+#ld {
+	opacity:0.7;
 }
 
 .ranking-curtain {
@@ -186,8 +202,10 @@ button {
 	text-align: center;
 }
 .ranking, .ranking th {
+	padding-right: 10px!important;
+	margin-bottom: 0;
+
 	text-align: center;
-	padding-right: 5px!important;
 }
 .ranking-spinner {
 	width: 0;
@@ -196,6 +214,7 @@ button {
 }
 .table-container {
 	max-height: 90%;
+
 	overflow-y: auto;
 }
 caption {
