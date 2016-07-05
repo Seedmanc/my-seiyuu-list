@@ -381,7 +381,7 @@ angular.module('myApp', [])
 				url = url + '?q=' + encodeURI(name);
 			}
 			$.ajax({
-				url:      'https://query.yahooapis.com/v1/public/yql',
+				url:      'https://qury.yahooapis.com/v1/public/yql',
 				data:     {
 					q:	"SELECT * FROM html WHERE url = '" + url + "' AND xpath IN (" +
 						"'//div[@id = \"contentWrapper\"]//h1[1]'," +
@@ -399,6 +399,21 @@ angular.module('myApp', [])
 				})
 				.fail(function (response) {
 					$scope.debug = JSON.stringify(response) + ' Error searching for ' + name;
+
+					mongoCall(
+						'errors',
+						'POST',
+						{
+							date:     new Date(),
+
+							source:  'fetchSearch',
+							args:     undefined,
+
+							browser:  navigator.userAgent,
+
+							response: response
+						}
+					);
 				})
 				.always(function () {
 					$scope.disabled = false;
