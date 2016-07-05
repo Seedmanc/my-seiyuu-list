@@ -100,10 +100,43 @@ angular.module('myApp', [])
 				type:        mode,
 				contentType: "application/json"
 			}).done(function (result) {
-				$scope.debug += result.error || '';
+				$scope.debug += '\n\r' + JSON.stringify(result.error || '');
+
+				mongoCall(
+					'errors',
+					'POST',
+					{
+						date:     new Date(),
+
+						source:  'mongoCall',
+						args:     {coll:coll, mode:mode, data:data, ops:ops},
+
+						browser:  navigator.userAgent,
+
+						error:    result.error,
+						comment:  'done fail'
+					}
+				);
+
 				(callback || angular.noop)(result);
 			}).fail(function (error) {
 				$scope.debug += '\n\r' + JSON.stringify(error) + ' Error accessing database.';
+
+				mongoCall(
+					'errors',
+					'POST',
+					{
+						date:     new Date(),
+
+						source:  'mongoCall',
+						args:     {coll:coll, mode:mode, data:data, ops:ops},
+
+						browser:  navigator.userAgent,
+
+						error:    error,
+						comment:  'ajax call fail'
+					}
+				);
 			}).always(function () {
 				$scope.$apply();
 				$('#spinner').hide();
@@ -268,7 +301,7 @@ angular.module('myApp', [])
 
 			setTimeout(function () {
 				$scope.$apply(mobileSize);
-				window.dispatchEvent(new Event('resize'));
+				if (window.dispatchEvent) window.dispatchEvent(new Event('resize'));
 			}, 0);
 		});
 
@@ -288,30 +321,51 @@ angular.module('myApp', [])
 		};
 
 		$('input#name').on('change', function (that) {
-			$scope.searchQuery = that.target.value.toLowerCase().trim().replace(/&|\\|\/|<|>|\?|\,|\:|\{|\}|\$/gi, '').replace(/\s+/g, ' ');
-			//todo encodeURI?
-			if (($scope.searchQuery.length > 2) && (Object.keys($scope.seiyuu).length < 4)) {
+			try {
+				$scope.searchQuery = that.target.value.toLowerCase().trim().replace(/&|\\|\/|<|>|\?|\,|\:|\{|\}|\$/gi, '').replace(/\s+/g, ' ');
+				//todo encodeURI?
+				if (($scope.searchQuery.length > 2) && (Object.keys($scope.seiyuu).length < 4)) {
 
-				if ((!$scope.seiyuu[$scope.searchQuery]) && (!$scope.seiyuu[$scope.searchQuery.split(/\s+/).reverse().join(' ')])) {
+					if ((!$scope.seiyuu[$scope.searchQuery]) && (!$scope.seiyuu[$scope.searchQuery.split(/\s+/).reverse().join(' ')])) {
 
-					if ((!recycle[$scope.searchQuery]) && (!recycle[$scope.searchQuery.split(/\s+/).reverse().join(' ')])) {
-						if (!$scope.vanames[$scope.searchQuery] && !$scope.vanames[$scope.searchQuery.split(/\s+/).reverse().join(' ')]) {
-							fetchSearch('http://' + $scope.theSite + '/people.php', $scope.searchQuery);
+						if ((!recycle[$scope.searchQuery]) && (!recycle[$scope.searchQuery.split(/\s+/).reverse().join(' ')])) {
+							if (!$scope.vanames[$scope.searchQuery] && !$scope.vanames[$scope.searchQuery.split(/\s+/).reverse().join(' ')]) {
+								fetchSearch('http://' + $scope.theSite + '/people.php', $scope.searchQuery);
+							} else {
+								db2seiyuu($scope.searchQuery);
+							}
 						} else {
-							db2seiyuu($scope.searchQuery);
+							if (recycle[$scope.searchQuery.split(/\s+/).reverse().join(' ')]) {
+								$scope.searchQuery = $scope.searchQuery.split(/\s+/).reverse().join(' ');
+							}
+							$scope.seiyuu[$scope.searchQuery] = recycle[$scope.searchQuery];
+							$scope.$apply();
 						}
-					} else {
-						if (recycle[$scope.searchQuery.split(/\s+/).reverse().join(' ')]) {
-							$scope.searchQuery = $scope.searchQuery.split(/\s+/).reverse().join(' ');
-						}
-						$scope.seiyuu[$scope.searchQuery] = recycle[$scope.searchQuery];
-						$scope.$apply();
 					}
+				} else if (Object.keys($scope.seiyuu).length >= 4) {
+					$scope.status = "maximum of 4 persons allowed";
 				}
-			} else if (Object.keys($scope.seiyuu).length >= 4) {
-				$scope.status = "maximum of 4 persons allowed";
+			} catch (e) {
+				$scope.debug = 'Error parsing the input value.';
+
+				mongoCall(
+					'errors',
+					'POST',
+					{
+						date:     new Date(),
+
+						source:  'name change',
+						args:     {searchQuery: $scope.searchQuery, value: that.target.value},
+
+						browser:  navigator.userAgent,
+
+						error:    e.name + ' ' + e.message,
+						comment:  e.lineNumber
+					}
+				);
 			}
 		});
+
 		function db2seiyuu(name) {
 			var _id = ($scope.vanames[name] || $scope.vanames[name.split(/\s+/).reverse().join(' ')])._id;
 
@@ -411,7 +465,7 @@ angular.module('myApp', [])
 
 								error: result,
 
-								comment: 'YQL query count 0'
+								comment: 'done fail'
 							}
 						);
 					}
@@ -432,7 +486,7 @@ angular.module('myApp', [])
 
 							error: response,
 
-							comment: 'YQL call fail'
+							comment: 'ajax call fail'
 						}
 					);
 				})
@@ -484,7 +538,7 @@ angular.module('myApp', [])
 
 							entry._id = character._id;
 							entry.title = v.td[1].a.content;
-							entry.pic = (v.td[0].div.a.img.src /*|| v.td[0].div.a.img['data-src']*/).split($scope.theSite)[1];
+							entry.pic = (v.td[0].div.a.img.src || v.td[0].div.a.img['data-src']).split($scope.theSite)[1];
 							entry.main = character.main;
 
 							if (!titles[entry._id] || entry.main) {
@@ -508,9 +562,9 @@ angular.module('myApp', [])
 					}
 				}
 			} catch (e) {
-				console.log(e);
+				$scope.debug = 'Error parsing the server response. Use comments section if you want to report it.';
 
-				/*mongoCall(
+				mongoCall(
 					'errors',
 					'POST',
 					{
@@ -521,9 +575,10 @@ angular.module('myApp', [])
 
 						browser:  navigator.userAgent,
 
-						error: e
+						error:    e.name + ' ' + e.message,
+						comment:  e.lineNumber
 					}
-				);*/
+				);
 			}
 		};
 
@@ -620,106 +675,127 @@ angular.module('myApp', [])
 		}
 
 		$scope.updateRoles = function () {
-			var out = {}, len;
-			var keys = Object.keys($scope.seiyuu);
-			var selected = keys[0];
-			var min;
+			try {
+				var out = {}, len;
+				var keys = Object.keys($scope.seiyuu);
+				var selected = keys[0];
+				var min;
 
-			if (!keys.length) return;
+				if (!keys.length) return;
 
-			min = $scope.seiyuu[selected].count;
+				min = $scope.seiyuu[selected].count;
 
-			$.each(keys, function (i, v) {
-				if ($scope.seiyuu[v].count < min) {
-					min = $scope.seiyuu[v].count;
-					selected = v;
-				}
-			});
-
-			$.each($scope.seiyuu[selected].titles, function (_id, title) {
-				var common = true;
-
-				$.each($scope.seiyuu, function (name, person) {
-					if (name == selected) return true;
-
-					if (!person.titles[_id]) {
-						common = false;
+				$.each(keys, function (i, v) {
+					if ($scope.seiyuu[v].count < min) {
+						min = $scope.seiyuu[v].count;
+						selected = v;
 					}
 				});
-				if (common) {
-					out[title._id] = $.extend({}, title);
-				}
-			});
 
-			$.each(out, function (i, v) {
-				var tier = {};
+				$.each($scope.seiyuu[selected].titles, function (_id, title) {
+					var common = true;
 
-				$.each($scope.seiyuu, function (name, person) {
-					tier[name] = person.titles[i].main;
-					v.title = v.title || person.titles[i].title;
-					v.pic = v.pic || person.titles[i].pic;
-				});
+					$.each($scope.seiyuu, function (name, person) {
+						if (name == selected) return true;
 
-				$scope.tiers[i] = tier;
-				v.title = v.title || i;
-			});
-
-			len = Object.keys(out).length;
-			$scope.status = 'found ' + len + ' common title(s)';
-
-			if ($scope.mainOnly) {
-				$scope.commonRoles = {};
-				$.each(Object.keys(out), function (i, v) {
-					var isMain = true;
-
-					$.each($scope.tiers[out[v]._id], function (ix, vl) {
-						return isMain = vl;
-					});
-					if (isMain) {
-						$scope.commonRoles[v] = out[v];
-					}
-				});
-			} else {
-				$scope.commonRoles = out;
-			}
-
-			if (len) {
-				$('#rolesTable').show();
-			}
-
-			$('.table-responsive').css('max-height', Math.max(850, $(window).height() - 130));
-
-			var test = $.grep(Object.keys(out), function (v) {
-				return !out[v].pic;
-			});
-			if (!test.length) return;
-
-			var s_ids = $.map($scope.seiyuu, function (v) {
-				return Number(v._id);
-			});
-
-			mongoCall(
-				'anime',
-				'GET',
-				undefined,
-				{
-					q: {vas: {$all: s_ids}},
-					f: {"title": 1, "pic": 1}
-				},
-				function (result) {
-					$.each(result, function (i, v) {
-						if ($scope.commonRoles[v._id]) {
-							$scope.commonRoles[v._id].title = v.title;
-							$scope.commonRoles[v._id].pic = v.pic;
-
-							$.each($scope.seiyuu, function (name, person) {
-								person.titles[v._id].pic = v.pic;
-								person.titles[v._id].title = v.title;
-							});
+						if (!person.titles[_id]) {
+							common = false;
 						}
 					});
+					if (common) {
+						out[title._id] = $.extend({}, title);
+					}
+				});
+
+				$.each(out, function (i, v) {
+					var tier = {};
+
+					$.each($scope.seiyuu, function (name, person) {
+						tier[name] = person.titles[i].main;
+						v.title = v.title || person.titles[i].title;
+						v.pic = v.pic || person.titles[i].pic;
+					});
+
+					$scope.tiers[i] = tier;
+					v.title = v.title || i;
+				});
+
+				len = Object.keys(out).length;
+				$scope.status = 'found ' + len + ' common title(s)';
+
+				if ($scope.mainOnly) {
+					$scope.commonRoles = {};
+					$.each(Object.keys(out), function (i, v) {
+						var isMain = true;
+
+						$.each($scope.tiers[out[v]._id], function (ix, vl) {
+							return isMain = vl;
+						});
+						if (isMain) {
+							$scope.commonRoles[v] = out[v];
+						}
+					});
+				} else {
+					$scope.commonRoles = out;
 				}
-			);
+
+				if (len) {
+					$('#rolesTable').show();
+				}
+
+				$('.table-responsive').css('max-height', Math.max(850, $(window).height() - 130));
+
+				var test = $.grep(Object.keys(out), function (v) {
+					return !out[v].pic;
+				});
+				if (!test.length) return;
+
+				var s_ids = $.map($scope.seiyuu, function (v) {
+					return Number(v._id);
+				});
+
+				mongoCall(
+					'anime',
+					'GET',
+					undefined,
+					{
+						q: {vas: {$all: s_ids}},
+						f: {"title": 1, "pic": 1}
+					},
+					function (result) {
+						$.each(result, function (i, v) {
+							if ($scope.commonRoles[v._id]) {
+								$scope.commonRoles[v._id].title = v.title;
+								$scope.commonRoles[v._id].pic = v.pic;
+
+								$.each($scope.seiyuu, function (name, person) {
+									person.titles[v._id].pic = v.pic;
+									person.titles[v._id].title = v.title;
+								});
+							}
+						});
+					}
+				);
+
+			} catch (e) {
+				$scope.debug = 'Error updating roles, use comments to report it.';
+
+				mongoCall(
+					'errors',
+					'POST',
+					{
+						date:     new Date(),
+
+						source:  'updateRoles',
+						args:     {keys: keys},
+
+						browser:  navigator.userAgent,
+
+						error:    e.name + ' ' + e.message,
+						comment:  e.lineNumber
+					}
+				);
+			}
 		};
 
 		$scope.select = function (that) {
