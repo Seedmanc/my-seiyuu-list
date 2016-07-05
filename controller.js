@@ -381,7 +381,7 @@ angular.module('myApp', [])
 				url = url + '?q=' + encodeURI(name);
 			}
 			$.ajax({
-				url:      'https://qury.yahooapis.com/v1/public/yql',
+				url:      'https://query.yahooapis.com/v1/public/yql',
 				data:     {
 					q:	"SELECT * FROM html WHERE url = '" + url + "' AND xpath IN (" +
 						"'//div[@id = \"contentWrapper\"]//h1[1]'," +
@@ -396,6 +396,25 @@ angular.module('myApp', [])
 				type:     'GET'
 			}).done(function (result) {
 					$scope.parseResults(result, overwrite);
+
+					if (result.query.count == 0) {
+						mongoCall(
+							'errors',
+							'POST',
+							{
+								date:     new Date(),
+
+								source:  'fetchSearch',
+								args:     {url: url, name: name, overwrite: overwrite},
+
+								browser:  navigator.userAgent,
+
+								error: result,
+
+								comment: 'YQL query count 0'
+							}
+						);
+					}
 				})
 				.fail(function (response) {
 					$scope.debug = JSON.stringify(response) + ' Error searching for ' + name;
@@ -407,11 +426,13 @@ angular.module('myApp', [])
 							date:     new Date(),
 
 							source:  'fetchSearch',
-							args:     undefined,
+							args:     {url: url, name: name, overwrite: overwrite},
 
 							browser:  navigator.userAgent,
 
-							response: response
+							error: response,
+
+							comment: 'YQL call fail'
 						}
 					);
 				})
@@ -425,64 +446,84 @@ angular.module('myApp', [])
 		}
 
 		$scope.parseResults = function (res, overwrite) {
-			$scope.status = "not found";
-			if (res.query.count === 0) {
-				$scope.status = "n/a";
-			}
-			else if (res.query.results.tr) {
-				var tr = Array.isArray(res.query.results.tr) ? res.query.results.tr : new Array(res.query.results.tr);
+			try {
+				$scope.status = "not found";
+				if (res.query.count === 0) {
+					$scope.status = "n/a";
 
-				if (tr[0].td.content == "Search Results") {
-					$.each(tr, function (i, v) {
-						if (i === 0) return true;
+				} else if (res.query.results.tr) {
+					var tr = Array.isArray(res.query.results.tr) ? res.query.results.tr : new Array(res.query.results.tr);
 
-						var foundName = v.td[1].a.content.replace(',', '').trim().toLowerCase();
-						if ((foundName == $scope.searchQuery) || (foundName == $scope.searchQuery.split(/\s+/).reverse().join(' '))) {
-							$scope.status = '';
-							fetchSearch('http://' + $scope.theSite + '/' + v.td[0].div.a.href);
+					if (tr[0].td.content == "Search Results") {
+						$.each(tr, function (i, v) {
+							if (i === 0) return true;
 
-							return false;
-						}
-					});
-				} else { //found
-					var va_id = Number(res.query.results.a.href.split($scope.theSite)[1].match(/people\/(\d+)\//)[1]);
-					var name = res.query.results.h1.content.replace(',', '').trim();
-					var pic = res.query.results.img.src.split($scope.theSite)[1];
-					var roles = [], titles = {};
-					var count, hits;
+							var foundName = v.td[1].a.content.replace(',', '').trim().toLowerCase();
 
-					$.each(tr, function (i, v) {
-						var character = {}, entry = {};
+							if ((foundName == $scope.searchQuery) || (foundName == $scope.searchQuery.split(/\s+/).reverse().join(' '))) {
+								$scope.status = '';
+								fetchSearch('http://' + $scope.theSite + '/' + v.td[0].div.a.href);
 
-						character.name = v.td[2].a.content.replace(',', '');
-						character.main = v.td[2].div.content.trim().toLowerCase() == "main";
-						character._id = Number(v.td[1].a.href.match(/anime\/(\d+)\//)[1]);
-						roles.push(character);
+								return false;
+							}
+						});
+					} else { //found
+						var va_id = Number(res.query.results.a.href.split($scope.theSite)[1].match(/people\/(\d+)\//)[1]);
+						var name = res.query.results.h1.content.replace(',', '').trim();
+						var pic = res.query.results.img.src.split($scope.theSite)[1];
+						var roles = [], titles = {};
+						var count, hits;
 
-						entry._id = character._id;
-						entry.title = v.td[1].a.content;
-						entry.pic = (v.td[0].div.a.img.src || v.td[0].div.a.img['data-src']).split($scope.theSite)[1];
-						entry.main = character.main;
+						$.each(tr, function (i, v) {
+							var character = {}, entry = {};
 
-						if (!titles[entry._id] || entry.main) {
-							titles[entry._id] = entry;
-						}
-					});
+							character.name = v.td[2].a.content.replace(',', '');
+							character.main = v.td[2].div.content.trim().toLowerCase() == "main";
+							character._id = Number(v.td[1].a.href.match(/anime\/(\d+)\//)[1]);
+							roles.push(character);
 
-					count = Object.keys(titles).length;
-					$scope.searchQuery = name.toLowerCase();
-					hits = $scope.vanames[$scope.searchQuery] && $scope.vanames[$scope.searchQuery].hits;
-					$scope.seiyuu[$scope.searchQuery] = {
-						'_id':  va_id,
-						name:   name,
-						pic:    pic,
-						titles: titles,
-						count:  count,
-						hits:   hits || 1
-					};
-					$scope.status = 'found ' + count + ' title(s)';
-					seiyuu2db($scope.searchQuery, roles, overwrite);
+							entry._id = character._id;
+							entry.title = v.td[1].a.content;
+							entry.pic = (v.td[0].div.a.img.src /*|| v.td[0].div.a.img['data-src']*/).split($scope.theSite)[1];
+							entry.main = character.main;
+
+							if (!titles[entry._id] || entry.main) {
+								titles[entry._id] = entry;
+							}
+						});
+
+						count = Object.keys(titles).length;
+						$scope.searchQuery = name.toLowerCase();
+						hits = $scope.vanames[$scope.searchQuery] && $scope.vanames[$scope.searchQuery].hits;
+						$scope.seiyuu[$scope.searchQuery] = {
+							'_id':  va_id,
+							name:   name,
+							pic:    pic,
+							titles: titles,
+							count:  count,
+							hits:   hits || 1
+						};
+						$scope.status = 'found ' + count + ' title(s)';
+						seiyuu2db($scope.searchQuery, roles, overwrite);
+					}
 				}
+			} catch (e) {
+				console.log(e);
+
+				/*mongoCall(
+					'errors',
+					'POST',
+					{
+						date:     new Date(),
+
+						source:  'parseResults',
+						args:     {url: res, overwrite: overwrite},
+
+						browser:  navigator.userAgent,
+
+						error: e
+					}
+				);*/
 			}
 		};
 
