@@ -177,6 +177,7 @@ button {
 	margin-right: auto;
 
 	width: 50%;
+	height:90%;
 	min-width: 300px;
 
 	background: white;
@@ -186,6 +187,7 @@ button {
 }
 .ranking, .ranking th {
 	text-align: center;
+	padding-right: 5px!important;
 }
 .ranking-spinner {
 	width: 0;
@@ -193,7 +195,7 @@ button {
 	margin-right: auto;
 }
 .table-container {
-	max-height: 100%;
+	max-height: 90%;
 	overflow-y: auto;
 }
 caption {
