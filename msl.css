@@ -167,7 +167,6 @@ span.thumb {
 	to { transform: rotate(359deg); }
 } 
 button {
-	top:-6px;
 	position:relative;
 
 	opacity: 0.9;

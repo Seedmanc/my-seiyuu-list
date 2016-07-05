@@ -854,11 +854,10 @@ angular.module('myApp', [])
 		}
 
 	}).config(['$compileProvider', function ($compileProvider) {
-		$compileProvider.debugInfoEnabled(true);
+		$compileProvider.debugInfoEnabled(false);
 	}
 ]);
 //todo show all roles for single seiyuu
 //todo nglist with looping over several names?
 //todo ngPluralize?
-//todo error reporting to db
 //todo manual updating
