@@ -32,9 +32,9 @@
 		<table class="ranking table table-striped">
 			<caption>Seiyuu popularity rankings</caption>
 			<colgroup>
-				<col width="50%">
-				<col width="20%">
-				<col width="30%">
+				<col width="40%">
+				<col width="25%">
+				<col width="35%">
 			</colgroup>
 			<thead>
 				<tr>
@@ -47,9 +47,9 @@
 		<div class="table-container">
 			<table class="ranking table table-striped">
 				<colgroup>
-					<col width="50%">
-					<col width="20%">
-					<col width="30%">
+					<col width="40%">
+					<col width="25%">
+					<col width="35%">
 				</colgroup>
 				<tbody>
 					<tr ng-repeat="seiyuu in rankedSeiyuu | orderBy:orderByFieldR:reverseSort">
@@ -214,9 +214,9 @@
 	</div>
 	<div class="row">
 		<div class="col-sm-2">
-			<button class="btn btn-default btn-block btn-xs" id="ld">toggle comments</button>
+			<button class="btn btn-default btn-block btn-xs" id="ld">comments</button>
 		</div>
-		<div id="disqus_thread" class="col-sm-8" style="display:none;"></div>
+		<div class="col-sm-8"><div id="disqus_thread" style="display:none;"></div></div>
 		<div class="col-sm-2">
 			<button class="btn btn-default btn-block btn-xs" id="showRanking" ng-click="showRanking()" >rankings</button>
 		</div>

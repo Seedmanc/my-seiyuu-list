@@ -169,6 +169,8 @@ span.thumb {
 button {
 	top:-6px;
 	position:relative;
+
+	opacity: 0.9;
 }
 
 #ld {
