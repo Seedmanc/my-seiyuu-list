@@ -31,6 +31,8 @@ angular.module('myApp', [])
 		$scope.tiers = {};
 		$scope.rankedSeiyuu = [];
 
+		var failCount = 0;
+
 		var recycle = {};
 		//var over = false;
 		var pid = 0;
@@ -100,43 +102,53 @@ angular.module('myApp', [])
 				type:        mode,
 				contentType: "application/json"
 			}).done(function (result) {
-				$scope.debug += '\n\r' + JSON.stringify(result.error || '');
 
-				mongoCall(
-					'errors',
-					'POST',
-					{
-						date:     new Date(),
+				if (result.error) {
+					$scope.debug += '\n\r' + JSON.stringify(result.error || '');
 
-						source:  'mongoCall',
-						args:     {coll:coll, mode:mode, data:data, ops:ops},
+					mongoCall(
+						'errors',
+						'POST',
+						{
+							date: new Date(),
 
-						browser:  navigator.userAgent,
+							source: 'mongoCall',
+							args:   {coll: coll, mode: mode, data: data, ops: ops},
 
-						error:    result.error,
-						comment:  'done fail'
-					}
-				);
+							browser: navigator.userAgent,
+
+							error:   result.error,
+							comment: 'done fail'
+						}
+					);
+				}
 
 				(callback || angular.noop)(result);
 			}).fail(function (error) {
 				$scope.debug += '\n\r' + JSON.stringify(error) + ' Error accessing database.';
 
-				mongoCall(
-					'errors',
-					'POST',
-					{
-						date:     new Date(),
+				if (failCount <= 3) {
 
-						source:  'mongoCall',
-						args:     {coll:coll, mode:mode, data:data, ops:ops},
+					mongoCall(
+						'errors',
+						'POST',
+						{
+							date: new Date(),
 
-						browser:  navigator.userAgent,
+							source: 'mongoCall',
+							args:   {coll: coll, mode: mode, data: data, ops: ops},
 
-						error:    error,
-						comment:  'ajax call fail'
-					}
-				);
+							browser: navigator.userAgent,
+
+							error:   error,
+							comment: 'ajax call fail ' + failCount
+						}
+					);
+
+					failCount++;
+				} else {
+					$scope.debug += '\n\r' + 'Recursive error, reload the page.';
+				}
 			}).always(function () {
 				$scope.$apply();
 				$('#spinner').hide();
@@ -459,7 +471,7 @@ angular.module('myApp', [])
 								date:     new Date(),
 
 								source:  'fetchSearch',
-								args:     {url: url, name: name, overwrite: overwrite},
+								args:     {url: url.split($scope.theSite)[1], name: name, overwrite: overwrite},
 
 								browser:  navigator.userAgent,
 
