@@ -103,9 +103,11 @@ angular.module('myApp', [])
 				contentType: "application/json"
 			}).done(function (result) {
 
-				if (result.error) {
+				if (result.error && failCount <= 3) {
 					$scope.debug += '\n\r' + JSON.stringify(result.error || '');
-
+					
+					failCount++;
+					
 					mongoCall(
 						'errors',
 						'POST',
@@ -129,6 +131,8 @@ angular.module('myApp', [])
 
 				if (failCount <= 3) {
 
+					failCount++;
+					
 					mongoCall(
 						'errors',
 						'POST',
@@ -144,11 +148,7 @@ angular.module('myApp', [])
 							comment: 'ajax call fail ' + failCount
 						}
 					);
-
-					failCount++;
-				} else {
-					$scope.debug += '\n\r' + 'Recursive error, reload the page.';
-				}
+				} 
 			}).always(function () {
 				$scope.$apply();
 				$('#spinner').hide();
