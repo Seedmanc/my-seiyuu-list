@@ -103,33 +103,16 @@ angular.module('myApp', [])
 				contentType: "application/json"
 			}).done(function (result) {
 
-				if (result.error && failCount <= 3) {
+				if (result.error) {
 					$scope.debug += '\n\r' + JSON.stringify(result.error || '');
-					
-					failCount++;
-					
-					mongoCall(
-						'errors',
-						'POST',
-						{
-							date: new Date(),
-
-							source: 'mongoCall',
-							args:   {coll: coll, mode: mode, data: data, ops: ops},
-
-							browser: navigator.userAgent,
-
-							error:   result.error,
-							comment: 'done fail'
-						}
-					);
 				}
 
 				(callback || angular.noop)(result);
+				
 			}).fail(function (error) {
 				$scope.debug += '\n\r' + JSON.stringify(error) + ' Error accessing database.';
 
-				if (failCount <= 3) {
+				if (failCount <= 2) {
 
 					failCount++;
 					
