@@ -53,7 +53,7 @@
 				</colgroup>
 				<tbody>
 					<tr ng-repeat="seiyuu in rankedSeiyuu | orderBy:orderByFieldR:reverseSort">
-						<td><a href="http://[[theSite+'/people/'+seiyuu._id]]">[[seiyuu.name]]</a></td>
+						<td><a href="http://[[theSite+'/people/'+seiyuu._id]]" target="_blank">[[seiyuu.name]]</a></td>
 						<td>[[seiyuu.hits]]</td>
 						<td>[[seiyuu.accessedText]]</td>
 					</tr>
@@ -112,7 +112,7 @@
 					<table class="text-center">
 						<tr>
 							<td colspan=2>
-								<b><a href="http://[[theSite+'/people/'+pair[0]._id]]" class="name">[[pair[0].name]]</a>
+								<b><a href="http://[[theSite+'/people/'+pair[0]._id]]" class="name" target="_blank">[[pair[0].name]]</a>
 								</b></td>
 						<tr>
 							<td colspan=2><img class="vapic img-rounded" ng-src="http://[[theSite+pair[0].pic]]"></td>
@@ -129,7 +129,7 @@
 					<table class="text-center">
 						<tr>
 							<td colspan=2>
-								<b><a href="http://[[theSite+'/people/'+pair[1]._id]]" class="name">[[pair[1].name]]</a>
+								<b><a href="http://[[theSite+'/people/'+pair[1]._id]]" class="name" target="_blank">[[pair[1].name]]</a>
 								</b>
 							</td>
 						<tr>
@@ -178,11 +178,11 @@
 								<tr ng-repeat="show in commonRoles | object2Array | orderBy:orderByField">
 									<td>[[$index + 1]]</td>
 									<td>
-										<a href="http://[[theSite+'/anime/'+show._id]]">
+										<a href="http://[[theSite+'/anime/'+show._id]]" target="_blank">
 											<img ng-if="show.pic" ng-src="http://cdn.[[theSite+show.pic]]"/>
 										</a>
 										&nbsp;
-										<a href="http://[[theSite+'/anime/'+show._id]]">[[show.title]]</a>
+										<a href="http://[[theSite+'/anime/'+show._id]]" target="_blank">[[show.title]]</a>
 									</td>
 									<td class="[[show.main || mainOnly ? 'main':'supporting']] text-center">
 										[[show.main || mainOnly ? 'main':'supporting']]

@@ -103,9 +103,9 @@ angular.module('myApp', [])
 				contentType: "application/json"
 			}).done(function (result) {
 
-				if (result.error) {
+				/*if (result.error) {
 					$scope.debug += '\n\r' + JSON.stringify(result.error || '');
-				}
+				}*/
 
 				(callback || angular.noop)(result);
 				
@@ -498,7 +498,7 @@ angular.module('myApp', [])
 			try {
 				$scope.status = "not found";
 				if (res.query.count === 0) {
-					$scope.status = "n/a";
+					$scope.status = "not found, try a different name writing";
 
 				} else if (res.query.results.tr) {
 					var tr = Array.isArray(res.query.results.tr) ? res.query.results.tr : new Array(res.query.results.tr);
