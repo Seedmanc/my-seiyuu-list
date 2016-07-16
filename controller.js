@@ -395,12 +395,13 @@ angular.module('myApp', [])
 										$inc: {hits: 1},
 										$set: {accessed: Number(new Date())}
 									},
-					'new':         true
+					'new':         true,
+					fields:              {"roles.name": 0}
 				},
 				{},
 				function (result) {
 					var updated = Date.parse(result.value.updated) / 1000;
-					var now = Date.parse(new Date().toUTCString()) / 1000;
+					var now = Number(new Date()) / 1000;
 
 					$scope.searchQuery = result.value.name.toLowerCase();
 					if ((Math.abs(now - updated) > 2592000) && false) {	//30 days, disabled
