@@ -93,8 +93,10 @@ angular.module('myApp', [])
 			}
 
 			$('#spinner').show();
+			$scope.disabled = true;
 			to = setTimeout(function () {
 				$('#spinner').hide();
+				$scope.disabled = false;
 			}, 10000);
 
 			$.ajax({
@@ -103,10 +105,6 @@ angular.module('myApp', [])
 				type:        mode,
 				contentType: "application/json"
 			}).done(function (result) {
-
-				/*if (result.error) {
-					$scope.debug += '\n\r' + JSON.stringify(result.error || '');
-				}*/
 
 				(callback || angular.noop)(result);
 				
@@ -404,6 +402,8 @@ angular.module('myApp', [])
 					var updated = Date.parse(result.value.updated) / 1000;
 					var now = Number(new Date()) / 1000;
 
+					$scope.seiyuu[result.value.name.toLowerCase()].hits = result.value.hits;
+
 					$scope.searchQuery = result.value.name.toLowerCase();
 					if ((Math.abs(now - updated) > 2592000) && over) {	// 30 days
 						fetchSearch('http://' + $scope.theSite + '/people/' + result.value._id, '', true);
@@ -625,7 +625,7 @@ angular.module('myApp', [])
 							name:     toSave.name,
 							pic:      toSave.pic,
 							count:    toSave.count,
-							hits:     overwrite ? $scope.vanames[name].hits + 1 : 1,
+							hits:     overwrite ? $scope.seiyuu[name].hits : 1,
 							roles:    roles,
 							updated:  new Date().toUTCString(),
 							accessed: Number(new Date())
