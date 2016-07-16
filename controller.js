@@ -15,26 +15,27 @@ angular.module('myApp', [])
 		};
 	})
 	.controller('myCtrl', function ($scope) {
+		$scope.commonRoles = {};
+		$scope.debug = '';
+		$scope.disabled = true;
+		$scope.mainOnly = localStorage.mainOnly == "true";
 		$scope.orderByField = ['-main', '+title'];
 		$scope.orderByFieldR = '-hits';
-		$scope.reverseSort = false;
-		$scope.theSite = '\x6d\x79\x61\x6e\x69\x6d\x65\x6c\x69\x73\x74\x2e\x6e\x65\x74';
-		$scope.commonRoles = {};
-		$scope.seiyuu = {};
-		$scope.searchQuery = '';
-		$scope.status = '';
-		$scope.vanames = {};
-		$scope.debug = '';
-		$scope.seiOut = [];
-		$scope.mainOnly = localStorage.mainOnly == "true";
-		$scope.selectedSeiyuu = '';
-		$scope.tiers = {};
 		$scope.rankedSeiyuu = [];
+		$scope.reverseSort = false;
+		$scope.searchQuery = '';
+		$scope.seiOut = [];
+		$scope.seiyuu = {};
+		$scope.selectedSeiyuu = '';
+		$scope.status = '';
+		$scope.theSite = '\x6d\x79\x61\x6e\x69\x6d\x65\x6c\x69\x73\x74\x2e\x6e\x65\x74';
+		$scope.tiers = {};
+		$scope.vanames = {};
 
 		var failCount = 0;
 
 		var recycle = {};
-		//var over = false;
+		var over = true;
 		var pid = 0;
 		var to;
 		var disqusLoaded = false;
@@ -147,6 +148,7 @@ angular.module('myApp', [])
 				$.each(result, function (i, v) {
 					$scope.vanames[v.name.toLowerCase()] = {_id: Number(v._id)};
 				});
+				$scope.disabled = false;
 				$scope.status = result.length + ' records cached';
 			}
 		);
@@ -376,8 +378,7 @@ angular.module('myApp', [])
 				function (response) {
 					if (Number(response) > 0) {
 						loadFromDB(_id);
-					}
-					else {
+					} else {
 						fetchSearch('http://' + $scope.theSite + '/people/' + _id, '', true);
 					}
 				}
@@ -404,18 +405,20 @@ angular.module('myApp', [])
 					var now = Number(new Date()) / 1000;
 
 					$scope.searchQuery = result.value.name.toLowerCase();
-					if ((Math.abs(now - updated) > 2592000) && false) {	//30 days, disabled
+					if ((Math.abs(now - updated) > 2592000) && over) {	// 30 days
 						fetchSearch('http://' + $scope.theSite + '/people/' + result.value._id, '', true);
 						return;
 					}
 
 					result.value.titles = {};
+
 					$.each(result.value.roles, function (i, v) {
 						if (!result.value.titles[v._id] || v.main) {
 							result.value.titles[v._id] = {_id: v._id, main: v.main};
 						}
 					});
 					delete result.value.roles;
+
 					$scope.seiyuu[result.value.name.toLowerCase()] = result.value;
 				}
 			);
@@ -467,7 +470,18 @@ angular.module('myApp', [])
 					}
 				})
 				.fail(function (response) {
-					$scope.debug = JSON.stringify(response) + ' Error searching for ' + name;
+
+					if (overwrite) {
+						var _id = url.match(/people\/(\d+)\//) && url.match(/people\/(\d+)\//)[1];
+
+						over = false;
+
+						if (_id) {
+							loadFromDB(_id);
+						}
+					} else {
+						$scope.debug = JSON.stringify(response) + ' Error searching for ' + name;
+					}
 
 					mongoCall(
 						'errors',
@@ -558,7 +572,17 @@ angular.module('myApp', [])
 					}
 				}
 			} catch (e) {
-				$scope.debug = 'Error parsing the server response. Use comments section if you want to report it.';
+
+				if (overwrite) {
+					var _id = $scope.vanames[$scope.searchQuery]._id;
+
+					over = false;
+					if (_id) {
+						loadFromDB(_id);
+					}
+				} else {
+					$scope.debug = 'Error parsing the server response. Use comments section if you want to report it.';
+				}
 
 				mongoCall(
 					'errors',
@@ -590,23 +614,50 @@ angular.module('myApp', [])
 				);
 			} else {
 				toSave = $scope.seiyuu[name];
-				mongoCall(
-					'seiyuu',
-					'POST',
-					{
-						_id:     toSave._id,
-						name:    toSave.name,
-						pic:     toSave.pic,
-						count:   toSave.count,
-						hits:    1,
-						roles:   roles,
-						updated: new Date().toUTCString(),
-						accessed: Number(new Date())
-					},
-					function (result) {
-						$scope.vanames[result.name.toLowerCase()] = {_id: result._id, hits: result.hits};
-					}
-				);
+
+				if (toSave._id && toSave.name && toSave.pic && toSave.count && roles.length) {
+
+					mongoCall(
+						'seiyuu',
+						'POST',
+						{
+							_id:      toSave._id,
+							name:     toSave.name,
+							pic:      toSave.pic,
+							count:    toSave.count,
+							hits:     overwrite ? toSave.hits + 1 : 1,
+							roles:    roles,
+							updated:  new Date().toUTCString(),
+							accessed: Number(new Date())
+						},
+						function (result) {
+							$scope.vanames[result.name.toLowerCase()] = {_id: result._id, hits: result.hits};
+						}
+					);
+				} else {
+					mongoCall(
+						'errors',
+						'POST',
+						{
+							date:     new Date(),
+
+							source:  'seiyuu2db',
+							args:     {name: name, roles: roles, overwrite: overwrite},
+
+							browser:  navigator.userAgent,
+
+							error:    {
+								_id:      toSave._id,
+								name:     toSave.name,
+								pic:      toSave.pic,
+								count:    toSave.count
+							},
+							comment:  'empty update field'
+						}
+					);
+				}
+
+
 				anime2db(name);
 			}
 		}
