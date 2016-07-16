@@ -625,7 +625,7 @@ angular.module('myApp', [])
 							name:     toSave.name,
 							pic:      toSave.pic,
 							count:    toSave.count,
-							hits:     overwrite ? toSave.hits + 1 : 1,
+							hits:     overwrite ? $scope.vanames[name].hits + 1 : 1,
 							roles:    roles,
 							updated:  new Date().toUTCString(),
 							accessed: Number(new Date())
