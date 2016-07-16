@@ -132,6 +132,7 @@ angular.module('myApp', [])
 					);
 				} 
 			}).always(function () {
+				$scope.disabled = false;
 				$scope.$apply();
 				$('#spinner').hide();
 			});
