@@ -35,7 +35,7 @@ angular.module('myApp', [])
 		var failCount = 0;
 
 		var recycle = {};
-		var over = true;
+		var over = false;
 		var pid = 0;
 		var to;
 		var disqusLoaded = false;
@@ -148,7 +148,7 @@ angular.module('myApp', [])
 					$scope.vanames[v.name.toLowerCase()] = {_id: Number(v._id)};
 				});
 				$scope.disabled = false;
-				$scope.status = result.length + ' records cached';
+				$scope.status = result.length + '. Adding new seiyuu is currently broken.';
 			}
 		);
 
