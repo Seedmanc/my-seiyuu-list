@@ -148,7 +148,7 @@ angular.module('myApp', [])
 					$scope.vanames[v.name.toLowerCase()] = {_id: Number(v._id)};
 				});
 				$scope.disabled = false;
-				$scope.status = result.length + '. Adding new seiyuu is currently broken.';
+				$scope.status = result.length + ' record(s) found';
 			}
 		);
 
