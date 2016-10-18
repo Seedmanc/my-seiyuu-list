@@ -431,7 +431,7 @@ angular.module('myApp', [])
 			}, 10000);
 
 			if (name) {
-				url = url + '?q=' + encodeURI(name);
+				url = url + '?q=' + encodeURI(name.replace(/\s+/g, '_'));
 			}
 			$.ajax({
 				url:      'https://query.yahooapis.com/v1/public/yql',
