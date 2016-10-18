@@ -551,7 +551,7 @@ angular.module('myApp', [])
 							entry.title = v.td[1].a.content;
 							entry.pic = (v.td[0].div.a.img.src || 
 								v.td[0].div.a.img['data-src']).split($scope.theSite)[1] || 
-								v.td[0].div.a.img['data-src'].replace(/(.*)(\/images\/anime\/)(.*)(\.)(.*)/gi, '$2$3v$4$5').replace(/\?.*$/, '');
+								v.td[0].div.a.img['data-src'].replace(/(.*)(\/images\/anime\/)(.*)(\.)(.*)/gi, '$2$3$4$5').replace(/\?.*$/, '');
 							entry.main = character.main;
 
 							if (!titles[entry._id] || entry.main) {
