@@ -404,7 +404,7 @@ angular.module('myApp', [])
 					var now = Number(new Date()) / 1000;
 
 					$scope.searchQuery = result.value.name.toLowerCase();
-					if ((Math.abs(now - updated) > 2592000) && over || true) {	// 30 days
+					if ((Math.abs(now - updated) > 2592000) && over) {	// 30 days
 						$scope.vanames[result.value.name.toLowerCase()].hits = result.value.hits;
 						fetchSearch('http://' + $scope.theSite + '/people/' + result.value._id, '', true);
 						return;
