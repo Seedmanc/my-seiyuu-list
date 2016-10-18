@@ -35,7 +35,7 @@ angular.module('myApp', [])
 		var failCount = 0;
 
 		var recycle = {};
-		var over = false;
+		var over = true;
 		var pid = 0;
 		var to;
 		var disqusLoaded = false;
@@ -404,7 +404,7 @@ angular.module('myApp', [])
 					var now = Number(new Date()) / 1000;
 
 					$scope.searchQuery = result.value.name.toLowerCase();
-					if ((Math.abs(now - updated) > 2592000) && over) {	// 30 days
+					if ((Math.abs(now - updated) > 2592000) && over || true) {	// 30 days
 						$scope.vanames[result.value.name.toLowerCase()].hits = result.value.hits;
 						fetchSearch('http://' + $scope.theSite + '/people/' + result.value._id, '', true);
 						return;
@@ -534,7 +534,8 @@ angular.module('myApp', [])
 					} else { //found
 						var va_id = Number(res.query.results.a.href.split($scope.theSite)[1].match(/people\/(\d+)\//)[1]);
 						var name = res.query.results.h1.content.replace(',', '').trim();
-						var pic = res.query.results.img.src.split($scope.theSite)[1] || res.query.results.img.src.replace(/(.*)(\/images\/voiceactors\/)(.*)/gi, '$2$3').replace(/\?.*$/, '');
+						var pic = res.query.results.img.src.split($scope.theSite)[1] || 
+						    res.query.results.img.src.replace(/(.*)(\/images\/voiceactors\/)(.*)/gi, '$2$3').replace(/\?.*$/, '');
 						var roles = [], titles = {};
 						var count, hits;
 
@@ -897,4 +898,3 @@ angular.module('myApp', [])
 //todo show all roles for single seiyuu
 //todo nglist with looping over several names?
 //todo ngPluralize?
-//todo manual updating
