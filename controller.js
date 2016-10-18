@@ -534,7 +534,7 @@ angular.module('myApp', [])
 					} else { //found
 						var va_id = Number(res.query.results.a.href.split($scope.theSite)[1].match(/people\/(\d+)\//)[1]);
 						var name = res.query.results.h1.content.replace(',', '').trim();
-						var pic = res.query.results.img.src.split($scope.theSite)[1];
+						var pic = res.query.results.img.src.split($scope.theSite)[1] || res.query.results.img.src.replace(/(.*)(\/images\/voiceactors\/)(.*)(\?.*)/gi, '$2$3');
 						var roles = [], titles = {};
 						var count, hits;
 
@@ -548,7 +548,9 @@ angular.module('myApp', [])
 
 							entry._id = character._id;
 							entry.title = v.td[1].a.content;
-							entry.pic = (v.td[0].div.a.img.src || v.td[0].div.a.img['data-src']).split($scope.theSite)[1];
+							entry.pic = (v.td[0].div.a.img.src || 
+								v.td[0].div.a.img['data-src']).split($scope.theSite)[1] || 
+								v.td[0].div.a.img['data-src']).replace(/(.*)(\/images\/anime\/)(.*)(\.)(.*)(\?.*)/gi, '$2$3v$4$5');
 							entry.main = character.main;
 
 							if (!titles[entry._id] || entry.main) {
