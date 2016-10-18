@@ -714,7 +714,8 @@ angular.module('myApp', [])
 
 					vas = [];
 					vas[0] = Number($scope.seiyuu[name]._id);
-					newRecords.push({_id: toSave._id, title: toSave.title, pic: toSave.pic, vas: vas});
+					if (toSave._id && toSave.title && toSave.pic && vas.length)
+						newRecords.push({_id: toSave._id, title: toSave.title, pic: toSave.pic, vas: vas});
 				});
 				mongoCall(
 					'anime',
