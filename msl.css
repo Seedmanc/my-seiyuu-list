@@ -229,8 +229,14 @@ img.show-pic {
 	border-color: red!important;
 }
 .c:not(:hover) {
-	border-color: #c97;
+	border-color: #c86;
 }
 .c {
-	color: #8b6000;
+	color: #8b5800;
+}
+#photos-spinner {
+	margin-left: 43%;
+	margin-top: 25%;
+	width: 128px;
+	height: 128px;
 }
