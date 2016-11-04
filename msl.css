@@ -225,3 +225,12 @@ caption {
 img.show-pic {
 	width: 22px;
 }
+.l:not(:hover) {
+	border-color: red!important;
+}
+.c:not(:hover) {
+	border-color: #b85;
+}
+.c {
+	color: #8b6400;
+}

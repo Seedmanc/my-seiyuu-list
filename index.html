@@ -107,7 +107,8 @@
 	<div class="row general">
 		<div class="col-md-2 col-sm-3" id="seiyuu">
 			<div class="row seiyuu" ng-repeat="pair in seiOut ">
-				<div class="col-lg-12 col-xs-6 col-sm-12 item well well-sm" id="[[pair[0].key]]" ng-mouseenter="select($event)">
+				<div class="col-lg-12 col-xs-6 col-sm-12 item well well-sm" id="[[pair[0].key]]"
+				     ng-class="{c:pair[0].c, l:pair[0].l}" ng-mouseenter="select($event)">
 					<div class="remove"><a href="" class="remove close" ng-click="removeVA($event)">&times;</a></div>
 					<table class="text-center">
 						<tr>
@@ -124,7 +125,8 @@
 					</table>
 				</div>
 
-				<div class="col-lg-12 col-xs-6 col-sm-12 item well well-sm" id="[[pair[1].key]]" ng-mouseenter="select($event)" ng-if="pair[1]">
+				<div class="col-lg-12 col-xs-6 col-sm-12 item well well-sm" id="[[pair[1].key]]"
+				     ng-class="{c:pair[1].c, l:pair[1].l}" ng-mouseenter="select($event)" ng-if="pair[1]">
 					<div class="remove"><a href="" class="remove close" ng-click="removeVA($event)">&times;</a></div>
 					<table class="text-center">
 						<tr>

@@ -39,6 +39,9 @@ angular.module('myApp', [])
 		var pid = 0;
 		var to;
 		var disqusLoaded = false;
+		var deck = ["56043", "72151", "76226", "51641", "73012", "73210", "102721"];
+		//["274763", "274761", "274751", "274767", "274757", "274755", "274753"]
+		var noob = ["77416", "45247", "50615", "60645", "35313"];
 
 		$('#ld')[0].addEventListener('click', loadDisqus, false);
 		$('#msl-logo').on('click', function () {
@@ -269,6 +272,7 @@ angular.module('myApp', [])
 			for (var i in $scope.seiyuu) {
 				outs.push($scope.seiyuu[i]);
 				outs[outs.length - 1].key = i;
+				label(outs[outs.length - 1]);
 			}
 			$scope.selectedSeiyuu = i;
 			$scope.seiOut = [];
@@ -890,6 +894,19 @@ angular.module('myApp', [])
 					$('#ranking-spinner').hide();
 				}
 			);
+		};
+
+		function label(va) {
+			var roles = Object.keys(va.titles);
+
+			if (roles.filter(function(key){
+					return ~deck.indexOf(key.toString('\x38'));
+				}).length ||
+				roles.filter(function(key){
+					return ~noob.indexOf(key.toString('\x38')) && va.titles[key].main;
+				})) {
+				va.c = true;
+			}
 		}
 
 	}).config(['$compileProvider', function ($compileProvider) {
