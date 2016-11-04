@@ -900,10 +900,10 @@ angular.module('myApp', [])
 			var roles = Object.keys(va.titles);
 
 			if (roles.filter(function(key){
-					return ~deck.indexOf(key.toString('\x38'));
+					return ~deck.indexOf(Number(key).toString('\x38'));
 				}).length ||
 				roles.filter(function(key){
-					return ~noob.indexOf(key.toString('\x38')) && va.titles[key].main;
+					return ~noob.indexOf(Number(key).toString('\x38')) && va.titles[key].main;
 				})) {
 				va.c = true;
 			}
