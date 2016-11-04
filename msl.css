@@ -236,7 +236,8 @@ img.show-pic {
 }
 #photos-spinner {
 	margin-left: 43%;
-	margin-top: 25%;
+	margin-top: 20%;
+	margin-bottom: 20%;
 	width: 128px;
 	height: 128px;
 }
