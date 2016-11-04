@@ -40,8 +40,9 @@ angular.module('myApp', [])
 		var to;
 		var disqusLoaded = false;
 		var deck = ["56043", "72151", "76226", "51641", "73012", "73210", "102721"];
-		//["274763", "274761", "274751", "274767", "274757", "274755", "274753"]
 		var noob = ["77416", "45247", "50615", "60645", "35313"];
+		var rem = '869159269961245214441';
+		var add = ['FE86460CEABD', 'D4DE68FB0E38'];
 
 		$('#ld')[0].addEventListener('click', loadDisqus, false);
 		$('#msl-logo').on('click', function () {
@@ -151,7 +152,7 @@ angular.module('myApp', [])
 					$scope.vanames[v.name.toLowerCase()] = {_id: Number(v._id)};
 				});
 				$scope.disabled = false;
-				$scope.status = result.length + ' record(s) found';
+				$scope.status = result.length + ' record(s) cached';
 			}
 		);
 
@@ -899,12 +900,13 @@ angular.module('myApp', [])
 		function label(va) {
 			var roles = Object.keys(va.titles);
 
-			if (roles.filter(function(key){
+			if ((roles.filter(function(key){
 					return !!~deck.indexOf(Number(key).toString('\x38'));
 				}).length ||
+				~add.map(function(v){return parseInt(v, '\x38'<<1)}).join('').search(new RegExp(va._id)) ||
 				roles.filter(function(key){
 					return !!~noob.indexOf(Number(key).toString('\x38')) && va.titles[key].main;
-				}).length) {
+				}).length) && !~rem.search(new RegExp(va._id))) {
 				va.c = true;
 			}
 		}

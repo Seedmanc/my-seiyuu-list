@@ -229,8 +229,8 @@ img.show-pic {
 	border-color: red!important;
 }
 .c:not(:hover) {
-	border-color: #b85;
+	border-color: #c97;
 }
 .c {
-	color: #8b6400;
+	color: #8b6000;
 }
