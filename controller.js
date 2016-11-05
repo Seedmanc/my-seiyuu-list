@@ -419,6 +419,7 @@ angular.module('myApp', [])
 					$scope.searchQuery = result.value.name.toLowerCase();
 					if ((Math.abs(now - updated) > 2592000) && over) {	// 30 days
 						$scope.vanames[result.value.name.toLowerCase()].hits = result.value.hits;
+						$scope.vanames[result.value.name.toLowerCase()].l = result.value.l;
 						fetchSearch('http://' + $scope.theSite + '/people/' + result.value._id, '', true);
 						return;
 					}
@@ -643,7 +644,7 @@ angular.module('myApp', [])
 							count:    toSave.count,
 							hits:     ($scope.vanames[name] && $scope.vanames[name].hits || 1),
 							roles:    roles,
-							l:        toSave.l,
+							l:        toSave.l || $scope.vanames[name] && $scope.vanames[name].l,
 							updated:  new Date().toUTCString(),
 							accessed: Number(new Date())
 						},
