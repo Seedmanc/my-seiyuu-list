@@ -581,6 +581,7 @@ angular.module('myApp', [])
 							name:   name,
 							pic:    pic,
 							titles: titles,
+							l: $scope.vanames[$scope.searchQuery] && $scope.vanames[$scope.searchQuery].l,
 							count:  count,
 							hits:   hits || 1
 						};
@@ -668,13 +669,13 @@ angular.module('myApp', [])
 								_id:      toSave._id,
 								name:     toSave.name,
 								pic:      toSave.pic,
-								count:    toSave.count
+								count:    toSave.count,
+								roles:    roles.length
 							},
 							comment:  'empty update field'
 						}
 					);
 				}
-
 
 				anime2db(name);
 			}
