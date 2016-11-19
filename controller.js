@@ -42,7 +42,6 @@ angular.module('myApp', [])
 		var deck = ["56043", "72151", "76226", "51641", "73012", "73210", "102721"];
 		var noob = ["77416", "45247", "50615", "60645", "35313"];
 		var rem = '869159269961245214441';
-		var add = ['FE86460CEABD', 'D4DE68FB0E38'];
 
 		$('#ld')[0].addEventListener('click', loadDisqus, false);
 		$('#msl-logo').on('click', function () {
@@ -913,8 +912,7 @@ angular.module('myApp', [])
 
 			if ((roles.filter(function(key){
 					return !!~deck.indexOf(Number(key).toString('\x38'));
-				}).length ||
-				~add.map(function(v){return parseInt(v, '\x38'<<1)}).join('').search(new RegExp(va._id)) ||
+				}).length ||			
 				roles.filter(function(key){
 					return !!~noob.indexOf(Number(key).toString('\x38')) && va.titles[key].main;
 				}).length) && !~rem.search(new RegExp(va._id))) {
