@@ -198,7 +198,7 @@ angular.module('myApp', [])
 			}
 			$('#photos-spinner').show();
 			$('#thumbContainer').hide();
-			$('#thumbContainer').load('https://crossorigin.me/'+encodeURIComponent('http://koe.booru.org/index.php?page=post&s=list&tags=' + tags + '&pid=') + pid + ' div.content span.thumb',
+			$('#thumbContainer').load('https://crossorigin.me/http://'+encodeURIComponent('koe.booru.org/index.php?page=post&s=list&tags=' + tags + '&pid=') + pid + ' div.content span.thumb',
 				function (response, status, xhr) {
 					gotPics(tags, status, xhr);
 					$('#photos-spinner').hide();
@@ -227,7 +227,7 @@ angular.module('myApp', [])
 			if (thumbs.length == 0 && ~tags.indexOf('solo')) {
 				$('#photos-spinner').show();
 				$('#thumbContainer').hide();
-				$('#thumbContainer').load('https://crossorigin.me/'+encodeURIComponent('http://koe.booru.org/index.php?page=post&s=list&tags=' + tags.replace('+solo', '') + '&pid=') + pid + ' div.content span.thumb', function (response, status, xhr) {
+				$('#thumbContainer').load('https://crossorigin.me/http://'+encodeURIComponent('koe.booru.org/index.php?page=post&s=list&tags=' + tags.replace('+solo', '') + '&pid=') + pid + ' div.content span.thumb', function (response, status, xhr) {
 					$('#photos-spinner').hide();
 					$('#thumbContainer').show();
 					gotPics(tags.replace('+solo', ''), status, xhr);
