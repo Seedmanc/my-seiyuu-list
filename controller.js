@@ -169,6 +169,44 @@ angular.module('myApp', [])
 			updatePics();
 		});
 
+		function loadPics(tags){
+			var thumbContainer = $('#thumbContainer');
+			var koeurl = 'http://koe.booru.org/index.php?page=post&s=list&tags=' + tags + '&pid=' + pid;
+
+			$('#photos-spinner').show();
+			thumbContainer.hide();
+			$.ajax({
+				url:      'https://query.yahooapis.com/v1/public/yql',
+				data:     {
+					q:	"SELECT * FROM html WHERE url = '" + koeurl + "' AND xpath IN (" +
+						  "'//div[@id=\"paginator\"]'," +
+						  "'//div[@class = \"content\"]//span[@class = \"thumb\"]'" +
+						  ")",
+					format: "json"
+				},
+				dataType: "json",
+				type:     'GET'
+			}).done(function(data){
+				if (data.query.count !== 0) {
+					data.query.results.span.forEach(function(span) {
+						thumbContainer.append($('<span class="thumb">' +
+							'<a href="'+span.a.href+'">' +
+							'<img src="'+span.a.img.src+'">' +
+							'</a>' +
+							'</span>')
+						);
+					});
+					gotPics(tags);
+				} else if (!data.query.results.div) {
+					gotPics(tags, true);
+				}
+				$('#photos-spinner').hide();
+				thumbContainer.show();
+			}).fail(function(xhr){
+				gotPics(tags, true, xhr);
+			});
+		}
+
 		function updatePics() {
 			var cntr = 0, tags;
 
@@ -196,52 +234,14 @@ angular.module('myApp', [])
 			} else {
 				$('#prev').hide();
 			}
-			$('#photos-spinner').show();
-			var thumbContainer = $('#thumbContainer');
-			thumbContainer.hide();
-			var koeurl = 'http://koe.booru.org/index.php?page=post&s=list&tags=' + tags + '&pid=' + pid;
-			$.ajax({
-				url:      'https://query.yahooapis.com/v1/public/yql',
-				data:     {
-					q:	"SELECT * FROM html WHERE url = '" + koeurl + "' AND xpath IN (" +
-							  "'//div[@id=\"paginator\"]'," +
-							  "'//div[@class = \"content\"]//span[@class = \"thumb\"]'" +
-						  ")",
-					format: "json"
-				},
-				dataType: "json",
-				type:     'GET'
-			}).done(function(data){
-				if (data.query.count !== 0) {
-					data.query.results.span.forEach(function(span) {
-						thumbContainer.append($('<span class="thumb">' +
-							'<a href="'+span.a.href+'">' +
-								'<img src="'+span.a.img.src+'">' +
-							'</a>' +
-						'</span>')
-						);
-					});
-					gotPics(tags);
-				} else if (!data.query.results.div) {
-					gotPics(tags, 'error');
-				}
-				$('#photos-spinner').hide();
-				thumbContainer.show();
-			}).fail(function(xhr){
-				gotPics(tags, 'error', xhr);
-			});
 
-			/*$('#thumbContainer').load('https://crossorigin.me/http://koe.booru.org/index.php%3Fpage=post&s=list&tags=' + tags + '&pid=' + pid + ' div.content span.thumb',
-				function (response, status, xhr) {
-
-				}
-			);*/
+			loadPics(tags);
 		}
 
-		function gotPics(tags, status, xhr) {
+		function gotPics(tags, stop, xhr) {
 			var thumbs = $('span.thumb'), moreTags;
 
-			if (status == 'error') {
+			if (stop) {
 				$scope.debug += '\n\r' + (xhr ? xhr.status + " " + xhr.statusText : "") +
 					' Pictures could not be retrieved now. You can see them here: ';
 				$scope.$apply();
@@ -255,16 +255,10 @@ angular.module('myApp', [])
 				v.href = $(v).find('img').attr('src').replace('thumbs', 'img').replace('thumbnails', 'images').replace('thumbnail_', '');
 				v.target = "_blank";
 			});
-			if (thumbs.length == 0 && ~tags.indexOf('solo')) {return;
-				$('#photos-spinner').show();
-				$('#thumbContainer').hide();
-				$('#thumbContainer').load('https://crossorigin.me/http://koe.booru.org/index.php%3fpage=post&s=list&tags=' + tags.replace('+solo', '') + '&pid=' + pid + ' div.content span.thumb', function (response, status, xhr) {
-					$('#photos-spinner').hide();
-					$('#thumbContainer').show();
-					gotPics(tags.replace('+solo', ''), status, xhr);
-				});
+			if (thumbs.length == 0 && ~tags.indexOf('solo')) {
+				loadPics(tags.replace('+solo', ''));
 
-
+				return;
 			}
 			if (thumbs.length < 20) {
 				moreTags = '~' + tags.replace('+solo', '').replace(/\+/g, '+~');
