@@ -214,7 +214,7 @@ angular.module('myApp', [])
 			}).done(function(data){
 				if (data.query.count !== 0) {
 					data.query.results.span.forEach(function(span) {
-						thumbContainer.appendChild($('<span class="thumb">' +
+						thumbContainer.append($('<span class="thumb">' +
 							'<a href="'+span.a.href+'">' +
 								'<img src="'+span.a.img.src+'">' +
 							'</a>' +
