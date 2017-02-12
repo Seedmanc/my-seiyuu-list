@@ -188,7 +188,7 @@ angular.module('myApp', [])
 				dataType: "json",
 				type:     'GET'
 			}).done(function(data){
-				if (data.query.count !== 0) {
+				if (data.query.results.span) {
 					data.query.results.span.forEach(function(span) {
 						thumbContainer.append($('<span class="thumb">' +
 							'<a href="'+span.a.href+'">' +
@@ -198,8 +198,10 @@ angular.module('myApp', [])
 						);
 					});
 					gotPics(tags);
-				} else if (data.query.results && !data.query.results.div) {
+				} else if (!data.query.count) {
 					gotPics(tags, true);
+				} else {
+					gotPics(tags);
 				}
 				thumbContainer.show();
 			}).fail(function(xhr){
