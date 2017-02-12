@@ -173,13 +173,14 @@ angular.module('myApp', [])
 			var thumbContainer = $('#thumbContainer');
 			var koeurl = 'http://koe.booru.org/index.php?page=post&s=list&tags=' + tags + '&pid=' + pid;
 
+			thumbContainer.empty();
 			$('#photos-spinner').show();
 			thumbContainer.hide();
 			$.ajax({
 				url:      'https://query.yahooapis.com/v1/public/yql',
 				data:     {
 					q:	"SELECT * FROM html WHERE url = '" + koeurl + "' AND xpath IN (" +
-						  "'//div[@id=\"paginator\"]'," +
+						  "'//div[@id=\"tag_list\"]'," +
 						  "'//div[@class = \"content\"]//span[@class = \"thumb\"]'" +
 						  ")",
 					format: "json"
@@ -197,13 +198,14 @@ angular.module('myApp', [])
 						);
 					});
 					gotPics(tags);
-				} else if (!data.query.results.div) {
+				} else if (data.query.results && !data.query.results.div) {
 					gotPics(tags, true);
 				}
-				$('#photos-spinner').hide();
 				thumbContainer.show();
 			}).fail(function(xhr){
 				gotPics(tags, true, xhr);
+			}).always(function(){
+				$('#photos-spinner').hide();
 			});
 		}
 
@@ -263,7 +265,7 @@ angular.module('myApp', [])
 			if (thumbs.length < 20) {
 				moreTags = '~' + tags.replace('+solo', '').replace(/\+/g, '+~');
 				$('#next').hide();
-				thumbs.last().after('<span class="thumb">more at  <b><a href="http://koe.booru.org/index.php?page=post&s=list&tags=' + moreTags + '">koe.booru.org</a></b></span>');
+				thumbs.last().after('<span class="thumb">more at  <b><a href="http://koe.booru.org/index.php?page=post&s=list&tags=' + moreTags + '" target="_blank">koe.booru.org</a></b></span>');
 			} else {
 				$('#next').show();
 			}
