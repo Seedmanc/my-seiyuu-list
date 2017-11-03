@@ -241,3 +241,6 @@ img.show-pic {
 	width: 128px;
 	height: 128px;
 }
+.img-thumbnail {
+	padding: 0!important;
+}

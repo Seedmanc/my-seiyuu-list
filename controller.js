@@ -180,7 +180,7 @@ angular.module('myApp', [])
 				url:      'https://query.yahooapis.com/v1/public/yql',
 				data:     {
 					q:	"SELECT * FROM htmlstring WHERE url = '" + koeurl + "' AND xpath IN (" +
-						  "'//div[@id=\"tag_list\"]'," +
+						  "'//div[@id=\"tag_list\"]//h5'," +
 						  "'//div[@class = \"content\"]//span[@class = \"thumb\"]'" +
 						  ")",
 					format: "json",
@@ -189,15 +189,8 @@ angular.module('myApp', [])
 				dataType: "json",
 				type:     'GET'
 			}).done(function(data){
-				if (data.query.results.span) {
-					data.query.results.span.forEach(function(span) {
-						thumbContainer.append($('<span class="thumb">' +
-							'<a href="'+span.a.href+'">' +
-							'<img src="'+span.a.img.src+'">' +
-							'</a>' +
-							'</span>')
-						);
-					});
+				if (data.query.results && data.query.results.result[1]) {
+					thumbContainer.append($(data.query.results.result[1].replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,'')));
 					gotPics(tags);
 				} else if (!data.query.count) {
 					gotPics(tags, true);
