@@ -179,11 +179,12 @@ angular.module('myApp', [])
 			$.ajax({
 				url:      'https://query.yahooapis.com/v1/public/yql',
 				data:     {
-					q:	"SELECT * FROM html WHERE url = '" + koeurl + "' AND xpath IN (" +
+					q:	"SELECT * FROM htmlstring WHERE url = '" + koeurl + "' AND xpath IN (" +
 						  "'//div[@id=\"tag_list\"]'," +
 						  "'//div[@class = \"content\"]//span[@class = \"thumb\"]'" +
 						  ")",
-					format: "json"
+					format: "json",
+					env: 'store://datatables.org/alltableswithkeys'
 				},
 				dataType: "json",
 				type:     'GET'
@@ -425,7 +426,7 @@ angular.module('myApp', [])
 			);
 		}
 
-		function loadFromDB(_id) {
+		function loadFromDB(_id, noInc) {
 			mongoCall(
 				'seiyuu',
 				'runCommand',
@@ -433,7 +434,7 @@ angular.module('myApp', [])
 					findAndModify: "seiyuu",
 					query:         {_id: _id},
 					update:        {
-										$inc: {hits: 1},
+										$inc: {hits: noInc ? 0 : 1},
 										$set: {accessed: Number(new Date())}
 									},
 					'new':         true,
@@ -448,22 +449,25 @@ angular.module('myApp', [])
 					if ((Math.abs(now - updated) > 2592000) && over) {	// 30 days
 						$scope.vanames[result.value.name.toLowerCase()].hits = result.value.hits;
 						$scope.vanames[result.value.name.toLowerCase()].l = result.value.l;
+						$scope.cached = result;
 						fetchSearch('http://' + $scope.theSite + '/people/' + result.value._id, '', true);
 						return;
 					}
-
-					result.value.titles = {};
-
-					$.each(result.value.roles, function (i, v) {
-						if (!result.value.titles[v._id] || v.main) {
-							result.value.titles[v._id] = {_id: v._id, main: v.main};
-						}
-					});
-					delete result.value.roles;
-
-					$scope.seiyuu[result.value.name.toLowerCase()] = result.value;
+					onLoadFromDB(result);
 				}
 			);
+		}
+		function onLoadFromDB(result) {
+			result.value.titles = {};
+
+			$.each(result.value.roles, function (i, v) {
+				if (!result.value.titles[v._id] || v.main) {
+					result.value.titles[v._id] = {_id: v._id, main: v.main};
+				}
+			});
+			delete result.value.roles;
+
+			$scope.seiyuu[result.value.name.toLowerCase()] = result.value;
 		}
 
 		function fetchSearch(url, name, overwrite) {
@@ -493,6 +497,21 @@ angular.module('myApp', [])
 					$scope.parseResults(result, overwrite);
 
 					if (result.query.count == 0) {
+						if (overwrite) {
+							var _id = url.match(/people\/(\d+)\/?/) && url.match(/people\/(\d+)\/?/)[1];
+
+							over = false;
+
+							if (_id) {
+								$scope.status = '';
+								if ($scope.cached && $scope.cached.value.name.toLowerCase() == $scope.searchQuery) {
+									onLoadFromDB($scope.cached);
+									delete $scope.cached;
+								} else {
+									loadFromDB(+_id, true);
+								}
+							}
+						}
 						mongoCall(
 							'errors',
 							'POST',
@@ -514,7 +533,7 @@ angular.module('myApp', [])
 				.fail(function (response) {
 
 					if (overwrite) {
-						var _id = url.match(/people\/(\d+)\//) && url.match(/people\/(\d+)\//)[1];
+						var _id = url.match(/people\/(\d+)\/?/) && url.match(/people\/(\d+)\/?/)[1];
 
 						over = false;
 
