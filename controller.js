@@ -476,11 +476,11 @@ angular.module('myApp', [])
 				url:      'https://query.yahooapis.com/v1/public/yql',
 				data:     {
 					q:	"SELECT * FROM html WHERE url = '" + url + "' AND xpath IN (" +
-						"'//div[@id = \"contentWrapper\"]//h1[1]'," +
-						"'//div[@id = \"content\"]//form[@name = \"searchVA\"]/following::table[1]//tr'," +
-						"'//div[@id = \"content\"]/table/tbody/tr/td[2]/div[@class = \"normal_header\"][1]/following-sibling::*[1]//tr'," +
-						"'//div[@id = \"content\"]/table/tbody/tr/td[1]/div[1]/a/img'," +
-						"'//div[@id = \"content\"]/table/tbody/tr/td[2]/div[2]/div[3]/a'" +
+						"'//div[@id = \"contentWrapper\"]//h1[1]'," +                           // seiyuu name on page
+						"'//div[@id = \"content\"]//form[@name = \"searchVA\"]/following::table[1]//tr'," + // list of search results
+						"'//div[@id = \"content\"]/table/tbody/tr/td[2]/div[@class = \"normal_header\"][1]/following-sibling::*[1]//tr'," + // list of roles
+						"'//div[@id = \"content\"]/table/tbody/tr/td[1]/div[1]/a/img'," +   // photo
+						"'//div[@id = \"content\"]/table/tbody/tr/td[2]/div[2]/div[3]/a'" + // page link
 					")",
 					format: "json"
 				},
