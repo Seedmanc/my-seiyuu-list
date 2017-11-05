@@ -972,9 +972,11 @@ angular.module('myApp', [])
 	}
 ]).directive('fallback', function() {
 	return {
-		link: function(scope, element, attrs) {
+		link: function(scope, element) {
 			element.bind('error', function() {
 				element.attr('src', element.attr('src').replace('v.', '.'));
+				element.unbind('error');
+				element.removeAttr('fallback');
 			});
 		}
 	}
