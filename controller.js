@@ -117,7 +117,7 @@ angular.module('myApp', [])
 				if (failCount <= 2) {
 
 					failCount++;
-					
+
 					mongoCall(
 						'errors',
 						'POST',
@@ -155,18 +155,18 @@ angular.module('myApp', [])
 			}
 		);
 
-		$('.toggleTabs').on('click', function () {
-			$('#anime,#photos').toggleClass('btn-success btn-default');
-		});
-
 		$('#anime').on('click', function () {
 			$('#roles').show();
 			$('#pics').hide();
+			$('#anime').addClass('btn-success');
+			$('#photos').removeClass('btn-success');
 		});
 		$('#photos').on('click', function () {
 			$('#pics').show();
 			$('#roles').hide();
 			updatePics();
+			$('#photos').addClass('btn-success');
+			$('#anime').removeClass('btn-success');
 		});
 
 		function loadPics(tags){
@@ -361,7 +361,7 @@ angular.module('myApp', [])
 
 						if ((!recycle[$scope.searchQuery]) && (!recycle[$scope.searchQuery.split(/\s+/).reverse().join(' ')])) {
 							if (!$scope.vanames[$scope.searchQuery] && !$scope.vanames[$scope.searchQuery.split(/\s+/).reverse().join(' ')]) {
-								fetchSearch('http://' + $scope.theSite + '/people.php', $scope.searchQuery);
+								fetchSearch('https://' + $scope.theSite + '/people.php', $scope.searchQuery);
 							} else {
 								db2seiyuu($scope.searchQuery);
 							}
@@ -475,21 +475,23 @@ angular.module('myApp', [])
 			$.ajax({
 				url:      'https://query.yahooapis.com/v1/public/yql',
 				data:     {
-					q:	"SELECT * FROM html WHERE url = '" + url + "' AND xpath IN (" +
+					q:	"SELECT * FROM htmlstring WHERE url = '" + url + "' AND xpath IN (" +
 						"'//div[@id = \"contentWrapper\"]//h1[1]'," +                           // seiyuu name on page
 						"'//div[@id = \"content\"]//form[@name = \"searchVA\"]/following::table[1]//tr'," + // list of search results
 						"'//div[@id = \"content\"]/table/tbody/tr/td[2]/div[@class = \"normal_header\"][1]/following-sibling::*[1]//tr'," + // list of roles
 						"'//div[@id = \"content\"]/table/tbody/tr/td[1]/div[1]/a/img'," +   // photo
 						"'//div[@id = \"content\"]/table/tbody/tr/td[2]/div[2]/div[3]/a'" + // page link
 					")",
-					format: "json"
+					format: "json",
+					env: 'store://datatables.org/alltableswithkeys'
 				},
 				dataType: "json",
 				type:     'GET'
 			}).done(function (result) {
-					$scope.parseResults(result, overwrite);
+					var entries = result.query && result.query.results && result.query.results.result;
+					$scope.parseResults(entries, overwrite);
 
-					if (result.query.count == 0) {
+					if (result.query.count == 0 || !(entries && entries.filter(el=>!!el).length>=2)) {
 						if (overwrite) {
 							var _id = url.match(/people\/(\d+)\/?/) && url.match(/people\/(\d+)\/?/)[1];
 
@@ -566,46 +568,45 @@ angular.module('myApp', [])
 		$scope.parseResults = function (res, overwrite) {
 			try {
 				$scope.status = "not found";
-				if (res.query.count === 0) {
-					$scope.status = "not found, try a different name writing";
+				if (res.filter(el=>!!el).length>2 && (res[1] || res[2])) {
+					entries = res.map(el => $(el.replace(/\n/gim,'')));
+					var search = entries[1];
+					var tr = entries[2];
 
-				} else if (res.query.results.tr) {
-					var tr = Array.isArray(res.query.results.tr) ? res.query.results.tr : new Array(res.query.results.tr);
-
-					if (tr[0].td.content == "Search Results") {
-						$.each(tr, function (i, v) {
+					if (search && search.find('td').eq(0).text() == "Search Results") {
+						search.each(function (i) {
 							if (i === 0) return true;
 
-							var foundName = v.td[1].a.content.replace(',', '').trim().toLowerCase();
+							var foundName = search.eq(i).find('td:nth-of-type(2) a').text().replace(',', '').trim().toLowerCase();
 
 							if ((foundName == $scope.searchQuery) || (foundName == $scope.searchQuery.split(/\s+/).reverse().join(' '))) {
 								$scope.status = '';
-								fetchSearch('http://' + $scope.theSite + '/' + v.td[0].div.a.href);
+								fetchSearch('http://' + $scope.theSite + '/' + search.eq(i).find('td:nth-of-type(2) a').attr('href'));
 
 								return false;
 							}
 						});
 					} else { //found
-						var va_id = Number(res.query.results.a.href.split($scope.theSite)[1].match(/people\/(\d+)\//)[1]);
-						var name = res.query.results.h1.content.replace(',', '').trim();
-						var pic = res.query.results.img.src.split($scope.theSite)[1] || 
-						    res.query.results.img.src.replace(/(.*)(\/images\/voiceactors\/)(.*)/gi, '$2$3').replace(/\?.*$/, '');
+						var va_id = Number(entries[4].attr('href').split($scope.theSite)[1].match(/people\/(\d+)\//)[1]);
+						var name = entries[0].text().replace(',', '').trim();
+						var pic = entries[3].attr('src').replace(/(.*)(\/images\/voiceactors\/)(.*)/gi, '$2$3').replace(/\?.*$/, '').replace('webp','jpg');
 						var roles = [], titles = {};
 						var count, hits;
 
-						$.each(tr, function (i, v) {
+						tr.each(function (i) {
 							var character = {}, entry = {};
 
-							character.name = v.td[2].a.content.replace(',', '');
-							character.main = v.td[2].div.content.trim().toLowerCase() == "main";
-							character._id = Number(v.td[1].a.href.match(/anime\/(\d+)\//)[1]);
+							character.name = tr.eq(i).find('td:nth-of-type(3) a').text().replace(',', '');
+							character.main = tr.eq(i).find('td:nth-of-type(3) div').text().trim().toLowerCase() == "main";
+							character._id = Number(tr.eq(i).find('td:nth-of-type(2) a').attr('href').match(/anime\/(\d+)\//)[1]);
 							roles.push(character);
 
 							entry._id = character._id;
-							entry.title = v.td[1].a.content;
-							entry.pic = (v.td[0].div.a.img.src || 
-								v.td[0].div.a.img['data-src']).split($scope.theSite)[1] || 
-								v.td[0].div.a.img['data-src'].replace(/(.*)(\/images\/anime\/)(.*)(\.)(.*)/gi, '$2$3$4$5').replace(/\?.*$/, '');
+							entry.title = tr.eq(i).find('td:nth-of-type(2) > a').text();
+							entry.pic = (
+								tr.eq(i).find('td:nth-of-type(1) img').attr('src') ||
+								tr.eq(i).find('td:nth-of-type(1) img').attr('data-src')
+								).replace(/(.*)(\/images\/anime\/)(.*)(\.)(.*)/gi, '$2$3$4$5').replace(/\?.*$/, '').replace('webp','jpg').replace('.jpg','v.jpg');
 							entry.main = character.main;
 
 							if (!titles[entry._id] || entry.main) {
@@ -636,7 +637,12 @@ angular.module('myApp', [])
 
 					over = false;
 					if (_id) {
-						loadFromDB(_id);
+						if ($scope.cached && $scope.cached.value.name.toLowerCase() == $scope.searchQuery) {
+							onLoadFromDB($scope.cached);
+							delete $scope.cached;
+						} else {
+							loadFromDB(+_id, true);
+						}
 					}
 				} else {
 					$scope.debug = 'Error parsing the server response. Use comments section if you want to report it.';
@@ -964,7 +970,15 @@ angular.module('myApp', [])
 	}).config(['$compileProvider', function ($compileProvider) {
 		$compileProvider.debugInfoEnabled(false);
 	}
-]);
+]).directive('fallback', function() {
+	return {
+		link: function(scope, element, attrs) {
+			element.bind('error', function() {
+				element.attr('src', element.attr('src').replace('v.', '.'));
+			});
+		}
+	}
+});
 //todo show all roles for single seiyuu
 //todo nglist with looping over several names?
 //todo ngPluralize?

@@ -19,7 +19,7 @@
 	<script src="lib/jquery.min.js"></script>
 	<script src="lib/angular.min.js"></script>
 	<script src="controller.js"></script>
-	<link href="lib/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+	<link href="lib/bootstrap.min.css" rel="stylesheet">
 	<link href="msl.css" rel="stylesheet">
 
 
@@ -70,7 +70,7 @@
 			<div class="col-sm-2" id="input-holder">
 				<form>
 					<div class="form-group  has-feedback">
-						<input type="text" id="name" placeholder="seiyuu name" ng-model="searchQuery" ngTrim="true"
+						<input type="text" id="name" placeholder="1 seiyuu name" ng-model="searchQuery" ngTrim="true"
 						       ng-disabled="disable()" autofocus ng-change="inputChange()"
 						       class=" form-control  input-md">
 						<i class="glyphicon glyphicon-search form-control-feedback"></i>
@@ -151,7 +151,7 @@
 		<div class="col-md-10 col-sm-9" id="details" style="display:none;">
 
 			<div class="btn-group btn-group-justified">
-				<a href="#" class="toggleTabs btn btn-success" id="anime"><b> titles </b></a>
+				<a href="#" class="toggleTabs btn btn-success btn-default" id="anime"><b> titles </b></a>
 				<a href="#" class="toggleTabs btn btn-default" id="photos"><b> photos </b></a>
 			</div>
 			<div class="row">
@@ -182,7 +182,7 @@
 									<td>[[$index + 1]]</td>
 									<td>
 										<a href="http://[[theSite+'/anime/'+show._id]]" target="_blank">
-											<img ng-if="show.pic" ng-src="//[[theSite+show.pic]]" class="show-pic"/>
+											<img ng-if="show.pic" ng-src="//[[theSite+show.pic]]" class="show-pic" fallback/>
 										</a>
 										&nbsp;
 										<a href="http://[[theSite+'/anime/'+show._id]]" target="_blank">[[show.title]]</a>

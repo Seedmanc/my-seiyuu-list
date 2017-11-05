@@ -244,3 +244,6 @@ img.show-pic {
 .img-thumbnail {
 	padding: 0!important;
 }
+.btn-success.btn-default:hover {
+	background-color: #008840;
+}
