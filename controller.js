@@ -35,7 +35,7 @@ angular.module('myApp', [])
 		var failCount = 0;
 
 		var recycle = {};
-		var over = false;
+		var over = true;
 		var pid = 0;
 		var to;
 		var disqusLoaded = false;
