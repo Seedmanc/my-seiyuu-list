@@ -1,0 +1,33 @@
+input:checked + label {
+  font-weight: bold;
+}
+
+td[data-main=true] {
+  font-weight: bold;
+}
+
+.table>tbody>tr>td {
+  vertical-align: inherit;
+}
+
+label {
+  vertical-align: super;
+  padding-left: 0;
+}
+
+#mainOnly {
+  display: inline-block;
+
+  width: 17px;
+  height: 17px;
+}
+
+#mainOnly-wrapper {
+  position:relative;
+
+  top: 0.5em;
+  z-index:2;
+
+  height: 0;
+  text-align:center;
+}

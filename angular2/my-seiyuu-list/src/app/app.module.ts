@@ -14,6 +14,7 @@ import { AnimeListComponent } from './anime-list/anime-list.component';
 import { MagazineListComponent } from './magazine-list/magazine-list.component';
 import { PhotoListComponent } from './photo-list/photo-list.component';
 import { SeiyuuPanelComponent } from './seiyuu-panel/seiyuu-panel.component';
+import {OrderByPipe} from "./orderBy.pipe";
 
 
 @NgModule({
@@ -27,7 +28,8 @@ import { SeiyuuPanelComponent } from './seiyuu-panel/seiyuu-panel.component';
     AnimeListComponent,
     MagazineListComponent,
     PhotoListComponent,
-    SeiyuuPanelComponent
+    SeiyuuPanelComponent,
+    OrderByPipe
   ],
   imports: [
     BrowserModule,

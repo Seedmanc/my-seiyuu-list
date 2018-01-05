@@ -1,3 +1,51 @@
-<p>
-  anime-list works!
-</p>
+<div class="col-sm-12 no-gutter">
+
+  <div id="roles" class="row">
+    <div class="col-md-12 table-responsive">
+      <div id="mainOnly-wrapper">
+        <input type="checkbox" #mainOnly (ngModelChange)="onMainOnlyChange(mainOnly.value)"
+               class="form-control" id="mainOnly">
+        <label for="mainOnly" class="checkbox-inline">
+          main only
+        </label>
+      </div>
+      <table class="table table-striped  header-fixed" id="rolesTable">
+        <thead>
+        <tr>
+          <th class="text-center">#</th>
+          <th> &nbsp;
+            <a href="javascript:void(0)" (click)="onSort('title')">
+              ▴title▾</a>
+          </th>
+          <th class="text-right"> &nbsp;
+            <a href="javascript:void(0)" (click)="onSort('character')">
+              ▴character▾</a>
+          </th>
+          <th class="text-center">
+            <b>role tier</b>
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let show of commonRoles | orderBy:orderByField:ascending; let idx=index">
+          <td class="text-center">{{idx + 1}}</td>
+          <td>
+            <a href="http://{{theSite+'/anime/'+show._id}}" target="_blank">
+              <img *ngIf="show.pic" src="//{{theSite+show.pic}}" class="show-pic"/> <!--fallback-->
+            </a>
+            &nbsp;
+            <a href="http://{{theSite+'/anime/'+show._id}}" target="_blank">{{show.title}}</a>
+          </td>
+          <td class="text-right">
+            {{show.character}}
+          </td>
+          <td class="text-center" [attr.data-main]="show.main">
+            {{show.main ? 'main':'supporting'}}
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
