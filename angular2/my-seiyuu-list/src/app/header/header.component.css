@@ -1,11 +1,12 @@
 #msl-logo {
   position: relative;
   top: 2px;
-  vertical-align: text-bottom !important;
+
+  margin-right: -1rem;
+  vertical-align: text-bottom;
 }
 
 #search-query {
-  text-align:center;
   font-size: 16px;
 
   margin-left: -6px;
@@ -29,11 +30,16 @@
   background-color: #0a6;
   color: #dfe;
 
-  margin:0;
-  padding: 7px;
+  margin: 0;
+  padding: 0.55rem;
 
   font-size: 16px;
   font-family: inherit;
+}
+
+#status-hint {
+  cursor: help;
+  text-decoration: none;
 }
 
 .form-group {

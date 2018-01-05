@@ -13,6 +13,7 @@ import {AppRoutingModule} from "./app-routing.module";
 import { AnimeListComponent } from './anime-list/anime-list.component';
 import { MagazineListComponent } from './magazine-list/magazine-list.component';
 import { PhotoListComponent } from './photo-list/photo-list.component';
+import { SeiyuuPanelComponent } from './seiyuu-panel/seiyuu-panel.component';
 
 
 @NgModule({
@@ -25,7 +26,8 @@ import { PhotoListComponent } from './photo-list/photo-list.component';
     RankingComponent,
     AnimeListComponent,
     MagazineListComponent,
-    PhotoListComponent
+    PhotoListComponent,
+    SeiyuuPanelComponent
   ],
   imports: [
     BrowserModule,

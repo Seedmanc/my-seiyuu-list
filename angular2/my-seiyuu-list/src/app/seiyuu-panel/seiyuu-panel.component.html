@@ -1,0 +1,28 @@
+<div class="row seiyuu">
+
+  <div class="col-lg-12 col-sm-12 well well-sm" [ngClass]="{l: seiyuu.l, c: seiyuu.c}" (mouseenter)="select($event)">
+
+    <a class="remove close" (click)="removeVA($event)">&times;</a>
+
+    <table class="text-center">
+      <tr>
+        <td colspan=2>
+          <h4>
+            <a href="http://{{theSite+'/people/'+seiyuu._id}}" class="name" target="_blank">
+              <b>{{seiyuu.name}}</b>
+            </a>
+          </h4>
+        </td>
+      </tr>
+      <tr>
+        <td colspan=2><img class="vapic img-rounded" src="//{{theSite+seiyuu.pic}}"/></td>
+      </tr>
+      <tr>
+        <td><b>titles</b>: {{seiyuu.count}}</td>
+        <td>&nbsp;<b>views</b>: {{seiyuu.hits}}</td>
+      </tr>
+    </table>
+
+  </div>
+
+</div>

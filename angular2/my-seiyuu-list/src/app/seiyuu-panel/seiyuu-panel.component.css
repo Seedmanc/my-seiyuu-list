@@ -1,0 +1,42 @@
+img.vapic {
+  width: auto;
+
+  max-height: 160px;
+  max-width:180px;
+}
+
+.seiyuu {
+  padding-left: 12px;
+  padding-right: 6px;
+
+  margin-bottom: 4px;
+}
+
+table.text-center {
+  margin: auto;
+}
+
+.well {
+  padding: 0;
+
+  margin-bottom: 0;
+}
+.well:hover{
+  border: 1px black solid;
+}
+
+.close {
+  position: absolute;
+  left: 91%;
+}
+
+.l:not(:hover) {
+  border-color: magenta!important;
+}
+
+.c:not(:hover) {
+  border-color: #ba6;
+}
+.c {
+  color: #740;
+}

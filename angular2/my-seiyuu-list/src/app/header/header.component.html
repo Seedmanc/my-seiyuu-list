@@ -3,7 +3,8 @@
     <div class="form-group  has-feedback">
       <input type="text" id="search-query" placeholder="1 seiyuu name" [(ngModel)]="searchQuery"
              [disabled]="disable()" autofocus (ngModelChange)="inputChange(search)"
-             class="form-control input-md" name="searchQuery" #search [attr.list]="searchQuery ? 'vanames':undefined">
+             class="form-control input-md text-center" name="searchQuery"
+             #search [attr.list]="searchQuery ? 'vanames':undefined">
       <i class="glyphicon glyphicon-search form-control-feedback" id="search-icon"></i>
     </div>
   </form>
@@ -13,9 +14,8 @@
   <div class="col-sm-10 no-gutter">
     <div class="col-lg-9 col-md-8 col-sm-7 no-gutter">
       <div class="sp sp-circle" id="spinner"></div>
-      <a href="#you can find any seiyuu here"
-         title="You can still look up any seiyuu regardless of cached records #"
-         style="cursor: help; border-bottom: 1px dotted #dfe;">
+      <a id="status-hint"
+         title="You can still look up any seiyuu regardless of cached records #">
         <pre id="status">{{status}}</pre>
       </a>
     </div>
