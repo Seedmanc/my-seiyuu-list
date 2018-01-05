@@ -16,7 +16,14 @@ export class SeiyuuListComponent implements OnInit {
       24,
       1,
       true,true
-    )
+    ),
+    new Seiyuu(
+      14,
+      'Hayashibara Megumi',
+      '/images/voiceactors/1/40734.jpg',
+      297,
+      2,
+    ),
   ];
 
   constructor() { }
