@@ -1,0 +1,45 @@
+#msl-logo {
+  position: relative;
+  top: 2px;
+  vertical-align: text-bottom !important;
+}
+
+#search-query {
+  text-align:center;
+  font-size: 16px;
+
+  margin-left: -6px;
+  padding-right: 3rem;
+}
+
+#header {
+  background-color: #0a6;
+
+  padding-top: 5px;
+  padding-right:0;
+  padding-left: 12px;
+
+  border-radius: 0 0 6px 6px;
+}
+
+#status {
+  text-align: center;
+  border: 0;
+
+  background-color: #0a6;
+  color: #dfe;
+
+  margin:0;
+  padding: 7px;
+
+  font-size: 16px;
+  font-family: inherit;
+}
+
+.form-group {
+  margin-bottom: 6px;
+}
+
+#search-icon {
+  opacity: 0.5;
+}
