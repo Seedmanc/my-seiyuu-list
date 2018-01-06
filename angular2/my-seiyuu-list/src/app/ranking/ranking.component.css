@@ -1,0 +1,49 @@
+.ranking-curtain {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 3;
+
+  width: 100%;
+  height: 100%;
+
+  background: rgba(225,225,225,0.5);
+}
+
+.ranking-container {
+  position: relative;
+  top: 52px;
+
+  width: 59%;
+  height:80%;
+  min-width: 300px;
+
+  background: white;
+  border-radius: 5px;
+
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.ranking, .ranking th {
+  margin-bottom: 0;
+
+  text-align: center;
+}
+
+.table-container {
+  max-height: 80%;
+
+  overflow-y: auto;
+}
+
+caption {
+  text-align: center;
+  font-weight: bold;
+}
+
+.close {
+  height: 0;
+  margin-right: 4px;
+}

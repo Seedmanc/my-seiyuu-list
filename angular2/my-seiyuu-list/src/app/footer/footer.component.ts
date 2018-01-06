@@ -1,4 +1,5 @@
-import {Component, ElementRef, OnInit, Renderer2} from '@angular/core';
+import {Component, ElementRef, OnInit, Renderer2, ViewChild} from '@angular/core';
+import {RankingComponent} from "../ranking/ranking.component";
 
 @Component({
   selector: 'msl-footer',
@@ -7,6 +8,8 @@ import {Component, ElementRef, OnInit, Renderer2} from '@angular/core';
 })
 export class FooterComponent implements OnInit {
   disqusVisible: boolean = true;
+
+  @ViewChild(RankingComponent) mslRanking: RankingComponent;
 
   constructor(private el:ElementRef, private renderer:Renderer2) { }
 
@@ -26,8 +29,5 @@ export class FooterComponent implements OnInit {
     script.setAttribute('data-timestamp', new Date().getTime().toString());
 
     this.el.nativeElement.appendChild(script);
-  }
-
-  showRanking() {
   }
 }
