@@ -16,4 +16,6 @@ export class SeiyuuPanelComponent implements OnInit {
   ngOnInit() {
   }
 
+  select = ()=>{}
+
 }
