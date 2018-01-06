@@ -1,3 +1,18 @@
-<p>
-  photo-list works!
-</p>
+<div id="pics" class="row">
+  <div class="col-sm-12">
+    <div class="row">
+      <div class="col-sm-12" id="thumbs">
+        <div class="sp sp-circle" id="photos-spinner" *ngIf="pending"></div>
+        <div id="thumbContainer" [innerHTML]="photoPage"></div>
+      </div>
+    </div>
+    <div id="nav" class="row">
+      <div class="btn-group btn-group-justified">
+        <button id="prev" class="btn btn-default btn-block glyphicon glyphicon-arrow-left"
+           [disabled]="pending || !hasPrev"> </button>
+        <button id="next" class="btn btn-default btn-block glyphicon glyphicon-arrow-right"
+           [disabled]="pending || !hasNext"> </button>
+      </div>
+    </div>
+  </div>
+</div>

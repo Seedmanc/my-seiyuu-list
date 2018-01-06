@@ -16,6 +16,7 @@ import { PhotoListComponent } from './photo-list/photo-list.component';
 import { SeiyuuPanelComponent } from './seiyuu-panel/seiyuu-panel.component';
 import {OrderByPipe} from "./orderBy.pipe";
 
+import {HttpClientModule} from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import {OrderByPipe} from "./orderBy.pipe";
   imports: [
     BrowserModule,
     AppRoutingModule,
+    HttpClientModule,
     FormsModule,
     RouterModule
   ],

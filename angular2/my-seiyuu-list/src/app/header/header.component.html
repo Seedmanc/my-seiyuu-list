@@ -1,5 +1,5 @@
 <div id="header" class="col-sm-12">
-  <form class="col-sm-2 no-gutter">
+  <form class="col-sm-3 col-md-3 col-lg-2 no-gutter">
     <div class="form-group  has-feedback">
       <input type="text" id="search-query" placeholder="1 seiyuu name" [(ngModel)]="searchQuery"
              [disabled]="disable()" autofocus (ngModelChange)="inputChange(search)"
@@ -12,7 +12,7 @@
     <option [value]="vaname" *ngFor="let vaname of objectKeys(vanames)"></option>
   </datalist>
 
-  <div class="col-sm-10 no-gutter">
+  <div class="col-sm-9 col-md-9 col-lg-10 no-gutter">
     <div class="col-lg-9 col-md-8 col-sm-7 no-gutter">
       <div class="sp sp-circle" id="spinner"></div>
       <a id="status-hint"

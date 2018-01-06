@@ -1,0 +1,44 @@
+#photos-spinner {
+  width: 128px;
+  height: 128px;
+
+  margin-left: 43%;
+  margin-top: 20%;
+  margin-bottom: 20%;
+}
+
+:host /deep/ .img-thumbnail {
+  padding: 0!important;
+}
+:host /deep/ span.thumb {
+  display:inline-block;
+  width:160px;
+  height:160px;
+
+  text-align:center;
+  margin: 2px;
+}
+:host /deep/ .thumb:before {
+  display: inline-block;
+  height: 100%;
+
+  content: "";
+  vertical-align: middle;
+}
+
+#thumbContainer {
+  min-height: 660px;
+
+  padding-top:5px;
+  margin-bottom: 4px;
+
+  text-align:center;
+}
+
+.btn-block+.btn-block {
+  margin-top: 0;
+}
+
+#nav button {
+  width: 50%;
+}
