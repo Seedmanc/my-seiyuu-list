@@ -24,6 +24,15 @@ export interface SeiyuuDB {
     _id: number
   }[],
   l?: boolean,
-  updated: string,
-  accessed: number
+  updated: Date,
+  accessed: Date
+}
+
+export interface BasicSeiyuu {
+  _id?: number,
+  name: string,
+  hits?: number,
+  count?: number,
+  updated?: Date,
+  accessed?: Date
 }

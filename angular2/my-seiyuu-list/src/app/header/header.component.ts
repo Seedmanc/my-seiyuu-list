@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import {RestService} from "../services/rest.service";
+import {SeiyuuService} from "../services/seiyuu.service";
 
 @Component({
   selector: 'msl-header',
@@ -7,17 +9,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HeaderComponent implements OnInit {
 
-  searchQuery: string;
+  searchQuery: string = '';
   status: string = 'status';
 
-  vanames = {
-    test: {id: '0'},
-    test2: {id: '1'},
-  }
-
-  private objectKeys = Object.keys;
-
-  constructor() { }
+  constructor(public restSvc: RestService, public seiyuuSvc: SeiyuuService) { }
 
   ngOnInit() {
   }

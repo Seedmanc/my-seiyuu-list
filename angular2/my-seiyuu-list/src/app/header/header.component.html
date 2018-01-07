@@ -4,17 +4,17 @@
       <input type="text" id="search-query" placeholder="1 seiyuu name" [(ngModel)]="searchQuery"
              [disabled]="disable()" autofocus (ngModelChange)="inputChange(search)"
              class="form-control input-md text-center" name="searchQuery"
-             #search [attr.list]="searchQuery ? 'vanames':undefined">
+             #search [attr.list]="searchQuery.length > 1 ? 'vanames':undefined">
       <i class="glyphicon glyphicon-search form-control-feedback" id="search-icon"></i>
     </div>
   </form>
   <datalist id="vanames">
-    <option [value]="vaname" *ngFor="let vaname of objectKeys(vanames)"></option>
+    <option value="{{seiyuu.name}} ({{seiyuu.count}})" *ngFor="let seiyuu of seiyuuSvc.basicList$ | async"></option>
   </datalist>
 
   <div class="col-sm-9 col-md-9 col-lg-10 no-gutter">
     <div class="col-lg-9 col-md-8 col-sm-7 no-gutter">
-      <div class="sp sp-circle" id="spinner"></div>
+      <div class="sp sp-circle" id="spinner" *ngIf="restSvc.pending"></div>
       <a id="status-hint"
          title="You can still look up any seiyuu regardless of cached records #">
         <pre id="status">{{status}}</pre>

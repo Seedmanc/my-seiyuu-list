@@ -1,6 +1,6 @@
 <div class="ranking-curtain" (click)="close($event)" [hidden]="!visible">
   <div class="ranking-container">
-    <div class="remove"><a class="remove close" (click)="this.visible=false">&times;</a></div>
+    <div class="remove"><a class="remove close" (click)="visible=false">&times;</a></div>
     <table class="ranking table table-striped">
       <caption>Seiyuu popularity rankings</caption>
       <colgroup>
@@ -14,7 +14,7 @@
         <th><a href="javascript:void(0)"  (click)="sort('name')">▴name▾</a></th>
         <th><a href="javascript:void(0)"  (click)="sort('count')">▴anime▾</a></th>
         <th><a href="javascript:void(0)"  (click)="sort('hits')">▴views▾</a></th>
-        <th><a href="javascript:void(0)"  (click)="sort('accessed')">▴accessed▾</a></th>
+        <th><a href="javascript:void(0)"  (click)="sort('accessed')" id="ranking-date">▴accessed▾</a></th>
       </tr>
       </thead>
     </table>
@@ -27,11 +27,11 @@
           <col width="35%">
         </colgroup>
         <tbody>
-        <tr *ngFor="let seiyuu of rankedSeiyuu | orderBy:orderByField:ascending">
+        <tr *ngFor="let seiyuu of seiyuuSvc.basicList$ | async | orderBy:orderByField:ascending">
           <td><a href="http://{{theSite+'/people/'+seiyuu._id}}" target="_blank">{{seiyuu.name}}</a></td>
           <td>{{seiyuu.count}}</td>
           <td>{{seiyuu.hits}}</td>
-          <td>{{seiyuu.accessed | date}}</td>
+          <td>{{seiyuu.accessed | date:'dd.MM.yyyy'}}</td>
         </tr>
         </tbody>
       </table>

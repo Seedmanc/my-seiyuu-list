@@ -17,6 +17,8 @@ import { SeiyuuPanelComponent } from './seiyuu-panel/seiyuu-panel.component';
 import {OrderByPipe} from "./orderBy.pipe";
 
 import {HttpClientModule} from '@angular/common/http';
+import {SeiyuuService} from "./services/seiyuu.service";
+import {RestService} from "./services/rest.service";
 
 @NgModule({
   declarations: [
@@ -39,7 +41,7 @@ import {HttpClientModule} from '@angular/common/http';
     FormsModule,
     RouterModule
   ],
-  providers: [],
+  providers: [SeiyuuService, RestService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
