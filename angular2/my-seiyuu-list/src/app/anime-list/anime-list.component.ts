@@ -1,15 +1,14 @@
 import { Component, OnInit } from '@angular/core';
+import {SortableComponent} from "../sortable.component";
+import {theSite} from "../../environments/const";
 
 @Component({
   selector: 'msl-anime-list',
   templateUrl: './anime-list.component.html',
   styleUrls: ['./anime-list.component.css']
 })
-export class AnimeListComponent implements OnInit {
-  orderByField: string = 'title';
-  ascending: boolean;
-
-  theSite = 'myanimelist.net';
+export class AnimeListComponent extends SortableComponent implements OnInit {
+  theSite = theSite;
 
   commonRoles: any[] = [
     {
@@ -42,14 +41,9 @@ export class AnimeListComponent implements OnInit {
     },
   ]
 
-  constructor() { }
+  constructor() {super('title')}
 
   ngOnInit() {
-  }
-
-  onSort(field) {
-    this.orderByField = field;
-    this.ascending = !this.ascending;
   }
 
 }

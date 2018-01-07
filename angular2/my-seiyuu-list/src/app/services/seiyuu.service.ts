@@ -2,12 +2,14 @@ import { Injectable } from '@angular/core';
 import {BasicSeiyuu} from "../models/seiyuu.model";
 import {Observable} from "rxjs/Observable";
 import {RestService} from "./rest.service";
+import {MessagesService} from "./messages.service";
+import {pluralize} from "../../environments/const";
 
 @Injectable()
 export class SeiyuuService {
   basicList$: Observable<BasicSeiyuu[]>;
 
-  constructor(private rest:RestService) {
+  constructor(private rest:RestService, private messageSvc: MessagesService) {
 
     this.basicList$ = this.rest.mongoCall({
       coll: 'seiyuu',
@@ -21,7 +23,9 @@ export class SeiyuuService {
         updated: new Date(seiyuu.updated),
         accessed: seiyuu.accessed && new Date(seiyuu.accessed) || new Date(seiyuu.updated)
       }
-    })).share();
+    }))
+      .do(list => this.messageSvc.status(list.length + ` record${pluralize(list.length)} cached`))
+      .share();
 
   }
 

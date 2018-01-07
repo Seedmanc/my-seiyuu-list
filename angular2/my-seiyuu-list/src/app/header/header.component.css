@@ -10,7 +10,7 @@
   font-size: 16px;
 
   margin-left: -6px;
-  padding-right: 3rem;
+  padding-right: 1rem;
 }
 
 #header {
@@ -35,6 +35,10 @@
 
   font-size: 16px;
   font-family: inherit;
+}
+#status.error {
+  background: #c46;
+  color: #fed;
 }
 
 #status-hint {

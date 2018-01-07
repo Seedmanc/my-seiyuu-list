@@ -17,7 +17,7 @@
       <div class="sp sp-circle" id="spinner" *ngIf="restSvc.pending"></div>
       <a id="status-hint"
          title="You can still look up any seiyuu regardless of cached records #">
-        <pre id="status">{{status}}</pre>
+        <pre id="status" [ngClass]="{error: (status$ | async).isError}">{{(status$ | async).data}}</pre>
       </a>
     </div>
     <div class="col-lg-3 col-md-4 col-sm-5 text-center no-gutter">

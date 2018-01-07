@@ -19,6 +19,7 @@ import {OrderByPipe} from "./orderBy.pipe";
 import {HttpClientModule} from '@angular/common/http';
 import {SeiyuuService} from "./services/seiyuu.service";
 import {RestService} from "./services/rest.service";
+import {MessagesService} from "./services/messages.service";
 
 @NgModule({
   declarations: [
@@ -41,7 +42,7 @@ import {RestService} from "./services/rest.service";
     FormsModule,
     RouterModule
   ],
-  providers: [SeiyuuService, RestService],
+  providers: [SeiyuuService, RestService, MessagesService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
