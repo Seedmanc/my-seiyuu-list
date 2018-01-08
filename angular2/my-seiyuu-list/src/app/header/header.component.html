@@ -1,15 +1,15 @@
 <div id="header" class="col-sm-12">
   <form class="col-sm-3 col-md-3 col-lg-2 no-gutter">
     <div class="form-group  has-feedback">
-      <input type="text" id="search-query" placeholder="1 seiyuu name" [(ngModel)]="searchQuery"
-             [disabled]="disable()" autofocus (ngModelChange)="inputChange(search)"
+      <input type="text" id="search-query" placeholder="1 seiyuu name"
+             [disabled]="disable()" autofocus  #search [(ngModel)]="searchQuery"
              class="form-control input-md text-center" name="searchQuery"
-             #search [attr.list]="searchQuery.length > 1 ? 'vanames':undefined">
+             [attr.list]="searchQuery.length > 1 ? 'vanames':undefined">
       <i class="glyphicon glyphicon-search form-control-feedback" id="search-icon"></i>
     </div>
   </form>
   <datalist id="vanames">
-    <option value="{{seiyuu.name}} ({{seiyuu.count}})" *ngFor="let seiyuu of seiyuuSvc.basicList$ | async"></option>
+    <option [value]="seiyuu.name" *ngFor="let seiyuu of seiyuuSvc.basicList$ | async"></option>
   </datalist>
 
   <div class="col-sm-9 col-md-9 col-lg-10 no-gutter">

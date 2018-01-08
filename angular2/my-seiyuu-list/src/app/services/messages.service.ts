@@ -17,4 +17,8 @@ export class MessagesService {
     this.message$.next({isError: false, data: text});
   }
 
+  blank() {
+    this.message$.next({});
+  }
+
 }
