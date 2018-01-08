@@ -24,7 +24,7 @@ export class HeaderComponent implements OnInit {
   }
 
   disable() {
-    return false;
+    return this.restSvc.pending;
   }
 
   inputChange(input) {

@@ -1,1 +1,1 @@
-<msl-seiyuu-panel *ngFor="let seiyuu of seiOut" [seiyuu]="seiyuu"></msl-seiyuu-panel>
+<msl-seiyuu-panel *ngFor="let seiyuu of seiyuuSvc.selectedList$ | async" [seiyuu]="seiyuu"></msl-seiyuu-panel>

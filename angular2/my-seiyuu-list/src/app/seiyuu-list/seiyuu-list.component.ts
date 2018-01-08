@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {Seiyuu} from "../_models/seiyuu.model";
+import {SeiyuuService} from "../_services/seiyuu.service";
 
 @Component({
   selector: 'msl-seiyuu-list',
@@ -8,25 +8,7 @@ import {Seiyuu} from "../_models/seiyuu.model";
 })
 export class SeiyuuListComponent implements OnInit {
 
-  seiOut: Seiyuu[] = [
-    new Seiyuu(
-      7337,
-      'Misawa Sachika',
-      '/images/voiceactors/2/44621.jpg',
-      24,
-      1,
-      true,true
-    ),
-    new Seiyuu(
-      14,
-      'Hayashibara Megumi',
-      '/images/voiceactors/1/40734.jpg',
-      297,
-      2,
-    ),
-  ];
-
-  constructor() { }
+  constructor(public seiyuuSvc: SeiyuuService) { }
 
   ngOnInit() {
   }

@@ -27,7 +27,7 @@
           <col width="35%">
         </colgroup>
         <tbody>
-        <tr *ngFor="let seiyuu of seiyuuSvc.basicList$ | async | orderBy:orderByField:ascending">
+        <tr *ngFor="let seiyuu of seiyuuSvc.totalList$ | async | orderBy:orderByField:ascending">
           <td><a href="http://{{theSite+'/people/'+seiyuu._id}}" target="_blank">{{seiyuu.name}}</a></td>
           <td>{{seiyuu.count}}</td>
           <td>{{seiyuu.hits}}</td>

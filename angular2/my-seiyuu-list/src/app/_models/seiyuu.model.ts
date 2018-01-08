@@ -1,38 +1,43 @@
-export class Seiyuu /*implements SeiyuuDB*/ {
+export class BasicSeiyuu {
+  public _id: number;
+  public name: string;
+  public hits?: number;
+  public count?: number;
+  public updated: Date;
+  public accessed?: Date;
 
-  constructor(
-    public _id: number,
-    public name: string,
-    public pic: string,
-    public count: number,
-    public hits: number,
-    public l?:boolean,
-    public c?:boolean
-  ) {
-  }
+  constructor(obj) {
+    let temp ={...obj,
+        updated: new Date(obj.updated),
+        accessed: obj.accessed && new Date(obj.accessed) || new Date(obj.updated)
+      };
+      Object.keys(temp).forEach(key => this[key] = temp[key]);
+    }
 }
 
-export interface SeiyuuDB {
-  _id: number,
-  name: string,
-  pic: string,
-  count: number,
-  hits: number,
-  roles: {
+export class Seiyuu extends BasicSeiyuu {
+
+  public _id: number;
+  public name: string;
+  public pic: string;
+  public count: number;
+  public hits: number;
+  private roles: {
+    _id: number,
     name: string,
     main: boolean,
-    _id: number
-  }[],
-  l?: boolean,
-  updated: Date,
-  accessed: Date
-}
+  }[];
+  public l?:boolean;
+  public c?:boolean;
 
-export interface BasicSeiyuu {
-  _id?: number,
-  name: string,
-  hits?: number,
-  count?: number,
-  updated?: Date,
-  accessed?: Date
+  public get pending(): boolean {
+    return !this.pic && !!this.name;
+  };
+
+  constructor(obj) {
+    super(obj);
+    Object.keys(obj).forEach(key => {
+      if (!this[key]) this[key] = obj[key]
+    });
+  }
 }
