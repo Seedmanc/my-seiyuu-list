@@ -4,3 +4,6 @@
 #footer-wrapper {
   margin-top: 8px;
 }
+#list-wrapper {
+  z-index: 1;
+}

@@ -1,7 +1,7 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {RestService} from "../services/rest.service";
-import {SeiyuuService} from "../services/seiyuu.service";
-import {MessagesService} from "../services/messages.service";
+import {RestService} from "../_services/rest.service";
+import {SeiyuuService} from "../_services/seiyuu.service";
+import {MessagesService} from "../_services/messages.service";
 import {Observable} from "rxjs/Observable";
 
 @Component({

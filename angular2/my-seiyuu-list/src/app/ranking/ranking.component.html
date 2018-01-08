@@ -1,4 +1,4 @@
-<div class="ranking-curtain" (click)="close($event)" [hidden]="!visible">
+<div class="ranking-curtain" (click)="close($event)" *ngIf="visible">
   <div class="ranking-container">
     <div class="remove"><a class="remove close" (click)="visible=false">&times;</a></div>
     <table class="ranking table table-striped">

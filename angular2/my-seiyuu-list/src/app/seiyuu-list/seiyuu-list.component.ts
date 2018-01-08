@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {Seiyuu} from "../models/seiyuu.model";
+import {Seiyuu} from "../_models/seiyuu.model";
 
 @Component({
   selector: 'msl-seiyuu-list',

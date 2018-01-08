@@ -1,3 +1,4 @@
-.btn {
+.btn-sm {
   opacity: 0.9;
+  font-size: unset;
 }

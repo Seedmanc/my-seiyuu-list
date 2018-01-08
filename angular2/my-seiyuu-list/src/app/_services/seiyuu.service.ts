@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {BasicSeiyuu} from "../models/seiyuu.model";
+import {BasicSeiyuu} from "../_models/seiyuu.model";
 import {Observable} from "rxjs/Observable";
 import {RestService} from "./rest.service";
 import {MessagesService} from "./messages.service";
@@ -26,7 +26,7 @@ export class SeiyuuService {
       }
     }))
       .do(list => this.messageSvc.status(list.length + ` record${pluralize(list.length)} cached`))
-      .share();
+      .publishLast().refCount();
   }
 
   attachListener(search$: Observable<Event>) {

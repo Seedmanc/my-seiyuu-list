@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {SeiyuuService} from "../services/seiyuu.service";
+import {SeiyuuService} from "../_services/seiyuu.service";
 import {SortableComponent} from "../sortable.component";
 import {theSite} from "../../environments/const";
 
