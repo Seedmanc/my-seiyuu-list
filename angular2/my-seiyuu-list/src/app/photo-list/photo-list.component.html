@@ -1,9 +1,11 @@
 <div id="pics" class="row">
   <div class="col-sm-12">
     <div class="row">
-      <div class="col-sm-12" id="thumbs">
-        <div class="sp sp-circle" id="photos-spinner" *ngIf="pending"></div>
-        <div id="thumbContainer" [innerHTML]="photoPage"></div>
+      <div class="col-sm-12 text-center">
+        <div id="photos-spinner" *ngIf="pending">
+          <msl-spinner size="calc(15vmin)"></msl-spinner>
+        </div>
+        <div id="thumbContainer" [innerHTML]="photoPage" *ngIf="!pending"></div>
       </div>
     </div>
     <div id="nav" class="row">

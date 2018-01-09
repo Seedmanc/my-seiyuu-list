@@ -13,7 +13,10 @@
       </td>
     </tr>
     <tr>
-      <td colspan=2><img class="vapic img-rounded" src="//{{theSite+seiyuu.pic}}"/></td>
+      <td colspan=2>
+        <msl-spinner size="5rem" *ngIf="seiyuu.pending"></msl-spinner>
+        <img class="vapic img-rounded" src="//{{theSite+seiyuu.pic}}" *ngIf="!seiyuu.pending"/>
+      </td>
     </tr>
     <tr>
       <td><b>titles</b>: {{seiyuu.count}}</td>

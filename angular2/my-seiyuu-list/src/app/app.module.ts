@@ -20,6 +20,7 @@ import {HttpClientModule} from '@angular/common/http';
 import {SeiyuuService} from "./_services/seiyuu.service";
 import {RestService} from "./_services/rest.service";
 import {MessagesService} from "./_services/messages.service";
+import { SpinnerComponent } from './spinner/spinner.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import {MessagesService} from "./_services/messages.service";
     MagazineListComponent,
     PhotoListComponent,
     SeiyuuPanelComponent,
-    OrderByPipe
+    OrderByPipe,
+    SpinnerComponent
   ],
   imports: [
     BrowserModule,
