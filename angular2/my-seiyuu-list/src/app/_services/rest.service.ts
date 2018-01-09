@@ -26,7 +26,7 @@ export class RestService {
     ).do(_ => this.pending = false);
 
 
-/*        if (failCount <= 2) {
+/*        if ( failCount <= 2) {
         failCount++;
 $scope.debug += '\n\r' + JSON.stringify(error) + ' Error accessing database.';
         mongoCall(
