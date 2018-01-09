@@ -10,9 +10,9 @@ import {Subject} from "rxjs/Subject";
 export class SeiyuuService {
   totalList$: Observable<BasicSeiyuu[]>;
   search$: Observable<string>;
-  selectedList$: Subject<Seiyuu[]> = new Subject();
+  selectedList$: Subject<(Seiyuu|BasicSeiyuu)[]> = new Subject();
 
-  private selectedList: Seiyuu[] = [];
+  private selectedList = [];
 
   constructor(private rest:RestService, private messageSvc: MessagesService) {
 
@@ -40,9 +40,8 @@ export class SeiyuuService {
 
     found.do(_=>this.messageSvc.blank())
       .do(console.info)
-      .flatMap(basicSeiyuu => this.loadSeiyuu([basicSeiyuu._id]))
-      .do(list => {
-        this.selectedList.push(...list);
+      .do(obj => {
+        this.selectedList.push(new BasicSeiyuu(obj));
         this.selectedList$.next(this.selectedList);
       })
       .subscribe(console.log);
@@ -60,7 +59,7 @@ export class SeiyuuService {
     } else return '';
   }
 
-  private loadSeiyuu(ids: number[]): Observable<Seiyuu[]> {
+  public loadByIds(ids: number[]): Observable<Seiyuu[]> {
     return this.rest.mongoCall({
       coll: 'seiyuu',
       mode: 'get',
@@ -69,7 +68,14 @@ export class SeiyuuService {
            _id: {'$in': ids}
         }
       }
-    }).map(list => list.map(el => new Seiyuu(el)));
+    }).map(list => list.map(el => new Seiyuu(el)))
+      .do(seiyuus => {
+        seiyuus.forEach(seiyuu => {
+          let index = this.selectedList.findIndex(el => el._id === seiyuu._id);
+          this.selectedList[index] = seiyuu;
+        });
+        this.selectedList$.next(this.selectedList);
+      });
   }
 
 }

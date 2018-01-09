@@ -34,6 +34,11 @@ table.text-center {
   color: #740;
 }
 
+h4 {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
 /*.col-xs-6 {
   width: calc(50% - 8px);
   margin-right: 4px;

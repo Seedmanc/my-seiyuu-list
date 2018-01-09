@@ -18,12 +18,12 @@ export class RestService {
 
     let options = Object.keys(query).reduce((total, key) => total + `&${key}=${encodeURIComponent(JSON.stringify(query[key]))}`, '');
 
-    this.pending = true;
+    //this.pending = true;
 
     return this.http[mode](
       `https://api.mongolab.com/api/1/databases/myseiyuulist/${path}?apiKey=R4jg8qqhpTI68lRYfYjEJoM5aRiJnrLK${options}`,
       payload
-    ).do(_ => this.pending = false);
+    );//.do(_ => this.pending = false);
 
 
 /*        if ( failCount <= 2) {

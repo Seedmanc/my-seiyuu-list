@@ -11,7 +11,17 @@ export class BasicSeiyuu {
         updated: new Date(obj.updated),
         accessed: obj.accessed && new Date(obj.accessed) || new Date(obj.updated)
       };
-      Object.keys(temp).forEach(key => this[key] = temp[key]);
+     this.upgrade(temp);
+    }
+
+    public get pending(): boolean {
+      return !this['roles'] && !!this.name;
+    };
+
+    protected upgrade(obj) {
+      Object.keys(obj).forEach(key => {
+        if (this[key] === undefined) this[key] = obj[key]
+      });
     }
 }
 
@@ -30,14 +40,8 @@ export class Seiyuu extends BasicSeiyuu {
   public l?:boolean;
   public c?:boolean;
 
-  public get pending(): boolean {
-    return !this.pic && !!this.name;
-  };
-
   constructor(obj) {
     super(obj);
-    Object.keys(obj).forEach(key => {
-      if (!this[key]) this[key] = obj[key]
-    });
+    this.upgrade(obj);
   }
 }
