@@ -5,7 +5,6 @@ import { FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
-import { SeiyuuListComponent } from './seiyuu-list/seiyuu-list.component';
 import { TabsComponent } from './tabs/tabs.component';
 import { FooterComponent } from './footer/footer.component';
 import { RankingComponent } from './ranking/ranking.component';
@@ -21,12 +20,12 @@ import {SeiyuuService} from "./_services/seiyuu.service";
 import {RestService} from "./_services/rest.service";
 import {MessagesService} from "./_services/messages.service";
 import { SpinnerComponent } from './spinner/spinner.component';
+import { BaseComponent } from './base/base.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
-    SeiyuuListComponent,
     TabsComponent,
     FooterComponent,
     RankingComponent,
@@ -35,7 +34,8 @@ import { SpinnerComponent } from './spinner/spinner.component';
     PhotoListComponent,
     SeiyuuPanelComponent,
     OrderByPipe,
-    SpinnerComponent
+    SpinnerComponent,
+    BaseComponent
   ],
   imports: [
     BrowserModule,

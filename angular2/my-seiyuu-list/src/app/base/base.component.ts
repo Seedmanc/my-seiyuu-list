@@ -1,0 +1,24 @@
+import { Component, OnInit } from '@angular/core';
+import {ActivatedRoute} from "@angular/router";
+import {SeiyuuService} from "../_services/seiyuu.service";
+
+@Component({
+  selector: 'msl-base',
+  templateUrl: './base.component.html',
+  styleUrls: ['./base.component.css']
+})
+export class BaseComponent implements OnInit {
+
+  constructor(private route: ActivatedRoute, private seiyuuSvc: SeiyuuService) { }
+
+  ngOnInit() {
+    let id$ = this.route.paramMap
+      .map(params => params.get('ids').split(',').map(el=>+el.replace(/\D/g, '')).filter(el=>!!el));
+
+    id$.combineLatest(this.seiyuuSvc.totalList$)
+      .map(([ids,list]) => ids.filter(id => list.find(el => el._id == id)))
+      .filter(ids => !!ids.length)
+      .subscribe(ids => console.log(ids));
+  }
+
+}
