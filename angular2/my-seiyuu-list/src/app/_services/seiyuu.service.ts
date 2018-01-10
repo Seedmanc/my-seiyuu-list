@@ -11,6 +11,7 @@ export class SeiyuuService {
   totalList$: Observable<BasicSeiyuu[]>;
   search$: Observable<string>;
   selectedList$: Subject<(Seiyuu|BasicSeiyuu)[]> = new Subject();
+  pending: boolean = true;
 
   private selectedList = [];
 
@@ -25,6 +26,7 @@ export class SeiyuuService {
       }
     }).map(list => list.map(el => new BasicSeiyuu(el)))
       .do(list => this.messageSvc.status(list.length + ` record${pluralize(list.length)} cached`))
+      .do(_ => this.pending = false)
       .publishLast().refCount();
   }
 
@@ -44,7 +46,7 @@ export class SeiyuuService {
         this.selectedList.push(new BasicSeiyuu(obj));
         this.selectedList$.next(this.selectedList);
       })
-      .subscribe(console.log);
+      .subscribe();
 
     notFound.withLatestFrom(this.search$)
       .subscribe(input => this.messageSvc.error(`"${input[1]}" is not found`));

@@ -16,14 +16,12 @@ export class RestService {
       mode = "post";
     }
 
-    let options = Object.keys(query).reduce((total, key) => total + `&${key}=${encodeURIComponent(JSON.stringify(query[key]))}`, '');
-
-    //this.pending = true;
+    let options = Object.keys(query).reduce((total, key) => total + `&${key}=${JSON.stringify(query[key])}`, '');
 
     return this.http[mode](
       `https://api.mongolab.com/api/1/databases/myseiyuulist/${path}?apiKey=R4jg8qqhpTI68lRYfYjEJoM5aRiJnrLK${options}`,
       payload
-    );//.do(_ => this.pending = false);
+    );
 
 
 /*        if ( failCount <= 2) {

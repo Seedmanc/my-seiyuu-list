@@ -14,7 +14,7 @@
 
   <div class="col-sm-9 col-md-9 col-lg-10 no-gutter">
     <div class="col-lg-9 col-md-8 col-sm-7 no-gutter">
-      <msl-spinner float="left" *ngIf="restSvc.pending"></msl-spinner>
+      <msl-spinner float="left" *ngIf="seiyuuSvc.pending"></msl-spinner>
       <a id="status-hint"
          title="You can still look up any seiyuu regardless of cached records #">
         <pre id="status" [ngClass]="{error: (status$ | async).isError}">{{(status$ | async).data}}</pre>

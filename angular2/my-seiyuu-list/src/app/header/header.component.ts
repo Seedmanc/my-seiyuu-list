@@ -1,5 +1,4 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {RestService} from "../_services/rest.service";
 import {SeiyuuService} from "../_services/seiyuu.service";
 import {MessagesService} from "../_services/messages.service";
 import {Observable} from "rxjs/Observable";
@@ -15,7 +14,7 @@ export class HeaderComponent implements OnInit {
   status$;
   searchQuery: string = '';
 
-  constructor(public restSvc: RestService, public seiyuuSvc: SeiyuuService, private messageSvc: MessagesService) { }
+  constructor(public seiyuuSvc: SeiyuuService, private messageSvc: MessagesService) { }
 
   ngOnInit() {
     this.status$ = this.messageSvc.message$;
@@ -24,10 +23,7 @@ export class HeaderComponent implements OnInit {
   }
 
   disable() {
-    return this.restSvc.pending;
-  }
-
-  inputChange(input) {
+    return this.seiyuuSvc.pending;
   }
 
 }
