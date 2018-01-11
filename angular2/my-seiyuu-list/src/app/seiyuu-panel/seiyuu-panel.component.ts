@@ -17,7 +17,7 @@ export class SeiyuuPanelComponent implements OnInit {
 
   ngOnInit() {
     if (this.seiyuu.pending) {
-      this.seiyuuSvc.loadByIds([this.seiyuu._id]).subscribe(seiyuus => console.log(seiyuus[0]));
+      this.seiyuuSvc.updateRequest$.next(this.seiyuu._id);
     }
   }
 

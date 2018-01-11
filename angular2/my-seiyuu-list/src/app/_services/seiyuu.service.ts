@@ -5,17 +5,22 @@ import {RestService} from "./rest.service";
 import {MessagesService} from "./messages.service";
 import {pluralize} from "../../environments/const";
 import {Subject} from "rxjs/Subject";
+import {Router} from "@angular/router";
+import {BehaviorSubject} from "rxjs/BehaviorSubject";
 
 @Injectable()
 export class SeiyuuService {
   totalList$: Observable<BasicSeiyuu[]>;
   search$: Observable<string>;
-  selectedList$: Subject<(Seiyuu|BasicSeiyuu)[]> = new Subject();
+  selectedList$: Subject<(Seiyuu|BasicSeiyuu)[]> = new Subject(); //todo wtf
+  updateRequest$: Subject<number> = new Subject();
+
   pending: boolean = true;
 
+  routeId$: Subject<number[]> = new BehaviorSubject([]);
   private selectedList = [];
 
-  constructor(private rest:RestService, private messageSvc: MessagesService) {
+  constructor(private rest:RestService, private messageSvc: MessagesService, private router: Router) {
 
     this.totalList$ = this.rest.mongoCall({
       coll: 'seiyuu',
@@ -28,6 +33,24 @@ export class SeiyuuService {
       .do(list => this.messageSvc.status(list.length + ` record${pluralize(list.length)} cached`))
       .do(_ => this.pending = false)
       .publishLast().refCount();
+
+    this.updateRequest$.bufferTime(500)
+      .filter(el=>!!el.length)      //otherwise endless loop wtf
+      .flatMap(ids => this.loadByIds(ids))
+      .withLatestFrom(this.totalList$)
+      .subscribe(([seiyuus,total]) => {
+        seiyuus.forEach(seiyuu => {
+          let index = this.selectedList.findIndex(el => el._id === seiyuu._id);
+          this.selectedList[index].upgrade(seiyuu);
+          total.find(seiyuu2 => seiyuu2._id === seiyuu._id).upgrade(seiyuu);
+        });
+        this.selectedList$.next(this.selectedList);
+      });
+
+    this.routeId$.withLatestFrom(this.totalList$)
+      .map(([ids, list]) => ids.map(id => list.find(el => el._id === id)))
+      .do(seiyuus => {this.selectedList = seiyuus; this.selectedList$.next(this.selectedList)})
+      .subscribe();
   }
 
   attachListener(search$: Observable<Event>) {
@@ -41,10 +64,11 @@ export class SeiyuuService {
       .partition(equals => !!equals);
 
     found.do(_=>this.messageSvc.blank())
-      .do(console.info)
-      .do(obj => {
-        this.selectedList.push(new BasicSeiyuu(obj));
-        this.selectedList$.next(this.selectedList);
+      .map(seiyuu => seiyuu._id)
+      .withLatestFrom(this.routeId$)
+      .do(([id, ids]) => {
+        let newList = [...ids, id].filter((el, i, arr) => arr.indexOf(el) === i);
+        this.router.navigate(['/'+newList.join(','), 'anime']);
       })
       .subscribe();
 
@@ -71,13 +95,6 @@ export class SeiyuuService {
         }
       }
     }).map(list => list.map(el => new Seiyuu(el)))
-      .do(seiyuus => {
-        seiyuus.forEach(seiyuu => {
-          let index = this.selectedList.findIndex(el => el._id === seiyuu._id);
-          this.selectedList[index] = seiyuu;
-        });
-        this.selectedList$.next(this.selectedList);
-      });
   }
 
 }

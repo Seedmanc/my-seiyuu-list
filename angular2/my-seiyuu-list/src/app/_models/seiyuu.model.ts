@@ -18,7 +18,7 @@ export class BasicSeiyuu {
       return !this['roles'] && !!this.name;
     };
 
-    protected upgrade(obj) {
+    public upgrade(obj) {
       Object.keys(obj).forEach(key => {
         if (this[key] === undefined) this[key] = obj[key]
       });

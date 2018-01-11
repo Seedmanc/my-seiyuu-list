@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {SeiyuuService} from "../_services/seiyuu.service";
 
 @Component({
@@ -9,16 +9,18 @@ import {SeiyuuService} from "../_services/seiyuu.service";
 })
 export class BaseComponent implements OnInit {
 
-  constructor(private route: ActivatedRoute, private seiyuuSvc: SeiyuuService) { }
+  constructor(private route: ActivatedRoute, private seiyuuSvc: SeiyuuService, private router: Router) { }
 
   ngOnInit() {
     let id$ = this.route.paramMap
-      .map(params => params.get('ids').split(',').map(el=>+el.replace(/\D/g, '')).filter(el=>!!el));
+      .map(params => params.get('ids').split(',').map(el => +el.replace(/\D/g, '')).filter(el=>!!el));
 
     id$.combineLatest(this.seiyuuSvc.totalList$)
-      .map(([ids,list]) => ids.filter(id => list.find(el => el._id == id)))
+      .map(([ids,list]) => ids.filter((id,i) => list.find(el => el._id == id)))
       .filter(ids => !!ids.length)
-      .subscribe(ids => console.log(ids));
+      //.do(ids => this.router.navigate(['/'+ids.join(','), 'anime'])) //switchMap?
+      .do(ids => this.seiyuuSvc.routeId$.next(ids))
+      .subscribe();
   }
 
 }
