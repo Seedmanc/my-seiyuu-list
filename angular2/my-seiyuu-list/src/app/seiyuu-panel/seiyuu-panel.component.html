@@ -3,25 +3,35 @@
   <a class="remove close" (click)="removeVA($event)">&times;</a>
 
   <table class="text-center">
-    <tr>
-      <td colspan=2>
-        <h4>
-          <a href="http://{{theSite+'/people/'+seiyuu._id}}" class="name" target="_blank">
-            <b>{{seiyuu.name}}</b>
-          </a>
-        </h4>
-      </td>
-    </tr>
-    <tr>
-      <td colspan=2>
-        <msl-spinner size="5rem" *ngIf="seiyuu.pending"></msl-spinner>
-        <img class="vapic img-rounded" src="//{{theSite+seiyuu.pic}}" *ngIf="!seiyuu.pending"/>
-      </td>
-    </tr>
-    <tr>
-      <td><b>titles</b>: {{seiyuu.count}}</td>
-      <td>&nbsp;<b>views</b>: {{seiyuu.hits}}</td>
-    </tr>
+    <tbody *ngIf="!seiyuu.namesakes">
+      <tr>
+        <td colspan=2>
+          <h4>
+            <a href="http://{{theSite+'/people/'+seiyuu._id}}" class="name" target="_blank">
+              <b>{{seiyuu.name}}</b>
+            </a>
+          </h4>
+        </td>
+      </tr>
+      <tr>
+        <td colspan=2>
+          <msl-spinner size="5rem" *ngIf="seiyuu.pending"></msl-spinner>
+          <img class="vapic img-rounded" src="//{{theSite+seiyuu.pic}}" *ngIf="!seiyuu.pending"/>
+        </td>
+      </tr>
+      <tr>
+        <td><b>titles</b>: {{seiyuu.count}}</td>
+        <td>&nbsp;<b>views</b>: {{seiyuu.hits}}</td>
+      </tr>
+    </tbody>
+
+    <tbody *ngIf="seiyuu.namesakes" class="namesakes">
+      <tr><td colspan=2>{{seiyuu.namesakes.length}} matches found</td></tr>
+      <tr><td colspan=2>choose one: </td></tr>
+      <tr *ngFor="let namesake of seiyuu.namesakes">
+        <td colspan=2><button>{{namesake}}</button></td>
+      </tr>
+    </tbody>
   </table>
 
 </div>

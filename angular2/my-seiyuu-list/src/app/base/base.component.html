@@ -3,7 +3,7 @@
 </div>
 <div class="row">
   <div class="col-sm-3 col-md-3 col-lg-2" id="list-wrapper">
-    <msl-seiyuu-panel *ngFor="let seiyuu of seiyuuSvc.selectedList$ | async" [seiyuu]="seiyuu"></msl-seiyuu-panel>
+    <msl-seiyuu-panel *ngFor="let seiyuu of seiyuuSvc.displayList$ | async" [seiyuu]="seiyuu"></msl-seiyuu-panel>
   </div>
   <div class="col-sm-9 col-md-9 col-lg-10" id="router-wrapper">
     <div class="row">

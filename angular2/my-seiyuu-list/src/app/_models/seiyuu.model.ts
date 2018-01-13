@@ -5,6 +5,7 @@ export class BasicSeiyuu {
   public count?: number;
   public updated: Date;
   public accessed?: Date;
+  public namesakes: any[];
 
   constructor(obj) {
     let temp ={...obj,

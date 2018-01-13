@@ -19,6 +19,7 @@ export class SeiyuuPanelComponent implements OnInit {
     if (this.seiyuu.pending) {
       this.seiyuuSvc.updateRequest$.next(this.seiyuu._id);
     }
+
   }
 
   select = ()=>{}
