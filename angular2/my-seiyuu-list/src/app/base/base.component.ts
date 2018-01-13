@@ -15,12 +15,7 @@ export class BaseComponent implements OnInit {
     let id$ = this.route.paramMap
       .map(params => params.get('ids').split(',').map(el => +el.replace(/\D/g, '')).filter(el=>!!el));
 
-    id$.combineLatest(this.seiyuuSvc.totalList$)
-      .map(([ids,list]) => ids.filter((id,i) => list.find(el => el._id == id)))
-      .filter(ids => !!ids.length)
-      //.do(ids => this.router.navigate(['/'+ids.join(','), 'anime'])) //switchMap?
-      .do(ids => this.seiyuuSvc.routeId$.next(ids))
-      .subscribe();
+    this.seiyuuSvc.addRoutes(id$);
   }
 
 }

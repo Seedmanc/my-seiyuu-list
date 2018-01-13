@@ -19,7 +19,12 @@ export class HeaderComponent implements OnInit {
   ngOnInit() {
     this.status$ = this.messageSvc.message$;
 
-    this.seiyuuSvc.attachListener(Observable.fromEvent(this.searchInput.nativeElement, 'input'));
+    let search = Observable.fromEvent(this.searchInput.nativeElement, 'input')
+      .debounceTime(500)
+      .map((event:Event) => event.target['value'])
+      .filter(value => !!(value && value.trim().length > 3));
+
+    this.seiyuuSvc.addSearch(search);
   }
 
   disable() {

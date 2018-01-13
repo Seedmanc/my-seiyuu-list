@@ -14,12 +14,12 @@ export class SeiyuuService {
   updateRequest$: Subject<number> = new Subject();
   displayList$: Observable<BasicSeiyuu[]>;
   picked$: Subject<number> = new Subject();
-  routeId$: Subject<number[]> = new BehaviorSubject([]);
-
-  private search$: Observable<string>;
-  private namesake$: Observable<BasicSeiyuu[]>;
 
   pending: boolean = true;
+
+  private routeId$: Subject<number[]> = new BehaviorSubject([]);
+  private namesake$: Subject<BasicSeiyuu[]> = new BehaviorSubject([<BasicSeiyuu>{namesakes: [1,2]}]);
+  //private totalMap: {[key:number]: BasicSeiyuu} = {};
 
 
   constructor(private rest:RestService, private messageSvc: MessagesService, private router: Router) {
@@ -33,6 +33,7 @@ export class SeiyuuService {
       }
     }).map(list => list.map(el => new BasicSeiyuu(el)))
       .do(list => this.messageSvc.status(list.length + ` record${pluralize(list.length)} cached`))
+      //.do(list => list.forEach(seiyuu => this.totalMap[seiyuu._id] = seiyuu))
       .do(_ => this.pending = false)
       .publishLast().refCount();
 
@@ -45,21 +46,21 @@ export class SeiyuuService {
           total.find(seiyuu2 => seiyuu2._id === seiyuu._id).upgrade(seiyuu);
         });
       });
+
+    this.displayList$ = this.routeId$.combineLatest(this.totalList$)
+      .map(([ids, seiyuus]) => seiyuus.filter(el => ~ids.indexOf(el._id)))
+      .combineLatest(this.namesake$).map(([seiyuus, namesakes]) => [...seiyuus, ...namesakes]);
   }
 
-  attachListener(search$: Observable<Event>) {
-    this.search$ = search$.debounceTime(500)
-      .map(event => event.target['value'])
-      .filter(value => !!(value && value.trim().length > 3));   // u mad?
-
-    let [found, notFound] = this.search$
+  addSearch(search$: Observable<string>) {
+    let [found, notFound] = search$
       .withLatestFrom(this.totalList$)
       .map(([name,list]) => list.filter(seiyuu => !!this.equals(name, seiyuu.name)).map(seiyuu => seiyuu._id))
       .partition(equals => !!equals.length);
 
     let [single, multiple] = found.do(_=>this.messageSvc.blank()).partition(list => list.length === 1);
 
-    this.namesake$ = multiple.map(ids => [new BasicSeiyuu({namesakes: ids})]).startWith([new BasicSeiyuu({namesakes:[1,2]})]);
+    multiple.map(ids => [new BasicSeiyuu({namesakes: ids})]).subscribe(namesakes => this.namesake$.next(namesakes));
 
     single
       .map(ids => ids[0])
@@ -71,12 +72,16 @@ export class SeiyuuService {
       })
       .subscribe();
 
-    notFound.withLatestFrom(this.search$)
+    notFound.withLatestFrom(search$)
       .subscribe(input => this.messageSvc.error(`"${input[1]}" is not found`));
+  }
 
-    this.displayList$ = this.routeId$.combineLatest(this.totalList$)
-      .map(([ids, seiyuus]) => seiyuus.filter(el => ~ids.indexOf(el._id)))
-      .combineLatest(this.namesake$).map(([seiyuus, namesakes]) => [...seiyuus, ...namesakes]);
+  addRoutes(routeId$: Observable<number[]>) {
+    routeId$
+      .combineLatest(this.totalList$)
+      .map(([ids,list]) => ids.filter(id => !!list.find(seiyuu => seiyuu._id === id)))
+      .filter(ids => !!ids.length)
+      .subscribe(ids => this.routeId$.next(ids));
   }
 
   private equals(input: string, name: string): string {
@@ -88,7 +93,7 @@ export class SeiyuuService {
     } else return '';
   }
 
-  public loadByIds(ids: number[]): Observable<Seiyuu[]> {
+  private loadByIds(ids: number[]): Observable<Seiyuu[]> {
     return this.rest.mongoCall({
       coll: 'seiyuu',
       mode: 'get',
