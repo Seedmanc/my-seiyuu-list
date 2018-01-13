@@ -53,7 +53,7 @@ export class SeiyuuService {
       .filter(value => !!(value && value.trim().length > 3));   // u mad?
 
     let [found, notFound] = this.search$
-      .combineLatest(this.totalList$)
+      .withLatestFrom(this.totalList$)
       .map(([name,list]) => list.filter(seiyuu => !!this.equals(name, seiyuu.name)).map(seiyuu => seiyuu._id))
       .partition(equals => !!equals.length);
 
