@@ -14,13 +14,14 @@ table.text-center {
 
   margin-bottom: 6px;
 }
-.well:hover{
+.well:not(.namesake):hover{
   border: 1px black solid;
 }
 
 .close {
   position: absolute;
-  left: 91%;
+  right: 4px;
+  z-index: 2;
 }
 
 .l:not(:hover) {
@@ -45,9 +46,24 @@ h4 {
   margin-left: 4px;
 }*/
 
-.namesakes {
+.namesake {
   font-weight: bold;
+  text-align: center;
 }
-button {
+
+.btn-group {
   width: 100%;
+  margin-top: 8px;
+}
+
+.btn {
+  height: 46px;
+
+  line-height: 32px;
+}
+
+.small-thumb {
+  height: 32px;
+
+  float: left;
 }

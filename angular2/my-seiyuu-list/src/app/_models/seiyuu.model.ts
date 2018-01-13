@@ -24,6 +24,9 @@ export class BasicSeiyuu {
         if (this[key] === undefined) this[key] = obj[key]
       });
     }
+    protected get thumb() {
+      return this['pic'] && this['pic'].replace('.', 'v.');
+    }
 }
 
 export class Seiyuu extends BasicSeiyuu {

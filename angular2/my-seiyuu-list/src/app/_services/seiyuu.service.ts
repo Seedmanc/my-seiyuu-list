@@ -18,8 +18,8 @@ export class SeiyuuService {
   pending: boolean = true;
 
   private routeId$: Subject<number[]> = new BehaviorSubject([]);
-  private namesake$: Subject<BasicSeiyuu[]> = new BehaviorSubject([<BasicSeiyuu>{namesakes: [1,2]}]);
-  //private totalMap: {[key:number]: BasicSeiyuu} = {};
+  private namesake$: Subject<BasicSeiyuu[]> = new BehaviorSubject([]);
+  private totalMap: {[key:number]: BasicSeiyuu} = {};
 
 
   constructor(private rest:RestService, private messageSvc: MessagesService, private router: Router) {
@@ -33,23 +33,23 @@ export class SeiyuuService {
       }
     }).map(list => list.map(el => new BasicSeiyuu(el)))
       .do(list => this.messageSvc.status(list.length + ` record${pluralize(list.length)} cached`))
-      //.do(list => list.forEach(seiyuu => this.totalMap[seiyuu._id] = seiyuu))
+      .do(list => list.forEach(seiyuu => this.totalMap[seiyuu._id] = seiyuu))
       .do(_ => this.pending = false)
       .publishLast().refCount();
 
     this.updateRequest$.bufferTime(500)
       .filter(el=>!!el.length)      //otherwise endless loop wtf
       .flatMap(ids => this.loadByIds(ids))
-      .withLatestFrom(this.totalList$)
-      .subscribe(([seiyuus,total]) => {
+      .subscribe(seiyuus => {
         seiyuus.forEach(seiyuu => {
-          total.find(seiyuu2 => seiyuu2._id === seiyuu._id).upgrade(seiyuu);
+          this.totalMap[seiyuu._id].upgrade(seiyuu);
         });
       });
 
-    this.displayList$ = this.routeId$.combineLatest(this.totalList$)
-      .map(([ids, seiyuus]) => seiyuus.filter(el => ~ids.indexOf(el._id)))
-      .combineLatest(this.namesake$).map(([seiyuus, namesakes]) => [...seiyuus, ...namesakes]);
+    this.displayList$ = this.routeId$
+      .map(ids => ids.map(id => this.totalMap[id]))
+      .combineLatest(this.namesake$)
+      .map(([seiyuus, namesakes]) => [...seiyuus, ...namesakes]);
   }
 
   addSearch(search$: Observable<string>) {
@@ -60,11 +60,12 @@ export class SeiyuuService {
 
     let [single, multiple] = found.do(_=>this.messageSvc.blank()).partition(list => list.length === 1);
 
-    multiple.map(ids => [new BasicSeiyuu({namesakes: ids})]).subscribe(namesakes => this.namesake$.next(namesakes));
+    multiple.map(ids => [new BasicSeiyuu({namesakes: ids.map(id => this.totalMap[id])})])
+      .subscribe(namesakes => this.namesake$.next(namesakes));
 
     single
       .map(ids => ids[0])
-     // .merge(this.picked$)
+      .merge(this.picked$.do(id => this.namesake$.next([])))
       .withLatestFrom(this.routeId$)
       .do(([id, ids]) => {
         let newList = [...ids, id].filter((el, i, arr) => arr.indexOf(el) === i);

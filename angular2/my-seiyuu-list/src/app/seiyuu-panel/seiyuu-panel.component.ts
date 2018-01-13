@@ -19,7 +19,13 @@ export class SeiyuuPanelComponent implements OnInit {
     if (this.seiyuu.pending) {
       this.seiyuuSvc.updateRequest$.next(this.seiyuu._id);
     }
+    if (this.seiyuu.namesakes) {
+      this.seiyuu.namesakes.forEach(namesake => this.seiyuuSvc.updateRequest$.next(namesake._id));
+    }
+  }
 
+  pick(id: number) {
+    this.seiyuuSvc.picked$.next(id);
   }
 
   select = ()=>{}
