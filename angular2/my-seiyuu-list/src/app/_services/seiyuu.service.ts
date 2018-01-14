@@ -3,10 +3,10 @@ import {BasicSeiyuu, Seiyuu} from "../_models/seiyuu.model";
 import {Observable} from "rxjs/Observable";
 import {RestService} from "./rest.service";
 import {MessagesService} from "./messages.service";
-import {pluralize} from "../../environments/const";
 import {Subject} from "rxjs/Subject";
 import {Router} from "@angular/router";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
+import {Utils} from "./utils.service";
 
 @Injectable()
 export class SeiyuuService {
@@ -32,7 +32,7 @@ export class SeiyuuService {
         s: {name: 1}
       }
     }).map(list => list.map(el => new BasicSeiyuu(el)))
-      .do(list => this.messageSvc.status(list.length + ` record${pluralize(list.length)} cached`))
+      .do(list => this.messageSvc.status(list.length + ` record${Utils.pluralize(list.length)} cached`))
       .do(list => list.forEach(seiyuu => this.totalMap[seiyuu._id] = seiyuu))
       .do(_ => this.pending = false)
       .publishLast().refCount();
@@ -55,7 +55,7 @@ export class SeiyuuService {
   addSearch(search$: Observable<string>) {
     let [found, notFound] = search$
       .withLatestFrom(this.totalList$)
-      .map(([name,list]) => list.filter(seiyuu => !!this.equals(name, seiyuu.name)).map(seiyuu => seiyuu._id))
+      .map(([name,list]) => list.filter(seiyuu => !!Utils.unorderedEquals(name, seiyuu.name)).map(seiyuu => seiyuu._id))
       .partition(equals => !!equals.length);
 
     let [single, multiple] = found.do(_=>this.messageSvc.blank()).partition(list => list.length === 1);
@@ -87,15 +87,6 @@ export class SeiyuuService {
       .map(([ids,list]) => ids.filter(id => !!list.find(seiyuu => seiyuu._id === id)))
       .filter(ids => !!ids.length)
       .subscribe(ids => this.routeId$.next(ids));
-  }
-
-  private equals(input: string, name: string): string {
-    if (name) {
-      input = input.toLowerCase();
-      name = name.toLowerCase();
-
-      return (input === name || input.split(' ').reverse().join(' ') === name) && name;
-    } else return '';
   }
 
   private loadByIds(ids: number[]): Observable<Seiyuu[]> {

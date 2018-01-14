@@ -21,6 +21,8 @@ import {RestService} from "./_services/rest.service";
 import {MessagesService} from "./_services/messages.service";
 import { SpinnerComponent } from './spinner/spinner.component';
 import { BaseComponent } from './base/base.component';
+import {UniqPipe} from "./uniq.pipe";
+import {Utils} from "./_services/utils.service";
 
 @NgModule({
   declarations: [
@@ -34,6 +36,7 @@ import { BaseComponent } from './base/base.component';
     PhotoListComponent,
     SeiyuuPanelComponent,
     OrderByPipe,
+    UniqPipe,
     SpinnerComponent,
     BaseComponent
   ],
@@ -44,7 +47,7 @@ import { BaseComponent } from './base/base.component';
     FormsModule,
     RouterModule
   ],
-  providers: [SeiyuuService, RestService, MessagesService],
+  providers: [SeiyuuService, RestService, MessagesService, Utils],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

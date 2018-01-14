@@ -12,12 +12,15 @@ export class HeaderComponent implements OnInit {
 
   @ViewChild('search') searchInput: ElementRef;
   status$;
+  name$: Observable<string[]>;
+
   searchQuery: string = '';
 
   constructor(public seiyuuSvc: SeiyuuService, private messageSvc: MessagesService) { }
 
   ngOnInit() {
     this.status$ = this.messageSvc.message$;
+    this.name$ = this.seiyuuSvc.totalList$.map(seiyuus => seiyuus.map(seiyuu => seiyuu.name));
 
     let search = Observable.fromEvent(this.searchInput.nativeElement, 'input')
       .debounceTime(500)

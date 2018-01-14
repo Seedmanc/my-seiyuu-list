@@ -9,7 +9,7 @@
     </div>
   </form>
   <datalist id="vanames">
-    <option [value]="seiyuu.name" *ngFor="let seiyuu of seiyuuSvc.totalList$ | async"></option>
+    <option [value]="name" *ngFor="let name of name$ | async | uniq"></option>
   </datalist>
 
   <div class="col-sm-9 col-md-9 col-lg-10 no-gutter">

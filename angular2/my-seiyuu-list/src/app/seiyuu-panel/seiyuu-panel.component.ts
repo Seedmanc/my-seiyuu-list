@@ -1,6 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
 import {Seiyuu} from "../_models/seiyuu.model";
-import {theSite} from "../../environments/const";
 import {SeiyuuService} from "../_services/seiyuu.service";
 
 @Component({
@@ -11,7 +10,6 @@ import {SeiyuuService} from "../_services/seiyuu.service";
 export class SeiyuuPanelComponent implements OnInit {
 
   @Input() seiyuu: Seiyuu;
-  theSite: string = theSite;
 
   constructor(private seiyuuSvc: SeiyuuService) { }
 

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {SortableComponent} from "../sortable.component";
-import {theSite} from "../../environments/const";
+import {Utils} from "../_services/utils.service";
 
 @Component({
   selector: 'msl-anime-list',
@@ -8,7 +8,7 @@ import {theSite} from "../../environments/const";
   styleUrls: ['./anime-list.component.css']
 })
 export class AnimeListComponent extends SortableComponent implements OnInit {
-  theSite = theSite;
+  theSite = Utils.theSite;
 
   commonRoles: any[] = [
     {

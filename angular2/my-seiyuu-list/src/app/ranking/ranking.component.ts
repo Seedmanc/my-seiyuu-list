@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {SeiyuuService} from "../_services/seiyuu.service";
 import {SortableComponent} from "../sortable.component";
-import {theSite} from "../../environments/const";
 
 @Component({
   selector: 'msl-ranking',
@@ -10,7 +9,6 @@ import {theSite} from "../../environments/const";
 })
 export class RankingComponent extends SortableComponent implements OnInit {
   visible: boolean;
-  theSite = theSite;
 
   constructor(public seiyuuSvc: SeiyuuService) {
     super();

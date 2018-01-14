@@ -8,7 +8,7 @@
       <tr>
         <td colspan=2>
           <h4>
-            <a href="http://{{theSite+'/people/'+seiyuu._id}}" target="_blank">
+            <a [href]="seiyuu.link" target="_blank">
               <b>{{seiyuu.name}}</b>
             </a>
           </h4>
@@ -17,7 +17,7 @@
       <tr>
         <td colspan=2>
           <msl-spinner size="5rem" *ngIf="seiyuu.pending"></msl-spinner>
-          <img class="vapic img-rounded" src="//{{theSite+seiyuu.pic}}" *ngIf="!seiyuu.pending"/>
+          <img class="vapic img-rounded" [src]="seiyuu.photo" *ngIf="!seiyuu.pending"/>
         </td>
       </tr>
       <tr>
@@ -34,8 +34,8 @@
     <div class="col-sm-12 btn-group btn-group-vertical">
       <div class="col-sm-12 btn btn-default" *ngFor="let namesake of seiyuu.namesakes" (click)="pick(namesake._id)">
         <msl-spinner size="28px" float="left" *ngIf="namesake.pending"></msl-spinner>
-        <a href="http://{{theSite+'/people/'+namesake._id}}" target="_blank">
-          <img class="small-thumb" *ngIf="namesake.pic || false" src="//{{theSite+namesake.thumb}}"/>
+        <a [href]="namesake.link" target="_blank">
+          <img class="small-thumb" *ngIf="namesake.photo" [src]="namesake.thumb"/>
         </a>
         <div class="text-right"><b>titles:</b> {{namesake.count}}</div>
       </div>

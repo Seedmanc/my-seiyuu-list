@@ -1,3 +1,9 @@
 #list-wrapper {
   z-index: 1;
 }
+#router-wrapper {
+  padding-right: 30px;
+}
+#footer-wrapper {
+  margin-top: 2px;
+}

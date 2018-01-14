@@ -1,3 +1,5 @@
+import {Utils} from "../_services/utils.service";
+
 export class BasicSeiyuu {
   public _id: number;
   public name: string;
@@ -15,27 +17,31 @@ export class BasicSeiyuu {
      this.upgrade(temp);
     }
 
-    public get pending(): boolean {
-      return !this['roles'] && !!this.name;
-    };
+  public get pending(): boolean {
+    return !this['roles'] && !!this.name;
+  };
 
-    public upgrade(obj) {
-      Object.keys(obj).forEach(key => {
-        if (this[key] === undefined) this[key] = obj[key]
-      });
-    }
-    protected get thumb() {
-      return this['pic'] && this['pic'].replace('.', 'v.');
-    }
+  public get link(): string {
+    return `//${Utils.theSite}/people/${this._id}`;
+  }
+
+  public upgrade(obj) {
+    Object.keys(obj).forEach(key => {
+      if (this[key] === undefined) this[key] = obj[key]
+    });
+  }
+
+  protected get photo(): string {
+    return this['pic'] && `//${Utils.theSite}/${this['pic']}`;
+  }
+  protected get thumb(): string {
+    return this.photo && this.photo.replace('.jp', 'v.jp');
+  }
 }
 
 export class Seiyuu extends BasicSeiyuu {
 
-  public _id: number;
-  public name: string;
-  public pic: string;
-  public count: number;
-  public hits: number;
+  private pic: string;
   private roles: {
     _id: number,
     name: string,
@@ -48,4 +54,5 @@ export class Seiyuu extends BasicSeiyuu {
     super(obj);
     this.upgrade(obj);
   }
+
 }
