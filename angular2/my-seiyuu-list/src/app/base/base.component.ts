@@ -9,7 +9,7 @@ import {SeiyuuService} from "../_services/seiyuu.service";
 })
 export class BaseComponent implements OnInit {
 
-  constructor(private route: ActivatedRoute, private seiyuuSvc: SeiyuuService, private router: Router) { }
+  constructor(private route: ActivatedRoute, private seiyuuSvc: SeiyuuService) { }
 
   ngOnInit() {
     let id$ = this.route.paramMap

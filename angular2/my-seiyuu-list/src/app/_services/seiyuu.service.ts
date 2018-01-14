@@ -4,9 +4,9 @@ import {Observable} from "rxjs/Observable";
 import {RestService} from "./rest.service";
 import {MessagesService} from "./messages.service";
 import {Subject} from "rxjs/Subject";
-import {Router} from "@angular/router";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {Utils} from "./utils.service";
+import {RoutingService} from "./routing.service";
 
 @Injectable()
 export class SeiyuuService {
@@ -14,6 +14,7 @@ export class SeiyuuService {
   updateRequest$: Subject<number> = new Subject();
   displayList$: Observable<BasicSeiyuu[]>;
   picked$: Subject<number> = new Subject();
+  removed$: Subject<number> = new Subject();
 
   pending: boolean = true;
 
@@ -22,7 +23,7 @@ export class SeiyuuService {
   private totalMap: {[key:number]: BasicSeiyuu} = {};
 
 
-  constructor(private rest:RestService, private messageSvc: MessagesService, private router: Router) {
+  constructor(private rest:RestService, private messageSvc: MessagesService, private routingSvc: RoutingService) {
 
     this.totalList$ = this.rest.mongoCall({
       coll: 'seiyuu',
@@ -50,6 +51,10 @@ export class SeiyuuService {
       .map(ids => ids.map(id => this.totalMap[id]))
       .combineLatest(this.namesake$)
       .map(([seiyuus, namesakes]) => [...seiyuus, ...namesakes]);
+
+    this.removed$.withLatestFrom(this.routeId$)
+      .do(([removed,current]) => this.routingSvc.remove(removed, current))
+      .subscribe();
   }
 
   addSearch(search$: Observable<string>) {
@@ -72,8 +77,7 @@ export class SeiyuuService {
       )
       .withLatestFrom(this.routeId$)
       .do(([id, ids]) => {
-        let newList = [...ids, id].filter((el, i, arr) => arr.indexOf(el) === i);
-        this.router.navigate(['/'+newList.join(','), 'anime']);
+         this.routingSvc.add(id, ids);
       })
       .subscribe();
 
@@ -85,7 +89,6 @@ export class SeiyuuService {
     routeId$
       .combineLatest(this.totalList$)
       .map(([ids,list]) => ids.filter(id => !!list.find(seiyuu => seiyuu._id === id)))
-      .filter(ids => !!ids.length)
       .subscribe(ids => this.routeId$.next(ids));
   }
 
