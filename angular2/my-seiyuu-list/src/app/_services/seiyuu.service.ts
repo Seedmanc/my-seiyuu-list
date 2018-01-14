@@ -18,7 +18,7 @@ export class SeiyuuService {
 
   pending: boolean = true;
 
-  private routeId$: Subject<number[]> = new BehaviorSubject([]);
+  private routeId$: Observable<number[]>;
   private namesake$: Subject<BasicSeiyuu[]> = new BehaviorSubject([]);
   private totalMap: {[key:number]: BasicSeiyuu} = {};
 
@@ -37,6 +37,10 @@ export class SeiyuuService {
       .do(list => list.forEach(seiyuu => this.totalMap[seiyuu._id] = seiyuu))
       .do(_ => this.pending = false)
       .publishLast().refCount();
+
+    this.routeId$ = this.routingSvc.routeId$
+      .combineLatest(this.totalList$)
+      .map(([ids,list]) => ids.filter(id => !!list.find(seiyuu => seiyuu._id === id)));
 
     this.updateRequest$.bufferTime(500)
       .filter(el=>!!el.length)      //otherwise endless loop wtf
@@ -85,12 +89,6 @@ export class SeiyuuService {
       .subscribe(input => this.messageSvc.error(`"${input[1]}" is not found`));
   }
 
-  addRoutes(routeId$: Observable<number[]>) {
-    routeId$
-      .combineLatest(this.totalList$)
-      .map(([ids,list]) => ids.filter(id => !!list.find(seiyuu => seiyuu._id === id)))
-      .subscribe(ids => this.routeId$.next(ids));
-  }
 
   private loadByIds(ids: number[]): Observable<Seiyuu[]> {
     return this.rest.mongoCall({

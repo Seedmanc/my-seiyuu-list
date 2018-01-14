@@ -1,21 +1,15 @@
-import { Component, OnInit } from '@angular/core';
-import {ActivatedRoute, Router} from "@angular/router";
+import { Component } from '@angular/core';
 import {SeiyuuService} from "../_services/seiyuu.service";
+import {RoutingService} from "../_services/routing.service";
 
 @Component({
   selector: 'msl-base',
   templateUrl: './base.component.html',
-  styleUrls: ['./base.component.css']
+  styleUrls: ['./base.component.css'],
+  providers: [RoutingService, SeiyuuService]
 })
-export class BaseComponent implements OnInit {
+export class BaseComponent {
 
-  constructor(private route: ActivatedRoute, private seiyuuSvc: SeiyuuService) { }
-
-  ngOnInit() {
-    let id$ = this.route.paramMap
-      .map(params => params.get('ids').split(',').map(el => +el.replace(/\D/g, '')).filter(el=>!!el));
-
-    this.seiyuuSvc.addRoutes(id$);
-  }
+  constructor(public seiyuuSvc: SeiyuuService) {}
 
 }

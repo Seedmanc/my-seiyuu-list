@@ -48,7 +48,7 @@ import {RoutingService} from "./_services/routing.service";
     FormsModule,
     RouterModule
   ],
-  providers: [SeiyuuService, RestService, MessagesService, Utils, RoutingService],
+  providers: [RestService, MessagesService, Utils],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
