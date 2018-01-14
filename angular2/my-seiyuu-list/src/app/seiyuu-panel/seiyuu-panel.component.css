@@ -58,12 +58,17 @@ h4 {
 
 .btn {
   height: 46px;
-
+  padding: 6px 18px;
   line-height: 32px;
+}
+
+.btn a {
+  float: left;
+}
+.btn a:hover {
+  outline: 1px solid blue;
 }
 
 .small-thumb {
   height: 32px;
-
-  float: left;
 }

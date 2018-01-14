@@ -60,12 +60,16 @@ export class SeiyuuService {
 
     let [single, multiple] = found.do(_=>this.messageSvc.blank()).partition(list => list.length === 1);
 
-    multiple.map(ids => [new BasicSeiyuu({namesakes: ids.map(id => this.totalMap[id])})])
-      .subscribe(namesakes => this.namesake$.next(namesakes));
+    multiple.map(ids => [{namesakes: ids.map(id => this.totalMap[id])}])
+      .withLatestFrom(this.namesake$, (New, old) => [...old, ...New])
+      .subscribe(namesakes => this.namesake$.next(<BasicSeiyuu[]>namesakes));
 
     single
       .map(ids => ids[0])
-      .merge(this.picked$.do(id => this.namesake$.next([])))
+      .merge(this.picked$.withLatestFrom(this.namesake$)
+        .do(([picked,list]) => this.namesake$.next(list.filter(el => !el.namesakes.find(nmsk => nmsk._id === picked))))
+        .map(([picked]) => picked)
+      )
       .withLatestFrom(this.routeId$)
       .do(([id, ids]) => {
         let newList = [...ids, id].filter((el, i, arr) => arr.indexOf(el) === i);
