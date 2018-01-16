@@ -52,7 +52,6 @@ export class Seiyuu extends BasicSeiyuu {
 
   constructor(obj) {
     super(obj);
-    this.upgrade(obj);
   }
 
 }

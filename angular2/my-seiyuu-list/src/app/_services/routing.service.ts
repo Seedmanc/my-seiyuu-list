@@ -16,9 +16,11 @@ export class RoutingService {
       .map(params => params.get('ids').split(',').map(el => +el.replace(/\D/g, '')).filter(el=>!!el));
   }
 
-  add(id, list) {
+  add(id, list): number {
     let newList = [...list, id].filter((el, i, arr) => arr.indexOf(el) === i);
     this.router.navigate(['/'+newList.join(','), this.mode]);
+    // was it a duplicate?
+    return list.length == newList.length ? id : null;
   }
 
   remove(id, list) {

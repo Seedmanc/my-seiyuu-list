@@ -40,7 +40,7 @@ export class SeiyuuService {
 
     this.routeId$ = this.routingSvc.routeId$
       .combineLatest(this.totalList$)
-      .map(([ids,list]) => ids.filter(id => !!list.find(seiyuu => seiyuu._id === id)));
+      .map(([ids]) => ids.filter(id => !!this.totalMap[id]));
 
     this.updateRequest$.bufferTime(500)
       .filter(el=>!!el.length)      //otherwise endless loop wtf
@@ -80,13 +80,13 @@ export class SeiyuuService {
         .map(([picked]) => picked)
       )
       .withLatestFrom(this.routeId$)
-      .do(([id, ids]) => {
-         this.routingSvc.add(id, ids);
-      })
+      .map(([id, ids]) => this.routingSvc.add(id, ids))
+      .filter(id => !!id)
+      .do(id => this.messageSvc.status(`"${this.totalMap[id].name}" is already selected`))
       .subscribe();
 
     notFound.withLatestFrom(search$)
-      .subscribe(input => this.messageSvc.error(`"${input[1]}" is not found`));
+      .subscribe(([,search]) => this.messageSvc.error(`"${search}" is not found`));
   }
 
 

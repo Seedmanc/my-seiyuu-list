@@ -22,12 +22,24 @@ export class HeaderComponent implements OnInit {
     this.status$ = this.messageSvc.message$;
     this.name$ = this.seiyuuSvc.totalList$.map(seiyuus => seiyuus.map(seiyuu => seiyuu.name));
 
-    let search = Observable.fromEvent(this.searchInput.nativeElement, 'input')
+    let input = Observable.fromEvent(this.searchInput.nativeElement, 'input')
       .debounceTime(500)
+      .withLatestFrom(this.seiyuuSvc.totalList$)
+      .filter(([event,list]) => list.some(el=>el.name === event['target'].value))
+      .map(([event]) => event);
+
+    let search = Observable.fromEvent(this.searchInput.nativeElement, 'change')
+      .merge(input)
       .map((event:Event) => event.target['value'])
-      .filter(value => !!(value && value.trim().length > 3));
+      .filter(value => !!(value && value.trim().length > 2))
+      .distinctUntilChanged()
+      .do(_ => this.selectAll());
 
     this.seiyuuSvc.addSearch(search);
+  }
+
+  selectAll() {
+    this.searchInput.nativeElement.select();
   }
 
   disable() {
