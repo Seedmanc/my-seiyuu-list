@@ -13,5 +13,10 @@ export class Utils {
     return number && (number % 10 > 1 || (number % 10) == 0) ? 's' : '';
   };
 
+  public static unique<T>(list: T[], prop?: string): T[] {
+    return list.filter((el,i) => list.findIndex(elem => elem === el ||
+      elem[prop] && elem[prop] === el[prop]) === i);
+  }
+
   public static readonly theSite: string = 'myanimelist.net';
 }

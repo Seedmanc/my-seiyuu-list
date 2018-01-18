@@ -15,7 +15,7 @@ export class SeiyuuService {
   updateRequest$: Subject<number> = new Subject();
   displayList$: Observable<BasicSeiyuu[]>;
   picked$: Subject<number> = new Subject();
-  removed$: Subject<number|string> = new Subject();
+  removed$: Subject<number> = new Subject();
 
   pending: boolean = true;
 
@@ -38,7 +38,7 @@ export class SeiyuuService {
       .combineLatest(this.totalList$)
       .map(([ids]) => ids.filter(id => !!this.totalMap[id]));
 
-    this.updateRequest$.bufferTime(500)
+    this.updateRequest$.bufferTime(300)
       .filter(el=>!!el.length)      //otherwise endless loop wtf
       .flatMap(ids => this.loadByIds(ids))
       .subscribe(seiyuus => {
@@ -55,7 +55,7 @@ export class SeiyuuService {
     this.removed$.withLatestFrom(this.routeId$)
       .map(([removed,current]) => {this.routingSvc.remove(removed, current); return removed;})
       .withLatestFrom(this.namesake$)
-      .map(([removed,current]) => current.filter(nmsk => nmsk.name !== removed))
+      .map(([removed,current]) => current.filter(nmsk => !nmsk.namesakes.find(el => el._id === removed)))
       .do(filtered => this.namesake$.next(filtered))
       .subscribe();
   }
@@ -69,14 +69,13 @@ export class SeiyuuService {
     let [single, multiple] = found.do(_=>this.messageSvc.blank()).partition(list => list.length === 1);
 
     multiple.map(ids => [{name: this.totalMap[ids[0]].name, namesakes: ids.map(id => this.totalMap[id])}])
-      .withLatestFrom(this.namesake$, (New, old) => [...old, ...New])
+      .withLatestFrom(this.namesake$, (New, old) => Utils.unique([...old, ...New], 'name'))
       .subscribe(namesakes => this.namesake$.next(<BasicSeiyuu[]>namesakes));
 
     single
       .map(ids => ids[0])
-      .merge(this.picked$.withLatestFrom(this.namesake$)
-        .do(([picked,list]) => this.namesake$.next(list.filter(el => !el.namesakes.find(nmsk => nmsk._id === picked))))
-        .map(([picked]) => picked)
+      .merge(this.picked$
+        .do(id => this.removed$.next(id))
       )
       .withLatestFrom(this.routeId$)
       .map(([id, ids]) => this.routingSvc.add(id, ids))
@@ -101,8 +100,10 @@ export class SeiyuuService {
     }).map(list => list.map(el => new Seiyuu(el)))
       .catch(err => {
         this.messageSvc.error('Error loading seiyuu details: '+err.status);
+
         console.warn(err.message, err.error && err.error.message);
         ids.forEach(id => this.removed$.next(id));
+
         return Observable.of([])
       })
   }
@@ -118,9 +119,11 @@ export class SeiyuuService {
     }).map(list => list.map(el => new BasicSeiyuu(el)))
       .do(list => list.forEach(seiyuu => this.totalMap[seiyuu._id] = seiyuu))
       .catch(err => {
-        this.pending = false;
         this.messageSvc.error('Error getting cached list: '+err.status);
+
         console.warn(err.message, err.error && err.error.message);
+        this.pending = false;
+
         throw err;
       })
   }

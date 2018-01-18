@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRoute, NavigationEnd, Router} from "@angular/router";
 import {Observable} from "rxjs/Observable";
+import {Utils} from "./utils.service";
 
 @Injectable()
 export class RoutingService {
@@ -17,7 +18,7 @@ export class RoutingService {
   }
 
   add(id, list): number {
-    let newList = [...list, id].filter((el, i, arr) => arr.indexOf(el) === i);
+    let newList = Utils.unique([...list, id]);
     this.router.navigate(['/'+newList.join(','), this.mode]);
     // was it a duplicate?
     return list.length == newList.length ? id : null;

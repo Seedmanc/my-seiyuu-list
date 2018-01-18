@@ -16,9 +16,10 @@ export class SeiyuuPanelComponent implements OnInit {
   ngOnInit() {
     if (this.seiyuu.pending) {
       this.seiyuuSvc.updateRequest$.next(this.seiyuu._id);
-    }
-    if (this.seiyuu.namesakes) {
-      this.seiyuu.namesakes.forEach(namesake => this.seiyuuSvc.updateRequest$.next(namesake._id));
+    } else if (this.seiyuu.namesakes) {
+      this.seiyuu.namesakes
+        .filter(namesake => namesake.pending)
+        .forEach(namesake => this.seiyuuSvc.updateRequest$.next(namesake._id));
     }
   }
 
@@ -27,7 +28,7 @@ export class SeiyuuPanelComponent implements OnInit {
   }
 
   remove() {
-      this.seiyuuSvc.removed$.next(this.seiyuu._id || this.seiyuu.name);
+      this.seiyuuSvc.removed$.next(this.seiyuu._id || this.seiyuu.namesakes && this.seiyuu.namesakes[0]._id);
   }
 
   select = ()=>{}

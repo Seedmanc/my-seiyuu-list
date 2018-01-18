@@ -18,7 +18,7 @@ export class BasicSeiyuu {
     }
 
   public get pending(): boolean {
-    return !this['roles'] && !!this._id;
+    return !this['roles'] && !this.namesakes && !!this.name;
   };
 
   public get link(): string {
