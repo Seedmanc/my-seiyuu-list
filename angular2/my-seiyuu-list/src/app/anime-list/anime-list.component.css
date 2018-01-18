@@ -11,6 +11,7 @@ td[data-main=true] {
 }
 
 label {
+  top: 1px;
   vertical-align: super;
   padding-left: 0;
 }
@@ -24,10 +25,16 @@ label {
 
 #mainOnly-wrapper {
   position:relative;
+  float: right;
 
-  top: 0.5em;
+  top: -2px;
   z-index:2;
 
   height: 0;
   text-align:center;
+
+  text-decoration: none;
+}
+#anime-title {
+  float: left;
 }

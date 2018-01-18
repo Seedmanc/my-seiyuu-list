@@ -40,12 +40,6 @@ h4 {
   margin-bottom: 5px;
 }
 
-/*.col-xs-6 {
-  width: calc(50% - 8px);
-  margin-right: 4px;
-  margin-left: 4px;
-}*/
-
 .namesake {
   font-weight: bold;
   text-align: center;
@@ -71,4 +65,14 @@ h4 {
 
 .small-thumb {
   height: 32px;
+}
+
+@media (max-width: 768px) {
+  .seiyuu {
+    width: 49%!important;
+  }
+
+  :host:nth-child(even) .seiyuu {
+    float: right!important;
+  }
 }

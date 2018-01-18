@@ -1,19 +1,19 @@
 <div class="col-md-12 no-gutter table-responsive">
-  <div id="mainOnly-wrapper">
-    <input type="checkbox" #mainOnly (ngModelChange)="onMainOnlyChange(mainOnly.value)"
-           class="form-control" id="mainOnly">
-    <label for="mainOnly" class="checkbox-inline">
-      main only
-    </label>
-  </div>
 
   <table class="table table-striped  header-fixed" id="rolesTable">
     <thead>
       <tr>
         <th class="text-center">#</th>
         <th>
-          <a href="javascript:void(0)" (click)="sort('title')">
+          <a href="javascript:void(0)" (click)="sort('title')" id="anime-title">
             ▴title▾</a>
+          <a id="mainOnly-wrapper">
+            <input type="checkbox" #mainOnly (ngModelChange)="onMainOnlyChange(mainOnly.value)"
+                   class="form-control" id="mainOnly">
+            <label for="mainOnly" class="checkbox-inline">
+              main only
+            </label>
+          </a>
         </th>
         <th class="text-right">
           <a href="javascript:void(0)" (click)="sort('character')">
