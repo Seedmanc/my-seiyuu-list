@@ -15,7 +15,7 @@ export class SeiyuuService {
   updateRequest$: Subject<number> = new Subject();
   displayList$: Observable<BasicSeiyuu[]>;
   picked$: Subject<number> = new Subject();
-  removed$: Subject<number> = new Subject();
+  removed$: Subject<number|string> = new Subject();
 
   pending: boolean = true;
 
@@ -55,7 +55,7 @@ export class SeiyuuService {
     this.removed$.withLatestFrom(this.routeId$)
       .map(([removed,current]) => {this.routingSvc.remove(removed, current); return removed;})
       .withLatestFrom(this.namesake$)
-      .map(([removed,current]) => current.filter(nmsk => !nmsk.namesakes.find(el => el._id === removed)))
+      .map(([removed,current]) => current.filter(nmsk => nmsk.name !== removed))
       .do(filtered => this.namesake$.next(filtered))
       .subscribe();
   }
@@ -75,7 +75,7 @@ export class SeiyuuService {
     single
       .map(ids => ids[0])
       .merge(this.picked$
-        .do(id => this.removed$.next(id))
+        .do(id => this.removed$.next(this.totalMap[id].name))
       )
       .withLatestFrom(this.routeId$)
       .map(([id, ids]) => this.routingSvc.add(id, ids))
