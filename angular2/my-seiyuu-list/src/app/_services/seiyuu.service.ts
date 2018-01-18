@@ -7,6 +7,7 @@ import {Subject} from "rxjs/Subject";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {Utils} from "./utils.service";
 import {RoutingService} from "./routing.service";
+import {AnimeService} from "./anime.service";
 
 @Injectable()
 export class SeiyuuService {
@@ -23,18 +24,13 @@ export class SeiyuuService {
   private totalMap: {[key:number]: BasicSeiyuu} = {};
 
 
-  constructor(private rest:RestService, private messageSvc: MessagesService, private routingSvc: RoutingService) {
+  constructor(private rest:RestService, private messageSvc: MessagesService,
+              private routingSvc: RoutingService, private animeSvc:AnimeService) {
 
-    this.totalList$ = this.rest.mongoCall({
-      coll: 'seiyuu',
-      mode: 'get',
-      query: {
-        f: {name: 1, hits: 1, updated: 1, count: 1, accessed: 1},
-        s: {name: 1}
-      }
-    }).map(list => list.map(el => new BasicSeiyuu(el)))
-      .do(list => this.messageSvc.status(list.length + ` record${Utils.pluralize(list.length)} cached`))
-      .do(list => list.forEach(seiyuu => this.totalMap[seiyuu._id] = seiyuu))
+    this.totalList$ = this.getTotalList()
+      .do(list => this.animeSvc.animeCount$
+        .subscribe(number => this.messageSvc.status(list.length + ` seiyuu & ${number} anime records cached`))
+      )
       .do(_ => this.pending = false)
       .publishLast().refCount();
 
@@ -103,6 +99,30 @@ export class SeiyuuService {
         }
       }
     }).map(list => list.map(el => new Seiyuu(el)))
+      .catch(err => {
+        this.messageSvc.error('Error loading seiyuu details: '+err.status);
+        console.warn(err.message, err.error && err.error.message);
+        ids.forEach(id => this.removed$.next(id));
+        return Observable.of([])
+      })
+  }
+
+  private getTotalList(): Observable<BasicSeiyuu[]> {
+    return this.rest.mongoCall({
+      coll: 'seiyuu',
+      mode: 'get',
+      query: {
+        f: {name: 1, hits: 1, updated: 1, count: 1, accessed: 1},
+        s: {name: 1}
+      }
+    }).map(list => list.map(el => new BasicSeiyuu(el)))
+      .do(list => list.forEach(seiyuu => this.totalMap[seiyuu._id] = seiyuu))
+      .catch(err => {
+        this.pending = false;
+        this.messageSvc.error('Error getting cached list: '+err.status);
+        console.warn(err.message, err.error && err.error.message);
+        throw err;
+      })
   }
 
 }

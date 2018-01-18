@@ -32,7 +32,6 @@ export class HeaderComponent implements OnInit {
       .merge(input)
       .map((event:Event) => event.target['value'])
       .filter(value => !!(value && value.trim().length > 2))
-      .distinctUntilChanged()
       .do(_ => this.selectAll());
 
     this.seiyuuSvc.addSearch(search);

@@ -2,3 +2,6 @@
   opacity: 0.9;
   font-size: unset;
 }
+.toggled {
+  background-color: #e6e6e6;
+}

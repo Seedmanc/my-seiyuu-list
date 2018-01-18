@@ -1,5 +1,5 @@
 <div id="header" class="col-sm-12 no-gutter">
-  <form class="col-sm-3 col-md-3 col-lg-2">
+  <form class="col-lg-2 col-md-3 col-sm-3">
     <div class="form-group  has-feedback">
       <input type="text" id="search-query" placeholder="1 seiyuu name" (click)="selectAll()"
              [disabled]="disable()" autofocus  #search [(ngModel)]="searchQuery"
@@ -12,16 +12,14 @@
     <option [value]="name" *ngFor="let name of name$ | async | uniq"></option>
   </datalist>
 
-  <div class="col-sm-9 col-md-9 col-lg-10 header">
-    <div class="col-lg-9 col-md-8 col-sm-7 no-gutter">
-      <msl-spinner float="left" *ngIf="seiyuuSvc.pending"></msl-spinner>
-      <a id="status-hint"
-         title="You can still look up any seiyuu regardless of cached records #">
-        <pre id="status" [ngClass]="{error: (status$ | async).isError}">{{(status$ | async).data}}</pre>
-      </a>
-    </div>
-    <div class="col-lg-3 col-md-4 col-sm-5 text-center no-gutter">
-      <a href="#" title="search"><img src="assets/msl-logo-200-white.png" alt="reset" id="msl-logo"></a>
-    </div>
+  <div class="col-lg-7 col-md-6 col-sm-5 no-gutter">
+    <msl-spinner float="left" *ngIf="seiyuuSvc.pending"></msl-spinner>
+    <a id="status-hint"
+       title="You can still look up any seiyuu regardless of cached records #">
+      <pre id="status" [ngClass]="{error: (status$ | async).isError}">{{(status$ | async).data}}</pre>
+    </a>
+  </div>
+  <div class="col-lg-3 col-md-3 col-sm-4 text-center no-gutter">
+    <a href="#" title="search"><img src="assets/msl-logo-200-white.png" alt="reset" id="msl-logo"></a>
   </div>
 </div>

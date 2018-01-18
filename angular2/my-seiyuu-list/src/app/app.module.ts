@@ -23,7 +23,7 @@ import { SpinnerComponent } from './spinner/spinner.component';
 import { BaseComponent } from './base/base.component';
 import {UniqPipe} from "./uniq.pipe";
 import {Utils} from "./_services/utils.service";
-import {RoutingService} from "./_services/routing.service";
+import {AnimeService} from "./_services/anime.service";
 
 @NgModule({
   declarations: [
@@ -48,7 +48,7 @@ import {RoutingService} from "./_services/routing.service";
     FormsModule,
     RouterModule
   ],
-  providers: [RestService, MessagesService, Utils],
+  providers: [RestService, MessagesService, Utils, AnimeService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
