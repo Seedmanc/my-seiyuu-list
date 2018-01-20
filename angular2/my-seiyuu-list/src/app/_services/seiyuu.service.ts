@@ -35,8 +35,8 @@ export class SeiyuuService {
       .publishLast().refCount();
 
     this.routeId$ = this.routingSvc.routeId$
-      .combineLatest(this.totalList$)
-      .map(([ids]) => ids.filter(id => !!this.totalMap[id]));
+      .delayWhen(()=>this.totalList$)
+      .map(ids => ids.filter(id => !!this.totalMap[id]));
 
     this.updateRequest$.bufferTime(300)
       .filter(el=>!!el.length)      //otherwise endless loop wtf
@@ -53,7 +53,8 @@ export class SeiyuuService {
       .map(([seiyuus, namesakes]) => [...seiyuus, ...namesakes]);
 
     this.removed$.withLatestFrom(this.routeId$)
-      .map(([removed,current]) => {this.routingSvc.remove(removed, current); return removed;})
+      .do(([removed,current]) => this.routingSvc.remove(removed, current))
+      .map(([removed]) => removed)
       .withLatestFrom(this.namesake$)
       .map(([removed,current]) => current.filter(nmsk => nmsk.name !== removed))
       .do(filtered => this.namesake$.next(filtered))
@@ -68,7 +69,7 @@ export class SeiyuuService {
 
     let [single, multiple] = found.do(_=>this.messageSvc.blank()).partition(list => list.length === 1);
 
-    multiple.map(ids => [{name: this.totalMap[ids[0]].name, namesakes: ids.map(id => this.totalMap[id])}])
+    multiple.map(ids => [{name: this.totalMap[ids[0]].name,  namesakes: ids.map(id => this.totalMap[id])}])
       .withLatestFrom(this.namesake$, (New, old) => Utils.unique([...old, ...New], 'name'))
       .subscribe(namesakes => this.namesake$.next(<BasicSeiyuu[]>namesakes));
 
@@ -90,7 +91,7 @@ export class SeiyuuService {
 
   private loadByIds(ids: number[]): Observable<Seiyuu[]> {
     return this.rest.mongoCall({
-      coll: 'seiyuu',
+      coll: 'seiyuu-test',
       mode: 'get',
       query: {
         q: {
@@ -110,7 +111,7 @@ export class SeiyuuService {
 
   private getTotalList(): Observable<BasicSeiyuu[]> {
     return this.rest.mongoCall({
-      coll: 'seiyuu',
+      coll: 'seiyuu-test',
       mode: 'get',
       query: {
         f: {name: 1, hits: 1, updated: 1, count: 1, accessed: 1},

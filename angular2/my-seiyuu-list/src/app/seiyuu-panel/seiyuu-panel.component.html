@@ -1,4 +1,4 @@
-<div class="seiyuu col-lg-12 col-md-12 col-sm-12 col-xs-6 well well-sm"
+<div class="seiyuu col-sm-12 col-xs-6 well well-sm"
      [ngClass]="{l: seiyuu.l, c: seiyuu.c, namesake: seiyuu.namesakes}" (mouseenter)="select($event)">
 
   <a class="remove close" (click)="remove()">&times;</a>
@@ -28,10 +28,10 @@
   </table>
 
   <div class="row" *ngIf="seiyuu.namesakes">
-    <div class="col-sm-12"><h4><b>{{seiyuu.name}}</b></h4></div>
-    <div class="col-sm-12">{{seiyuu.namesakes.length}} matches found</div>
-    <div class="col-sm-12">choose one: </div>
-    <div class="col-sm-12 btn-group btn-group-vertical">
+    <div><h4><b>{{seiyuu.name}}</b></h4></div>
+    <div>{{seiyuu.namesakes.length}} matches found</div>
+    <div>choose one: </div>
+    <div class="col-xs-12 btn-group btn-group-vertical">
       <div class="col-sm-12 btn btn-default" *ngFor="let namesake of seiyuu.namesakes" (click)="pick(namesake._id)">
         <msl-spinner size="28px" float="left" *ngIf="namesake.pending"></msl-spinner>
         <a [href]="namesake.link" target="_blank">

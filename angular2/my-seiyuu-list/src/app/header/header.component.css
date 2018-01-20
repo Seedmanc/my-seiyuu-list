@@ -1,15 +1,23 @@
-#msl-logo {
-  position: relative;
-  top: 2px;
+:host {
+  font-size: 16px;
+}
 
+#msl-logo {
+  margin-top: 2px;
   margin-right: -1rem;
-  vertical-align: text-bottom;
 }
 
 #search-query {
-  font-size: 16px;
+  font-size: inherit;
 
-  padding-right: 1rem;
+  padding-right: 0.4rem;
+}
+.form-control {
+  padding: 7px;
+}
+
+i {
+  margin-right: -4px;
 }
 
 #header {
@@ -22,28 +30,19 @@
 
 #status {
   text-align: center;
-  border: 0;
-
-  background-color: #0a6;
-  color: #dfe;
-
-  margin: 0;
   padding: 0.55rem;
-  padding-top: 0.56rem;
 
-  font-size: 16px;
-  font-family: inherit;
+  color: #dfe;
+  border-radius: 4px;
 
-  overflow: visible;
+  overflow: hidden;
+  white-space: nowrap;
+
+  cursor: help;
 }
 #status.error {
   background: #c45;
   color: #fed;
-}
-
-#status-hint {
-  cursor: help;
-  text-decoration: none;
 }
 
 .form-group {

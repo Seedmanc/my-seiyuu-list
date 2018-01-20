@@ -38,3 +38,6 @@ label {
 #anime-title {
   float: left;
 }
+.tier {
+  width: 120px;
+}
