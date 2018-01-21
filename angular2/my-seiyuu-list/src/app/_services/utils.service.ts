@@ -10,7 +10,7 @@ export class Utils {
   }
 
   public static pluralize(number) {
-    return number && (number % 10 > 1 || (number % 10) == 0) ? 's' : '';
+    return number !== undefined && (number % 10 > 1 || (number % 10) == 0) ? 's' : '';
   };
 
   public static unique<T>(list: T[], prop?: string): T[] {

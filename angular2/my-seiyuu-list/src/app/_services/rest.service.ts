@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import "rxjs/Rx";
+import {env} from "../../environments/environment";
 
 @Injectable()
 export class RestService {
@@ -18,7 +19,7 @@ export class RestService {
     let options = Object.keys(query).reduce((total, key) => total + `&${key}=${JSON.stringify(query[key])}`, '');
 
     return this.http[mode](
-      `https://api.mongolab.com/api/1/databases/myseiyuulist/${path}?apiKey=R4jg8qqhpTI68lRYfYjEJoM5aRiJnrLK${options}`,
+      `${env.mongoUrl}/${path}?apiKey=${env.apiKey}${options}`,
       payload
     );
 

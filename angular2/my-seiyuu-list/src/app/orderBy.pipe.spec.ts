@@ -1,0 +1,24 @@
+import {OrderByPipe} from "./orderBy.pipe";
+
+describe('Pipe: orderByPipe', () => {
+  it('should order an object list', () => {
+    let orderByPipe = new OrderByPipe();
+    expect(JSON.stringify(orderByPipe.transform([{name: '3'}, {name: '1'}, {name: '2'}], 'name')))
+      .toBe(JSON.stringify([{name: '1'}, {name: '2'}, {name: '3'}]));
+  });
+
+  it('should order an object list descending', () => {
+    let orderByPipe = new OrderByPipe();
+    expect(JSON.stringify(orderByPipe.transform([{name: '3'}, {name: '1'}, {name: '2'}], 'name', true)))
+      .toBe(JSON.stringify([{name: '3'}, {name: '2'}, {name: '1'}]));
+  });
+
+  it('should order an object list grouping by main', () => {
+    let orderByPipe = new OrderByPipe();
+    expect(JSON.stringify(orderByPipe.transform(
+      [{name: '3', main:true}, {name: '1', main:false}, {name: '2', main:true}, {name: '4', main:false}],
+      'name')))
+      .toBe(JSON.stringify([{name: '1', main:false}, {name: '4', main:false}, {name: '2', main:true}, {name: '3', main:true}]));
+  });
+
+});
