@@ -4,8 +4,7 @@ import {HttpClient} from "@angular/common/http";
 @Component({
   selector: 'msl-photo-list',
   templateUrl: './photo-list.component.html',
-  styleUrls: ['./photo-list.component.css'],
-// encapsulation: ViewEncapsulation.None
+  styleUrls: ['./photo-list.component.css']
 })
 export class PhotoListComponent implements OnInit {
   photoPage: string;

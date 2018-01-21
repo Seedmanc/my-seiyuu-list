@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AnimeListComponent } from './anime-list.component';
+import {OrderByPipe} from "../orderBy.pipe";
 
 describe('AnimeListComponent', () => {
   let component: AnimeListComponent;
@@ -8,7 +9,7 @@ describe('AnimeListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AnimeListComponent ]
+      declarations: [ AnimeListComponent, OrderByPipe ]
     })
     .compileComponents();
   }));
