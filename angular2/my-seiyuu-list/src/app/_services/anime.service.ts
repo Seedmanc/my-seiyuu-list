@@ -9,7 +9,7 @@ export class AnimeService {
   constructor(private rest: RestService) {
     this.animeCount$ = this.rest.mongoCall({
       coll: 'anime',
-      mode: 'get',
+      mode: 'GET',
       query: {c: true}
     });
   }

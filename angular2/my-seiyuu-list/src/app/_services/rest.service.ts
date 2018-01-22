@@ -8,17 +8,21 @@ export class RestService {
 
   constructor(private http: HttpClient) { }
 
-  mongoCall({coll, mode, payload=undefined, query={}}) {
+  mongoCall({coll, mode, payload={}, query={}}) {
     let path = "collections/" + coll;
+
+    if (JSON.stringify(payload) === '{}') {
+      payload = undefined;
+    }
 
     if (mode == "runCommand") {
       path = mode;
-      mode = "post";
+      mode = "POST";
     }
 
     let options = Object.keys(query).reduce((total, key) => total + `&${key}=${JSON.stringify(query[key])}`, '');
 
-    return this.http[mode](
+    return this.http[mode.toLowerCase()](
       `${env.mongoUrl}/${path}?apiKey=${env.apiKey}${options}`,
       payload
     );

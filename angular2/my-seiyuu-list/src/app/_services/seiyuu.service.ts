@@ -92,7 +92,7 @@ export class SeiyuuService {
   private loadByIds(ids: number[]): Observable<Seiyuu[]> {
     return this.rest.mongoCall({
       coll: 'seiyuu-test',
-      mode: 'get',
+      mode: 'GET',
       query: {
         q: {
            _id: {'$in': ids}
@@ -112,7 +112,7 @@ export class SeiyuuService {
   private getTotalList(): Observable<BasicSeiyuu[]> {
     return this.rest.mongoCall({
       coll: 'seiyuu-test',
-      mode: 'get',
+      mode: 'GET',
       query: {
         f: {name: 1, hits: 1, updated: 1, count: 1, accessed: 1},
         s: {name: 1}

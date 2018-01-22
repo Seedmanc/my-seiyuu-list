@@ -5,7 +5,7 @@ import {MagazineListComponent} from "./magazine-list/magazine-list.component";
 import {PhotoListComponent} from "./photo-list/photo-list.component";
 import {BaseComponent} from "./base/base.component";
 
-const appRoutes: Routes = [
+export const appRoutes: Routes = [
   { path: ':ids', component: BaseComponent,
     children: [
     { path: 'anime', component: AnimeListComponent },

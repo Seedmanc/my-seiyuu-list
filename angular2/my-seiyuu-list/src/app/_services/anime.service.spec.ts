@@ -26,5 +26,6 @@ describe('AnimeService', () => {
         url: `${env.mongoUrl}/collections/anime?apiKey=${env.apiKey}&c=true`,
         method:'GET'
       }, 'GET to count the # of records in the anime DB').flush(4286);
-  })))
+    })
+  ))
 });

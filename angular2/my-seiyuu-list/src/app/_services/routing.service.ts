@@ -14,7 +14,9 @@ export class RoutingService {
       .subscribe((e:any) => this.mode = e.urlAfterRedirects.split('/').reverse()[0]);
 
    this.routeId$ = this.route.paramMap
-      .map(params => (params.get('ids')||'-').split(',').map(el => +el.replace(/\D/g, '')).filter(el=>!!el));
+     .map(params => (params.get('ids')||'-').split(',')
+        .map(el => +el.replace(/\D/g, ''))
+        .filter(el=>!!el));
   }
 
   add(id, list): number {
@@ -26,7 +28,7 @@ export class RoutingService {
 
   remove(id, list) {
     let newList = list.filter(el => el !== id);
-    this.router.navigate(['/'+(newList.join(',')||'-'), this.mode]);
+    return this.router.navigate(['/'+(newList.join(',')||'-'), this.mode]);
   }
 
 }
