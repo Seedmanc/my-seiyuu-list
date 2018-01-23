@@ -31,7 +31,7 @@ export class SeiyuuService {
       .do(list => this.animeSvc.animeCount$
         .subscribe(number => this.messageSvc.status(list.length + ` seiyuu & ${number} anime records cached`))
       )
-      .do(_ => this.pending = false)
+      .do(() => this.pending = false)
       .publishLast().refCount();
 
     this.routeId$ = this.routingSvc.routeId$

@@ -1,9 +1,9 @@
 import {TestBed, inject, async} from '@angular/core/testing';
 import { HttpClientModule} from "@angular/common/http";
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import {AnimeService} from "./anime.service";
-import {RestService} from "./rest.service";
-import {env} from "../../environments/environment";
+import {AnimeService} from "../anime.service";
+import {RestService} from "../rest.service";
+import {env} from "../../../environments/environment";
 
 describe('AnimeService', () => {
   beforeEach(() => {

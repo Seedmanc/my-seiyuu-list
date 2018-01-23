@@ -1,21 +1,21 @@
 import {TestBed, inject, async  } from '@angular/core/testing';
-import {RoutingService} from "./routing.service";
+import {RoutingService} from "../routing.service";
 import {RouterTestingModule} from "@angular/router/testing";
-import {appRoutes} from "../app-routing.module";
-import {BaseComponent} from "../base/base.component";
-import {AnimeListComponent} from "../anime-list/anime-list.component";
-import {PhotoListComponent} from "../photo-list/photo-list.component";
-import {MagazineListComponent} from "../magazine-list/magazine-list.component";
+import {appRoutes} from "../../app-routing.module";
+import {BaseComponent} from "../../base/base.component";
+import {AnimeListComponent} from "../../anime-list/anime-list.component";
+import {PhotoListComponent} from "../../photo-list/photo-list.component";
+import {MagazineListComponent} from "../../magazine-list/magazine-list.component";
 import {Router} from "@angular/router";
-import {HeaderComponent} from "../header/header.component";
-import {SeiyuuPanelComponent} from "../seiyuu-panel/seiyuu-panel.component";
-import {TabsComponent} from "../tabs/tabs.component";
-import {FooterComponent} from "../footer/footer.component";
-import {OrderByPipe} from "../orderBy.pipe";
-import {RankingComponent} from "../ranking/ranking.component";
-import {SpinnerComponent} from "../spinner/spinner.component";
+import {HeaderComponent} from "../../header/header.component";
+import {SeiyuuPanelComponent} from "../../seiyuu-panel/seiyuu-panel.component";
+import {TabsComponent} from "../../tabs/tabs.component";
+import {FooterComponent} from "../../footer/footer.component";
+import {OrderByPipe} from "../../orderBy.pipe";
+import {RankingComponent} from "../../ranking/ranking.component";
+import {SpinnerComponent} from "../../spinner/spinner.component";
 import {FormsModule} from "@angular/forms";
-import {UniqPipe} from "../uniq.pipe";
+import {UniqPipe} from "../../uniq.pipe";
 import { Location} from '@angular/common';
 
 describe('RoutingService', () => {

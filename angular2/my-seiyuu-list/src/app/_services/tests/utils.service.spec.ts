@@ -1,5 +1,5 @@
 import { TestBed, inject } from '@angular/core/testing';
-import {Utils} from "./utils.service";
+import {Utils} from "../utils.service";
 
 describe('Utils', () => {
   it('should be injectable', () => {

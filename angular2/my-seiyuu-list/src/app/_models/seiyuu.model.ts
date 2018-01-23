@@ -29,10 +29,11 @@ export class BasicSeiyuu {
     Object.keys(obj).forEach(key => {
       if (this[key] === undefined) this[key] = obj[key]
     });
+    return this;
   }
 
   protected get photo(): string {
-    return this['pic'] && `//${Utils.theSite}/${this['pic']}`;
+    return this['pic'] && `//${Utils.theSite}${this['pic']}`;
   }
   protected get thumb(): string {
     return this.photo && this.photo.replace('.jp', 'v.jp');

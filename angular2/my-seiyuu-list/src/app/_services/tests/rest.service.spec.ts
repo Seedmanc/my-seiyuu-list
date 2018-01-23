@@ -1,8 +1,8 @@
 import {TestBed, inject, async} from '@angular/core/testing';
 import { HttpClientModule} from "@angular/common/http";
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import {RestService} from "./rest.service";
-import {env} from "../../environments/environment";
+import {RestService} from "../rest.service";
+import {env} from "../../../environments/environment";
 
 describe('RestService', () => {
   beforeEach(() => {

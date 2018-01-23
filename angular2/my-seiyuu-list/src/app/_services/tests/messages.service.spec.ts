@@ -1,6 +1,6 @@
 import {TestBed, inject, fakeAsync, tick, async} from '@angular/core/testing';
 
-import { MessagesService } from './messages.service';
+import { MessagesService } from '../messages.service';
 
 describe('MessagesService', () => {
   beforeEach(() => {
