@@ -112,7 +112,7 @@ fdescribe('SeiyuuService', () => {
     })
   );
 
-  fit('should find by name', fakeAsync(
+  it('should find by name', fakeAsync(
     inject([SeiyuuService, MessagesService, HttpTestingController],
       (service:SeiyuuService, msgSvc:MessagesService, backend:HttpTestingController) => {
       service.displayList$.subscribe(data => x=data);
@@ -124,7 +124,45 @@ fdescribe('SeiyuuService', () => {
 
       service.addSearch(Observable.of('Maeda Konomi'));
       tick();
-      expect(JSON.stringify(x)).toBe(JSON.stringify([basicModel]));
+      expect(JSON.stringify(x)).toBe(JSON.stringify([new BasicSeiyuu(basicModel)]));
     })
-  ))
+  ));
+
+  it('should find namesakes', fakeAsync(
+    inject([SeiyuuService, MessagesService, HttpTestingController],
+      (service:SeiyuuService, msgSvc:MessagesService, backend:HttpTestingController) => {
+      service.displayList$.subscribe(data => x=data);
+
+      backend.expectOne({
+        url: `${env.mongoUrl}/collections/seiyuu-test?apiKey=${env.apiKey}&f={"name":1,"hits":1,"updated":1,"count":1,"accessed":1}&s={"name":1}`,
+        method:'GET'
+      }, 'GET to count the # of records in the seiyuu DB').flush([basicModel,basicModel]);
+
+      service.addSearch(Observable.of('Maeda Konomi'));
+      tick();
+      expect(JSON.stringify(x)).toBe(JSON.stringify([{name: 'Maeda Konomi', namesakes: [new BasicSeiyuu(basicModel), new BasicSeiyuu(basicModel)]}]));
+    })
+  ));
+
+  it('should pick one seiyuu from a list of namesakes', fakeAsync(
+    inject([SeiyuuService, MessagesService, HttpTestingController],
+      (service:SeiyuuService, msgSvc:MessagesService, backend:HttpTestingController) => {
+        service.displayList$.subscribe(data => x=data);
+
+        let bm2= Object.assign({}, basicModel);
+        bm2._id = bm2._id*1000;
+
+        backend.expectOne({
+          url: `${env.mongoUrl}/collections/seiyuu-test?apiKey=${env.apiKey}&f={"name":1,"hits":1,"updated":1,"count":1,"accessed":1}&s={"name":1}`,
+          method:'GET'
+        }, 'GET to count the # of records in the seiyuu DB').flush([basicModel,bm2]);
+
+        service.addSearch(Observable.of('Maeda Konomi'));
+        tick();
+        expect(JSON.stringify(x)).toBe(JSON.stringify([{name: 'Maeda Konomi', namesakes: [new BasicSeiyuu(basicModel), new BasicSeiyuu(bm2)]}]));
+        service.picked$.next(bm2._id);
+        tick();
+        expect(JSON.stringify(x)).toBe(JSON.stringify([new BasicSeiyuu(bm2)]));
+      })
+  ));
 });

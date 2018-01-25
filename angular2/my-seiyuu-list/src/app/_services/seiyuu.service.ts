@@ -38,8 +38,9 @@ export class SeiyuuService {
       .delayWhen(()=>this.totalList$)
       .map(ids => ids.filter(id => !!this.totalMap[id]));
 
-    this.updateRequest$.bufferTime(300)
-      .filter(el=>!!el.length)      //otherwise endless loop wtf
+    this.updateRequest$
+      .bufferToggle(this.updateRequest$.throttleTime(300), ()=>Observable.timer(300))
+      .do(console.warn)
       .flatMap(ids => this.loadByIds(ids))
       .subscribe(seiyuus => {
         seiyuus.forEach(seiyuu => {
