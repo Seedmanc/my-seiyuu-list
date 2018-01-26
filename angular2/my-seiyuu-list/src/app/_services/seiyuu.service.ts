@@ -39,7 +39,7 @@ export class SeiyuuService {
       .map(ids => ids.filter(id => !!this.totalMap[id]));
 
     this.updateRequest$
-      .bufferToggle(this.updateRequest$.throttleTime(300), ()=>Observable.timer(300))
+      .bufferToggle(this.updateRequest$.throttleTime(200), ()=>Observable.timer(200))
       .do(console.warn)
       .flatMap(ids => this.loadByIds(ids))
       .subscribe(seiyuus => {
