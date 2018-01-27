@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {BasicSeiyuu, Seiyuu} from "../_models/seiyuu.model";
+import {BasicSeiyuu, Namesake, Seiyuu} from "../_models/seiyuu.model";
 import {Observable} from "rxjs/Observable";
 import {RestService} from "./rest.service";
 import {MessagesService} from "./messages.service";
@@ -13,7 +13,7 @@ import {AnimeService} from "./anime.service";
 export class SeiyuuService {
   totalList$: Observable<BasicSeiyuu[]>;
   updateRequest$: Subject<number> = new Subject();
-  displayList$: Observable<BasicSeiyuu[]>;
+  displayList$: Observable<(BasicSeiyuu|Namesake)[]>;
   picked$: Subject<number> = new Subject();
   removed$: Subject<number|string> = new Subject();
   selected$: Subject<Seiyuu> = new Subject();
@@ -21,7 +21,7 @@ export class SeiyuuService {
   pending: boolean = true;
 
   private routeId$: Observable<number[]>;
-  private namesake$: Subject<BasicSeiyuu[]> = new BehaviorSubject([]);
+  private namesake$: Subject<Namesake[]> = new BehaviorSubject([]);
   private totalMap: {[key:number]: BasicSeiyuu} = {};
 
 
@@ -70,9 +70,9 @@ export class SeiyuuService {
 
     let [single, multiple] = found.do(_=>this.messageSvc.blank()).partition(list => list.length === 1);
 
-    multiple.map(ids => [{name: this.totalMap[ids[0]].name,  namesakes: ids.map(id => this.totalMap[id])}])
-      .withLatestFrom(this.namesake$, (New, old) => Utils.unique([...old, ...New], 'name'))
-      .subscribe(namesakes => this.namesake$.next(<BasicSeiyuu[]>namesakes));
+    multiple.map(ids => new Namesake(ids.map(id => this.totalMap[id])))
+      .withLatestFrom(this.namesake$, (New, old) => Utils.unique([...old, New], 'name'))
+      .subscribe(namesakes => this.namesake$.next(namesakes));
 
     single
       .map(ids => ids[0])

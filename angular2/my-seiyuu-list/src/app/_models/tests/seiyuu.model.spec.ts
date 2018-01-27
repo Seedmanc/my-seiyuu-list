@@ -31,8 +31,7 @@ export const basicModel2 = {
   "count": 1,
   "hits": 2,
   "updated": "Sun, 25 Oct 2015 10:02:56 GMT",
-  "accessed": +date,
-  namesakes: [basicModel]
+  "accessed": +date
 };
 export const model2 = Object.assign({}, basicModel2, {
   "pic": "/images/voiceactors/3/33867.jpg",
@@ -56,7 +55,6 @@ describe('Seiyuu model', () => {
   it('should require upgrade when basic unless with namesakes', ()=>{
     expect((new BasicSeiyuu(basicModel)).pending).toBeTruthy();
     expect((new Seiyuu(model)).pending).toBeFalsy();
-    expect((new BasicSeiyuu(basicModel2)).pending).toBeFalsy();
   });
   it('should upgrade from basic to full', ()=>{
     let upgraded = (new BasicSeiyuu(basicModel)).upgrade(model);

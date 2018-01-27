@@ -9,7 +9,7 @@ import {AnimeService} from "../anime.service";
 import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
 import {env} from "../../../environments/environment";
 import {basicModel, basicModel2, model, model2} from "../../_models/tests/seiyuu.model.spec";
-import {BasicSeiyuu, Seiyuu} from "../../_models/seiyuu.model";
+import {Namesake, BasicSeiyuu, Seiyuu} from "../../_models/seiyuu.model";
 import {RoutingServiceMock} from "./routing.service.mock";
 import {RoutingService} from "../routing.service";
 import {Observable} from "rxjs/Observable";
@@ -239,8 +239,7 @@ describe('SeiyuuService', () => {
       mockList(backend, [[basicModel,basicModel]]);
 
       service.addSearch(Observable.of('Maeda Konomi'));
-      expect(JSON.stringify(x)).toBe(JSON.stringify([{name: 'Maeda Konomi', namesakes:
-        [new BasicSeiyuu(basicModel), new BasicSeiyuu(basicModel)]}]
+      expect(JSON.stringify(x)).toBe(JSON.stringify([new Namesake([new BasicSeiyuu(basicModel), new BasicSeiyuu(basicModel)])]
       ));
     })
   );
@@ -257,7 +256,7 @@ describe('SeiyuuService', () => {
 
         service.addSearch(Observable.of('Maeda Konomi'));
 
-        expect(JSON.stringify(x)).toBe(JSON.stringify([{name: 'Maeda Konomi', namesakes: [new BasicSeiyuu(basicModel), new BasicSeiyuu(bm2)]}]));
+        expect(JSON.stringify(x)).toBe(JSON.stringify([new Namesake([new BasicSeiyuu(basicModel), new BasicSeiyuu(bm2)])]));
         service.picked$.next(bm2._id);
 
         expect(JSON.stringify(x)).toBe(JSON.stringify([new BasicSeiyuu(bm2)]));

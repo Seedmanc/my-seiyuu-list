@@ -32,7 +32,7 @@
     <div>{{seiyuu.namesakes.length}} matches found</div>
     <div>choose one: </div>
     <div class="col-xs-12 btn-group btn-group-vertical">
-      <div class="col-sm-12 btn btn-default" *ngFor="let namesake of seiyuu.namesakes" (click)="pick(namesake._id)">
+      <div class="col-sm-12 btn btn-default pick" *ngFor="let namesake of seiyuu.namesakes" (click)="pick(namesake._id)">
         <msl-spinner size="28px" float="left" *ngIf="namesake.pending"></msl-spinner>
         <a [href]="namesake.link" target="_blank">
           <img class="small-thumb" *ngIf="namesake.photo" [src]="namesake.thumb"/>
