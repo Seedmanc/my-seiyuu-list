@@ -24,7 +24,11 @@ describe('SeiyuuService', () => {
     model,
     model2
   ];
-  let x;
+  let x; let mockList = (backend, returned) => backend.expectOne({
+    url: `${env.mongoUrl}/collections/seiyuu-test?apiKey=${env.apiKey}&f={"name":1,"hits":1,"updated":1,"count":1,"accessed":1}&s={"name":1}`,
+    method:'GET'
+  }, 'GET to count the # of records in the seiyuu DB').flush(...returned);
+
   beforeEach(() => {
     x = undefined;
     TestBed.configureTestingModule({
@@ -45,10 +49,8 @@ describe('SeiyuuService', () => {
       expect(service.pending).toBeTruthy();
       service.totalList$.subscribe(data => x=data);
 
-      backend.expectOne({
-        url: `${env.mongoUrl}/collections/seiyuu-test?apiKey=${env.apiKey}&f={"name":1,"hits":1,"updated":1,"count":1,"accessed":1}&s={"name":1}`,
-        method:'GET'
-      }, 'GET to count the # of records in the seiyuu DB').flush(basicList);
+      mockList(backend, [basicList]);
+
       backend.expectOne({
         url: `${env.mongoUrl}/collections/anime?apiKey=${env.apiKey}&c=true`,
         method:'GET'
@@ -69,11 +71,7 @@ describe('SeiyuuService', () => {
       expect(()=> {
         service.totalList$.subscribe(data => x = data);
 
-        backend.expectOne({
-          url: `${env.mongoUrl}/collections/seiyuu-test?apiKey=${env.apiKey}&f={"name":1,"hits":1,"updated":1,"count":1,"accessed":1}&s={"name":1}`,
-          method:'GET'
-        }, 'GET to count the # of records in the seiyuu DB').flush('', {status: 404, statusText: 'Not Found'});
-
+        mockList(backend, ['', {status: 404, statusText: 'Not Found'}]);
       }).toThrow();
       expect(x).toBeFalsy();
       expect(service.pending).toBeFalsy();
@@ -93,10 +91,10 @@ describe('SeiyuuService', () => {
         service.totalList$
           .subscribe(r => x=r);
 
-        let countryRequest = backend.expectOne(
+        let request = backend.expectOne(
           `${env.mongoUrl}/collections/seiyuu-test?apiKey=${env.apiKey}&f={"name":1,"hits":1,"updated":1,"count":1,"accessed":1}&s={"name":1}`
         );
-        countryRequest.error(new ErrorEvent(''));
+        request.error(new ErrorEvent(''));
       }).toThrow();
 
       expect(x).toBeFalsy();
@@ -110,10 +108,7 @@ describe('SeiyuuService', () => {
       (service:SeiyuuService, backend:HttpTestingController, msgSvc:MessagesService) => {
         let spy = spyOn(msgSvc, 'error');
 
-        backend.expectOne({
-          url: `${env.mongoUrl}/collections/seiyuu-test?apiKey=${env.apiKey}&f={"name":1,"hits":1,"updated":1,"count":1,"accessed":1}&s={"name":1}`,
-          method:'GET'
-        }, 'GET to count the # of records in the seiyuu DB').flush(basicList);
+        mockList(backend, [basicList]);
 
         service.updateRequest$.next(53);
         tick(200);
@@ -134,10 +129,8 @@ describe('SeiyuuService', () => {
       service.totalList$.subscribe(data => x=data);
       let spy = spyOn(restSvc, 'mongoCall').and.returnValue(Observable.of(list));
 
-      backend.expectOne({
-        url: `${env.mongoUrl}/collections/seiyuu-test?apiKey=${env.apiKey}&f={"name":1,"hits":1,"updated":1,"count":1,"accessed":1}&s={"name":1}`,
-        method:'GET'
-      }, 'GET to count the # of records in the seiyuu DB').flush(basicList);
+      mockList(backend, [basicList]);
+
       service.updateRequest$.next(53);
       service.updateRequest$.next(0);
       tick(200);
@@ -163,10 +156,7 @@ describe('SeiyuuService', () => {
       (service:SeiyuuService, routingSvc:RoutingService, backend:HttpTestingController) => {
       let spy = spyOn(routingSvc, 'remove');
 
-      backend.expectOne({
-        url: `${env.mongoUrl}/collections/seiyuu-test?apiKey=${env.apiKey}&f={"name":1,"hits":1,"updated":1,"count":1,"accessed":1}&s={"name":1}`,
-        method:'GET'
-      }, 'GET to count the # of records in the seiyuu DB').flush(basicList);
+      mockList(backend, [basicList]);
 
       service.removed$.next(53);
       expect(spy).toHaveBeenCalledWith(53,[]);
@@ -178,10 +168,7 @@ describe('SeiyuuService', () => {
       (service:SeiyuuService, msgSvc:MessagesService, backend:HttpTestingController) => {
       let spy = spyOn(msgSvc, 'error');
 
-      backend.expectOne({
-        url: `${env.mongoUrl}/collections/seiyuu-test?apiKey=${env.apiKey}&f={"name":1,"hits":1,"updated":1,"count":1,"accessed":1}&s={"name":1}`,
-        method:'GET'
-      }, 'GET to count the # of records in the seiyuu DB').flush(basicList);
+      mockList(backend, [basicList]);
 
       service.addSearch(Observable.of('derp'));
       expect(spy).toHaveBeenCalledWith(`"derp" is not found`);
@@ -193,10 +180,7 @@ describe('SeiyuuService', () => {
       (service:SeiyuuService, backend:HttpTestingController) => {
       service.displayList$.subscribe(data => x=data);
 
-      backend.expectOne({
-        url: `${env.mongoUrl}/collections/seiyuu-test?apiKey=${env.apiKey}&f={"name":1,"hits":1,"updated":1,"count":1,"accessed":1}&s={"name":1}`,
-        method:'GET'
-      }, 'GET to count the # of records in the seiyuu DB').flush(basicList);
+      mockList(backend, [basicList]);
 
       service.addSearch(Observable.of('Maeda Konomi'));
       expect(JSON.stringify(x)).toBe(JSON.stringify([new BasicSeiyuu(basicModel)]));
@@ -208,10 +192,7 @@ describe('SeiyuuService', () => {
       (service:SeiyuuService, backend:HttpTestingController) => {
       service.displayList$.subscribe(data => x=data);
 
-      backend.expectOne({
-        url: `${env.mongoUrl}/collections/seiyuu-test?apiKey=${env.apiKey}&f={"name":1,"hits":1,"updated":1,"count":1,"accessed":1}&s={"name":1}`,
-        method:'GET'
-      }, 'GET to count the # of records in the seiyuu DB').flush(basicList);
+      mockList(backend, [basicList]);
 
       service.addSearch(Observable.of('Maeda Konomi'));
       service.removed$.next(578);
@@ -225,10 +206,7 @@ describe('SeiyuuService', () => {
       (service:SeiyuuService, backend:HttpTestingController) => {
       service.displayList$.subscribe(data => x=data);
 
-      backend.expectOne({
-        url: `${env.mongoUrl}/collections/seiyuu-test?apiKey=${env.apiKey}&f={"name":1,"hits":1,"updated":1,"count":1,"accessed":1}&s={"name":1}`,
-        method:'GET'
-      }, 'GET to count the # of records in the seiyuu DB').flush([basicModel,basicModel]);
+      mockList(backend, [[basicModel,basicModel]]);
 
       service.addSearch(Observable.of('Maeda Konomi'));
       service.removed$.next('Maeda Konomi');
@@ -244,10 +222,7 @@ describe('SeiyuuService', () => {
       let spy = spyOn(msgSvc, 'status');
       let search = new BehaviorSubject('Maeda Konomi');
 
-      backend.expectOne({
-        url: `${env.mongoUrl}/collections/seiyuu-test?apiKey=${env.apiKey}&f={"name":1,"hits":1,"updated":1,"count":1,"accessed":1}&s={"name":1}`,
-        method:'GET'
-      }, 'GET to count the # of records in the seiyuu DB').flush(basicList);
+      mockList(backend, [basicList]);
 
       service.addSearch(search);
       search.next('test');
@@ -261,13 +236,12 @@ describe('SeiyuuService', () => {
       (service:SeiyuuService, backend:HttpTestingController) => {
       service.displayList$.subscribe(data => x=data);
 
-      backend.expectOne({
-        url: `${env.mongoUrl}/collections/seiyuu-test?apiKey=${env.apiKey}&f={"name":1,"hits":1,"updated":1,"count":1,"accessed":1}&s={"name":1}`,
-        method:'GET'
-      }, 'GET to count the # of records in the seiyuu DB').flush([basicModel,basicModel]);
+      mockList(backend, [[basicModel,basicModel]]);
 
       service.addSearch(Observable.of('Maeda Konomi'));
-      expect(JSON.stringify(x)).toBe(JSON.stringify([{name: 'Maeda Konomi', namesakes: [new BasicSeiyuu(basicModel), new BasicSeiyuu(basicModel)]}]));
+      expect(JSON.stringify(x)).toBe(JSON.stringify([{name: 'Maeda Konomi', namesakes:
+        [new BasicSeiyuu(basicModel), new BasicSeiyuu(basicModel)]}]
+      ));
     })
   );
 
@@ -279,10 +253,7 @@ describe('SeiyuuService', () => {
         let bm2= Object.assign({}, basicModel);
         bm2._id = bm2._id*1000;
 
-        backend.expectOne({
-          url: `${env.mongoUrl}/collections/seiyuu-test?apiKey=${env.apiKey}&f={"name":1,"hits":1,"updated":1,"count":1,"accessed":1}&s={"name":1}`,
-          method:'GET'
-        }, 'GET to count the # of records in the seiyuu DB').flush([basicModel,bm2]);
+        mockList(backend, [[basicModel,bm2]]);
 
         service.addSearch(Observable.of('Maeda Konomi'));
 
