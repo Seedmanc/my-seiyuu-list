@@ -1,4 +1,4 @@
-import {TestBed, inject, async} from '@angular/core/testing';
+import {TestBed, inject} from '@angular/core/testing';
 import { HttpClientModule} from "@angular/common/http";
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import {AnimeService} from "../anime.service";
@@ -19,7 +19,7 @@ describe('AnimeService', () => {
     expect(service).toBeTruthy();
   }));
 
-  it('should fetch the record count from anime db', async(
+  it('should fetch the record count from anime db',
     inject([AnimeService, HttpTestingController], (service:AnimeService, backend:HttpTestingController) => {
       service.animeCount$.subscribe(data => expect(data).toEqual(4286));
       backend.expectOne({
@@ -27,5 +27,5 @@ describe('AnimeService', () => {
         method:'GET'
       }, 'GET to count the # of records in the anime DB').flush(4286);
     })
-  ))
+  )
 });

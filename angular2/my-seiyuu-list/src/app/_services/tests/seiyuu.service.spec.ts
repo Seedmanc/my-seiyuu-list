@@ -81,7 +81,7 @@ describe('SeiyuuService', () => {
     })
    );
 
-  it('should report if loading the total list fails with network error', fakeAsync(
+  it('should report if loading the total list fails with a network error',
     inject([SeiyuuService, HttpTestingController, MessagesService],
       (service:SeiyuuService, backend:HttpTestingController, msgSvc:MessagesService) => {
       let spy = spyOn(msgSvc, 'error');
@@ -102,7 +102,7 @@ describe('SeiyuuService', () => {
       expect(x).toBeFalsy();
       expect(service.pending).toBeFalsy();
       expect(spy).toHaveBeenCalledWith('Error getting cached list: 0');
-    }))
+    })
    );
 
   it('should report if loading details fails with 500', fakeAsync(
@@ -129,9 +129,10 @@ describe('SeiyuuService', () => {
   ));
 
   it('should load seiyuu details upon an update request', fakeAsync(
-    inject([SeiyuuService, HttpTestingController],
-      (service:SeiyuuService, backend:HttpTestingController) => {
+    inject([SeiyuuService, HttpTestingController, RestService],
+      (service:SeiyuuService, backend:HttpTestingController, restSvc:RestService) => {
       service.totalList$.subscribe(data => x=data);
+      let spy = spyOn(restSvc, 'mongoCall').and.returnValue(Observable.of(list));
 
       backend.expectOne({
         url: `${env.mongoUrl}/collections/seiyuu-test?apiKey=${env.apiKey}&f={"name":1,"hits":1,"updated":1,"count":1,"accessed":1}&s={"name":1}`,
@@ -140,10 +141,16 @@ describe('SeiyuuService', () => {
       service.updateRequest$.next(53);
       service.updateRequest$.next(0);
       tick(200);
-      backend.expectOne({
-        url: `${env.mongoUrl}/collections/seiyuu-test?apiKey=${env.apiKey}&q={"_id":{"$in":[53,0]}}`,
-        method:'GET'
-      }, 'GET to load seiyuu details').flush(list);
+
+      expect(spy).toHaveBeenCalledWith({
+        coll: 'seiyuu-test',
+        mode: 'GET',
+        query: {
+          q: {
+            _id: {'$in': [53,0]}
+          }
+        }
+      });
 
       expect(JSON.stringify(x)).toBe(JSON.stringify([new Seiyuu(model), new BasicSeiyuu(model2)]));
 
@@ -181,7 +188,7 @@ describe('SeiyuuService', () => {
     })
   );
 
-  it('should find by name', fakeAsync(
+  it('should find by name',
     inject([SeiyuuService,  HttpTestingController],
       (service:SeiyuuService, backend:HttpTestingController) => {
       service.displayList$.subscribe(data => x=data);
@@ -194,9 +201,9 @@ describe('SeiyuuService', () => {
       service.addSearch(Observable.of('Maeda Konomi'));
       expect(JSON.stringify(x)).toBe(JSON.stringify([new BasicSeiyuu(basicModel)]));
     })
-  ));
+  );
 
-  it('should remove seiyuu by id', fakeAsync(
+  it('should remove seiyuu by id',
     inject([SeiyuuService,  HttpTestingController],
       (service:SeiyuuService, backend:HttpTestingController) => {
       service.displayList$.subscribe(data => x=data);
@@ -211,9 +218,9 @@ describe('SeiyuuService', () => {
 
       expect(JSON.stringify(x)).toBe(JSON.stringify([]));
     })
-  ));
+  );
 
-  it('should remove namesakes by name', fakeAsync(
+  it('should remove namesakes by name',
     inject([SeiyuuService,  HttpTestingController],
       (service:SeiyuuService, backend:HttpTestingController) => {
       service.displayList$.subscribe(data => x=data);
@@ -228,9 +235,9 @@ describe('SeiyuuService', () => {
 
       expect(JSON.stringify(x)).toBe(JSON.stringify([]));
     })
-  ));
+  );
 
-  it('should avoid duplicates', fakeAsync(
+  it('should avoid duplicates',
     inject([SeiyuuService, MessagesService, HttpTestingController],
       (service:SeiyuuService, msgSvc:MessagesService, backend:HttpTestingController) => {
       service.displayList$.subscribe(data => x=data);
@@ -247,9 +254,9 @@ describe('SeiyuuService', () => {
       search.next('Maeda Konomi');
       expect(spy).toHaveBeenCalledWith('"Maeda Konomi" is already selected');
     })
-  ));
+  );
 
-  it('should find namesakes', fakeAsync(
+  it('should find namesakes',
     inject([SeiyuuService, HttpTestingController],
       (service:SeiyuuService, backend:HttpTestingController) => {
       service.displayList$.subscribe(data => x=data);
@@ -262,9 +269,9 @@ describe('SeiyuuService', () => {
       service.addSearch(Observable.of('Maeda Konomi'));
       expect(JSON.stringify(x)).toBe(JSON.stringify([{name: 'Maeda Konomi', namesakes: [new BasicSeiyuu(basicModel), new BasicSeiyuu(basicModel)]}]));
     })
-  ));
+  );
 
-  it('should pick one seiyuu from a list of namesakes', fakeAsync(
+  it('should pick one seiyuu from a list of namesakes',
     inject([SeiyuuService, HttpTestingController],
       (service:SeiyuuService, backend:HttpTestingController) => {
         service.displayList$.subscribe(data => x=data);
@@ -284,5 +291,5 @@ describe('SeiyuuService', () => {
 
         expect(JSON.stringify(x)).toBe(JSON.stringify([new BasicSeiyuu(bm2)]));
       })
-  ));
+  );
 });

@@ -1,4 +1,4 @@
-import {TestBed, inject, async} from '@angular/core/testing';
+import {TestBed, inject} from '@angular/core/testing';
 import { HttpClientModule} from "@angular/common/http";
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import {RestService} from "../rest.service";
@@ -18,7 +18,7 @@ describe('RestService', () => {
     expect(service).toBeTruthy();
   }));
 
-  it('should make a GET to the specified DB', async(
+  it('should make a GET to the specified DB',
     inject([RestService, HttpTestingController], (service:RestService, backend:HttpTestingController) => {
       service.mongoCall({coll:'seiyuu-test',mode:'GET',query:{c:true}}).subscribe(data => expect(data).toEqual(7));
       backend.expectOne({
@@ -26,11 +26,18 @@ describe('RestService', () => {
         method:'GET'
       }, 'GET to count the # of records in the seiyuu DB').flush(7);
     })
-  ));
+   );
 
-  it('should make a runCommand to the specified DB', async(
+  it('should make a runCommand to the specified DB',
     inject([RestService, HttpTestingController], (service:RestService, backend:HttpTestingController) => {
       let date = +(new Date());
+      let model = {
+        _id: 53,
+        name: 'Chihara Minori',
+        hits: 68,
+        count: 3,
+        accessed: date
+      };
       service.mongoCall({
         coll: 'seiyuu-test',
         mode: 'runCommand',
@@ -44,32 +51,17 @@ describe('RestService', () => {
           'new': true,
           fields: {"roles.name": 0}
         }
-      }).subscribe(data => expect(JSON.stringify(data)).toEqual(JSON.stringify(
-        {
-          _id: 53,
-          name: 'Chihara Minori',
-          hits: 68,
-          count: 3,
-          accessed: date
-        }
-      )));
+      }).subscribe(data => expect(JSON.stringify(data)).toEqual(JSON.stringify(model)));
       // not sure about the point of this repetition
 
       backend.expectOne({
         url: `${env.mongoUrl}/runCommand?apiKey=${env.apiKey}`,
         method:'POST'
-      }, 'POST to run command on the seiyuu DB').flush({
-          _id: 53,
-          name: 'Chihara Minori',
-          hits: 68,
-          count: 3,
-          accessed: date
-        }
-      );
+      }, 'POST to run command on the seiyuu DB').flush(model);
     })
-  ));
+   );
 
-  it('should make a PUT to the specified DB', async(
+  it('should make a PUT to the specified DB',
     inject([RestService, HttpTestingController], (service:RestService, backend:HttpTestingController) => {
 
       service.mongoCall({
@@ -87,5 +79,5 @@ describe('RestService', () => {
         method:'PUT'
       }, 'PUT to anime DB').flush({});
     })
-  ))
+  )
 });
