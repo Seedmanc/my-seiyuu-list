@@ -16,6 +16,7 @@ export class SeiyuuService {
   displayList$: Observable<BasicSeiyuu[]>;
   picked$: Subject<number> = new Subject();
   removed$: Subject<number|string> = new Subject();
+  selected$: Subject<Seiyuu> = new Subject();
 
   pending: boolean = true;
 
@@ -40,7 +41,6 @@ export class SeiyuuService {
 
     this.updateRequest$
       .bufferToggle(this.updateRequest$.throttleTime(200), ()=>Observable.timer(200))
-      .do(console.warn)
       .flatMap(ids => this.loadByIds(ids))
       .subscribe(seiyuus => {
         seiyuus.forEach(seiyuu => {

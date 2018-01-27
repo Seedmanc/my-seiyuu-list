@@ -13,6 +13,7 @@ export class HeaderComponent implements OnInit {
   @ViewChild('search') searchInput: ElementRef;
   status$;
   name$: Observable<string[]>;
+  search$: Observable<string>;
 
   searchQuery: string = '';
 
@@ -28,14 +29,14 @@ export class HeaderComponent implements OnInit {
       .filter(([event,list]) => list.some(el=>el.name === event['target'].value))
       .map(([event]) => event);
 
-    let search = Observable.fromEvent(this.searchInput.nativeElement, 'change')
+    this.search$ = Observable.fromEvent(this.searchInput.nativeElement, 'change')
       .merge(input)
       .map((event:Event) => event.target['value'])
       .filter(value => !!(value && value.trim().length > 2))
       .distinctUntilChanged()
       .do(_ => this.selectAll());
 
-    this.seiyuuSvc.addSearch(search);
+    this.seiyuuSvc.addSearch(this.search$);
   }
 
   selectAll() {

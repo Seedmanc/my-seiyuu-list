@@ -1,13 +1,13 @@
 import {Utils} from "../_services/utils.service";
 
 export class BasicSeiyuu {
-  public _id: number;
+  public _id?: number;
   public name: string;
   public hits?: number;
   public count?: number;
   public updated: Date;
   public accessed?: Date;
-  public namesakes: any[];
+  public namesakes?: any[];
 
   constructor(obj) {
     let temp ={...obj,

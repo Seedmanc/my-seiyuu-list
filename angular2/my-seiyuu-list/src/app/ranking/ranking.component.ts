@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component} from '@angular/core';
 import {SeiyuuService} from "../_services/seiyuu.service";
 import {SortableComponent} from "../sortable.component";
 
@@ -7,14 +7,11 @@ import {SortableComponent} from "../sortable.component";
   templateUrl: './ranking.component.html',
   styleUrls: ['./ranking.component.css']
 })
-export class RankingComponent extends SortableComponent implements OnInit {
+export class RankingComponent extends SortableComponent {
   visible: boolean;
 
   constructor(public seiyuuSvc: SeiyuuService) {
     super();
-  }
-
-  ngOnInit() {
   }
 
   close(event) {

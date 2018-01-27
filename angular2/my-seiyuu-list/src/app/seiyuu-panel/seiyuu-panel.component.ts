@@ -31,6 +31,9 @@ export class SeiyuuPanelComponent implements OnInit {
       this.seiyuuSvc.removed$.next(this.seiyuu._id || this.seiyuu.name);
   }
 
-  select = ()=>{}
+  select() {
+    if (!this.seiyuu.pending && !this.seiyuu.namesakes)
+      this.seiyuuSvc.selected$.next(this.seiyuu);
+  }
 
 }

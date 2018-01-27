@@ -9,6 +9,7 @@ import {HttpClientModule} from "@angular/common/http";
 import {MessagesService} from "../_services/messages.service";
 import {RoutingService} from "../_services/routing.service";
 import {RouterTestingModule} from "@angular/router/testing";
+import {RestServiceMock} from "../_services/tests/rest.service.mock";
 
 describe('RankingComponent', () => {
   let component: RankingComponent;
@@ -17,7 +18,7 @@ describe('RankingComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ RankingComponent,OrderByPipe ],
-      providers: [SeiyuuService, AnimeService, RestService, MessagesService, RoutingService],
+      providers: [SeiyuuService, AnimeService,  {provide: RestService, useClass: RestServiceMock}, MessagesService, RoutingService],
       imports: [HttpClientModule, RouterTestingModule]
     })
     .compileComponents();
@@ -31,5 +32,14 @@ describe('RankingComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should list the seiyuu when toggled', () => {
+    component.visible = true;
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('#rankingTable td').textContent).toContain('Maeda Konomi');
+    fixture.nativeElement.querySelector('.ranking-curtain').click();
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('#rankingTable td')).toBeFalsy();
   });
 });
