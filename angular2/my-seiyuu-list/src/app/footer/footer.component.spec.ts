@@ -10,6 +10,8 @@ import {MessagesService} from "../_services/messages.service";
 import {RoutingService} from "../_services/routing.service";
 import {RouterTestingModule} from "@angular/router/testing";
 import {AnimeService} from "../_services/anime.service";
+import {RestServiceMock} from "../_services/tests/rest.service.mock";
+import {RoutingServiceMock} from "../_services/tests/routing.service.mock";
 
 describe('FooterComponent', () => {
   let component: FooterComponent;
@@ -19,7 +21,8 @@ describe('FooterComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ FooterComponent, RankingComponent, OrderByPipe],
       providers: [
-        SeiyuuService, RestService, MessagesService, RoutingService, AnimeService
+        SeiyuuService, {provide: RestService, useClass: RestServiceMock}, MessagesService,
+        {provide: RoutingService, useClass: RoutingServiceMock}, AnimeService
       ],
       imports:[HttpClientModule, RouterTestingModule]
     })
@@ -36,8 +39,8 @@ describe('FooterComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  /*it('should load disqus', () => {    //TODO can break testing
+  it('should load disqus', () => {    //TODO can break testing
     component.toggleDisqus();
     expect(fixture.nativeElement.querySelector('script[src="//my-seiyuu-list.disqus.com/embed.js"]')).toBeTruthy();
-  });*/
+  });
 });

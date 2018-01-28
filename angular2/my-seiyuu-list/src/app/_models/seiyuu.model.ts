@@ -35,6 +35,12 @@ export class BasicSeiyuu extends NamedEntity{
     });
     return this;
   }
+  protected get photo(): string {
+    return this['pic'] && `//${Utils.theSite}${this['pic']}`;
+  }
+  protected get thumb(): string {
+    return this.photo && this.photo.replace('.jp', 'v.jp');
+  }
 }
 
 export class Seiyuu extends BasicSeiyuu {
@@ -52,12 +58,6 @@ export class Seiyuu extends BasicSeiyuu {
     super(obj);
   }
 
-  protected get photo(): string {
-    return this.pic && `//${Utils.theSite}${this['pic']}`;
-  }
-  protected get thumb(): string {
-    return this.photo && this.photo.replace('.jp', 'v.jp');
-  }
 
 }
 

@@ -12,6 +12,7 @@ import {MessagesService} from "../_services/messages.service";
 import {BasicSeiyuu, Namesake, Seiyuu} from "../_models/seiyuu.model";
 import {RestServiceMock} from "../_services/tests/rest.service.mock";
 import {basicModel, model} from "../_models/tests/seiyuu.model.spec";
+import {RoutingServiceMock} from "../_services/tests/routing.service.mock";
 
 describe('SeiyuuPanelComponent', () => {
   let component: SeiyuuPanelComponent;
@@ -20,7 +21,8 @@ describe('SeiyuuPanelComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ SeiyuuPanelComponent, SpinnerComponent ],
-      providers:[SeiyuuService, AnimeService, {provide: RestService, useClass: RestServiceMock}, RoutingService, MessagesService],
+      providers:[SeiyuuService, AnimeService, {provide: RestService, useClass: RestServiceMock},
+        {provide: RoutingService, useClass: RoutingServiceMock} , MessagesService],
       imports:[HttpClientModule, RouterTestingModule]
     })
     .compileComponents();
