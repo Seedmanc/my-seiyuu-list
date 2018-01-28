@@ -31,7 +31,7 @@
           <td><a [href]="seiyuu.link" target="_blank">{{seiyuu.name}}</a></td>
           <td>{{seiyuu.count}}</td>
           <td>{{seiyuu.hits}}</td>
-          <td>{{seiyuu.accessed | date:'dd.MM.yyyy'}}</td>
+          <td [attr.data-date]="seiyuu.accessed.valueOf()">{{seiyuu.accessed | date:'dd.MM.yyyy'}}</td>
         </tr>
         </tbody>
       </table>

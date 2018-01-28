@@ -1,8 +1,8 @@
 <div id="header" class="col-sm-12 no-gutter">
   <form class="col-lg-2 col-sm-3">
     <div class="form-group  has-feedback">
-      <input type="text" id="search-query" placeholder="1 seiyuu name" (click)="selectAll()"
-             [disabled]="disable()" autofocus  #search [(ngModel)]="searchQuery"
+      <input type="text" id="searchQuery" placeholder="1 seiyuu name" (click)="selectAll()"
+             [disabled]="seiyuuSvc.pending" autofocus  #search [(ngModel)]="searchQuery"
              class="form-control input-md text-center" name="searchQuery"
              [attr.list]="searchQuery.length > 1 ? 'vanames':undefined"
              maxlength="30">
@@ -13,7 +13,7 @@
     <option [value]="name" *ngFor="let name of name$ | async | uniq"></option>
   </datalist>
 
-  <div class="col-lg-7 col-md-6 col-sm-5 no-gutter">
+  <div class="col-lg-7 col-md-6 col-sm-5 no-gutter" id="statusWrapper">
     <msl-spinner float="left" *ngIf="seiyuuSvc.pending"></msl-spinner>
     <div id="status" [ngClass]="{error: (status$ | async).isError}"
       title="You can look up any seiyuu regardless of the cached records #">{{(status$ | async).data}}</div>

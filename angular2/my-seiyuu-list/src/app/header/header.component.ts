@@ -43,8 +43,4 @@ export class HeaderComponent implements OnInit {
     this.searchInput.nativeElement.select();
   }
 
-  disable() {
-    return this.seiyuuSvc.pending;
-  }
-
 }

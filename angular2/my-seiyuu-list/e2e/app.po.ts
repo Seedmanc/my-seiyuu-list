@@ -1,11 +1,19 @@
 import { browser, by, element } from 'protractor';
 
 export class AppPage {
-  navigateTo() {
+  static navigateTo() {
     return browser.get('/');
   }
 
-  getParagraphText() {
-    return element(by.css('app-root h1')).getText();
+  searchInput() {
+    return element(by.css('#searchQuery'));
+  }
+
+  searchSpinner() {
+    return element(by.css('#statusWrapper > msl-spinner'));
+  }
+
+  statusBar() {
+    return element(by.css('#status'));
   }
 }
