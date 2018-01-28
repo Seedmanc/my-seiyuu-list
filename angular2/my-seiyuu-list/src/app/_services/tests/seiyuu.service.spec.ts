@@ -151,18 +151,6 @@ describe('SeiyuuService', () => {
     })
   ));
 
-  it('should remove seiyuu from display by id',
-    inject([SeiyuuService, RoutingService, HttpTestingController],
-      (service:SeiyuuService, routingSvc:RoutingService, backend:HttpTestingController) => {
-      let spy = spyOn(routingSvc, 'remove');
-
-      mockList(backend, [basicList]);
-
-      service.removed$.next(53);
-      expect(spy).toHaveBeenCalledWith(53,[]);
-    })
-  );
-
   it('should error on searching for unknown name',
     inject([SeiyuuService, MessagesService, HttpTestingController],
       (service:SeiyuuService, msgSvc:MessagesService, backend:HttpTestingController) => {
@@ -187,16 +175,18 @@ describe('SeiyuuService', () => {
     })
   );
 
-  it('should remove seiyuu by id',
-    inject([SeiyuuService,  HttpTestingController],
-      (service:SeiyuuService, backend:HttpTestingController) => {
+  it('should remove seiyuu from display by id',
+    inject([SeiyuuService, RoutingService, HttpTestingController],
+      (service:SeiyuuService, routingSvc:RoutingService,  backend:HttpTestingController) => {
       service.displayList$.subscribe(data => x=data);
+      let spy = spyOn(routingSvc, 'remove').and.callThrough();
 
       mockList(backend, [basicList]);
 
       service.addSearch(Observable.of('Maeda Konomi'));
       service.removed$.next(578);
 
+      expect(spy).toHaveBeenCalledWith(578,[578]);
       expect(JSON.stringify(x)).toBe(JSON.stringify([]));
     })
   );

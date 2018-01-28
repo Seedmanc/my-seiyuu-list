@@ -63,7 +63,7 @@ describe('RoutingService', () => {
     })
    )
   );
-  it('remove an existing ID to route', async(inject([RoutingService], (service: RoutingService) => {
+  it('remove an existing ID from route', async(inject([RoutingService], (service: RoutingService) => {
       router.navigate(['/-/photos']).then(()=>{
         let navigateSpy = spyOn(router, 'navigate');
         service.remove(53, [53, 24]);
