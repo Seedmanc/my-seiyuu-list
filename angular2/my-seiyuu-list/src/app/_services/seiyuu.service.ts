@@ -50,6 +50,9 @@ export class SeiyuuService {
 
     this.displayList$ = this.routeId$
       .map(ids => ids.map(id => this.totalMap[id]))
+      .do(seiyuus => document.title = 'My Seiyuu List' +
+        (seiyuus.length ? ' - ' + seiyuus.map(seiyuu => seiyuu.name).join(', ') : '')
+      )
       .combineLatest(this.namesake$)
       .map(([seiyuus, namesakes]) => [...seiyuus, ...namesakes]);
 
