@@ -16,4 +16,12 @@ export class AppPage {
   statusBar() {
     return element(by.css('#status'));
   }
+
+  toggleDisqus() {
+    return element(by.css('.toggle-disqus'));
+  }
+
+  disqusContainer() {
+    return element(by.css('#disqus_thread'));
+  }
 }

@@ -22,4 +22,13 @@ describe('my-seiyuu-list App', () => {
     expect(page.searchSpinner().isPresent()).toBeFalsy();
   });
 
+  fit('should toggle disqus when clicked', () => {
+    expect(page.disqusContainer().isDisplayed()).toBeFalsy();
+    page.toggleDisqus().click();
+    browser.wait(EC.visibilityOf(page.disqusContainer()), 5000);
+    expect(page.disqusContainer().$('iframe').isPresent()).toBeTruthy();
+    page.toggleDisqus().click();
+    expect(page.disqusContainer().isDisplayed()).toBeFalsy();
+  });
+
 });
