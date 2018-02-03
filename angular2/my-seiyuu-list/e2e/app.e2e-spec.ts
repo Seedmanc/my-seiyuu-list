@@ -1,5 +1,5 @@
 import { AppPage } from './app.po';
-import {$, browser, by, protractor} from "protractor";
+import {$, browser, protractor} from "protractor";
 
 describe('my-seiyuu-list App', () => {
   let page: AppPage;
@@ -22,7 +22,7 @@ describe('my-seiyuu-list App', () => {
     expect(page.searchSpinner().isPresent()).toBeFalsy();
   });
 
-  fit('should toggle disqus when clicked', () => {
+  it('should toggle disqus when clicked', () => {
     expect(page.disqusContainer().isDisplayed()).toBeFalsy();
     page.toggleDisqus().click();
     browser.wait(EC.visibilityOf(page.disqusContainer()), 5000);

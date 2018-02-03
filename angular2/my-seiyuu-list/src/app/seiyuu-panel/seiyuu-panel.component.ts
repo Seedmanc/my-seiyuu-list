@@ -16,7 +16,8 @@ export class SeiyuuPanelComponent implements OnInit {
   ngOnInit() {
     if (this.seiyuu.pending) {
       this.seiyuuSvc.updateRequest$.next(this.seiyuu._id);
-    } else if (this.seiyuu.namesakes) {
+    } else
+      if (this.seiyuu.namesakes) {
 
       this.seiyuu.namesakes
         .filter(namesake => namesake.pending)

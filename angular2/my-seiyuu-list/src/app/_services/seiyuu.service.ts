@@ -12,8 +12,9 @@ import {AnimeService} from "./anime.service";
 @Injectable()
 export class SeiyuuService {
   totalList$: Observable<BasicSeiyuu[]>;
-  updateRequest$: Subject<number> = new Subject();
   displayList$: Observable<(BasicSeiyuu|Namesake)[]>;
+
+  updateRequest$: Subject<number> = new Subject();
   picked$: Subject<number> = new Subject();
   removed$: Subject<number|string> = new Subject();
   selected$: Subject<Seiyuu> = new Subject();

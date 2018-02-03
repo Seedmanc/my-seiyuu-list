@@ -58,13 +58,13 @@ describe('HeaderComponent', () => {
     let x;
     fixture.detectChanges();
     component.search$.subscribe(r => x=r);
-    component.searchInput.nativeElement.value = 'test';
+    component.searchInput.nativeElement.value = ' Test ';
     component.searchInput.nativeElement.dispatchEvent(new Event('change'));
     expect(x).toBe('test');
     component.searchInput.nativeElement.value = 'Maeda Konomi';
     component.searchInput.nativeElement.dispatchEvent(new Event('input'));
     tick(500);
-    expect(x).toBe('Maeda Konomi');
+    expect(x).toBe('maeda konomi');
     discardPeriodicTasks()
   }));
 });

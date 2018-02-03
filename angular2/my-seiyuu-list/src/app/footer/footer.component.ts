@@ -8,9 +8,9 @@ import {SeiyuuService} from "../_services/seiyuu.service";
   styleUrls: ['./footer.component.css']
 })
 export class FooterComponent implements OnInit {
-  disqusVisible: boolean;
-
   @ViewChild(RankingComponent) mslRanking: RankingComponent;
+
+  disqusVisible: boolean;
 
   constructor(private el:ElementRef, private renderer:Renderer2, public seiyuuSvc:SeiyuuService) { }
 

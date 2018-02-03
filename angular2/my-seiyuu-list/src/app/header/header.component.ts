@@ -26,13 +26,13 @@ export class HeaderComponent implements OnInit {
     let input = Observable.fromEvent(this.searchInput.nativeElement, 'input')
       .debounceTime(500)
       .withLatestFrom(this.seiyuuSvc.totalList$)
-      .filter(([event,list]) => list.some(el=>el.name === event['target'].value))
+      .filter(([event,list]) => list.some(el=>el.name.toLowerCase() === event['target'].value.toLowerCase()))
       .map(([event]) => event);
 
     this.search$ = Observable.fromEvent(this.searchInput.nativeElement, 'change')
       .merge(input)
-      .map((event:Event) => event.target['value'])
-      .filter(value => !!(value && value.trim().length > 2))
+      .map((event:Event) => event.target['value'] && event.target['value'].trim().toLowerCase())
+      .filter(value => !!(value && value.length > 2))
       .distinctUntilChanged()
       .do(_ => this.selectAll());
 

@@ -24,4 +24,8 @@ export class AppPage {
   disqusContainer() {
     return element(by.css('#disqus_thread'));
   }
+
+  listOption(name:string) {
+    return element(by.css(`#vanames option[value="${name}"]`))
+  }
 }

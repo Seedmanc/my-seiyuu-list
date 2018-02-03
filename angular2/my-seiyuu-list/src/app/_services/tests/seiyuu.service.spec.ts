@@ -20,10 +20,6 @@ describe('SeiyuuService', () => {
     basicModel,
     basicModel2
   ];
-  let list = [
-    model,
-    model2
-  ];
   let x; let mockList = (backend, returned) => backend.expectOne({
     url: `${env.mongoUrl}/collections/seiyuu-test?apiKey=${env.apiKey}&f={"name":1,"hits":1,"updated":1,"count":1,"accessed":1}&s={"name":1}`,
     method:'GET'
@@ -127,7 +123,7 @@ describe('SeiyuuService', () => {
     inject([SeiyuuService, HttpTestingController, RestService],
       (service:SeiyuuService, backend:HttpTestingController, restSvc:RestService) => {
       service.totalList$.subscribe(data => x=data);
-      let spy = spyOn(restSvc, 'mongoCall').and.returnValue(Observable.of(list));
+      let spy = spyOn(restSvc, 'mongoCall').and.returnValue(Observable.of([model,model2]));
 
       mockList(backend, [basicList]);
 
