@@ -205,15 +205,14 @@ describe('SeiyuuService', () => {
     inject([SeiyuuService, MessagesService, HttpTestingController],
       (service:SeiyuuService, msgSvc:MessagesService, backend:HttpTestingController) => {
       service.displayList$.subscribe(data => x=data);
-      let spy = spyOn(msgSvc, 'status');
       let search = new BehaviorSubject('Maeda Konomi');
 
       mockList(backend, [basicList]);
 
-      service.addSearch(search);
-      search.next('test');
+      service.addSearch(search.asObservable());
+      search.next('Test Name');
       search.next('Maeda Konomi');
-      expect(spy).toHaveBeenCalledWith('"Maeda Konomi" is already selected');
+      expect(x.length).toBe(2);
     })
   );
 
@@ -246,6 +245,32 @@ describe('SeiyuuService', () => {
         service.picked$.next(bm2._id);
 
         expect(JSON.stringify(x)).toBe(JSON.stringify([new BasicSeiyuu(bm2)]));
+      })
+  );
+
+  it('should limit selections to 4',
+    inject([SeiyuuService, HttpTestingController],
+      (service:SeiyuuService, backend:HttpTestingController) => {
+        service.displayList$.subscribe(data => x=data);
+        let search = new BehaviorSubject('');
+        let list = basicList.slice();
+
+        for (let i=0;i<3;i++) {
+          let el = Object.assign({},list[0]);
+          el._id = el._id*(i+2);
+          el.name = el.name+i;
+          list.push(el)
+        }
+
+        mockList(backend, [list]);
+
+        service.addSearch(search);
+        search.next('Test Name');
+        search.next('Maeda Konomi');
+        search.next('Maeda Konomi0');
+        search.next('Maeda Konomi1');
+        search.next('Maeda Konomi2');
+        expect(x.length).toBe(4);
       })
   );
 });

@@ -153,4 +153,17 @@ describe('seiyuu lookups', () => {
     expect(element.all(by.css('.seiyuu:not(.namesake)')).count()).toBe(1);
     expect(page.statusBar().getText()).toBe(`"${mk}" is already selected`);
   });
+
+  it('should limit selections to 4', () => {
+    page.searchInput().sendKeys('Mizuki Nana');
+    page.searchInput().sendKeys('Koshimizu Ami');
+    page.searchInput().sendKeys(cm);
+    page.searchInput().sendKeys(dj);
+
+    expect(page.statusBar().getText()).toBeFalsy();
+    expect(seiyuu.containers().count()).toBe(4);
+    page.searchInput().sendKeys(mk);
+    expect(seiyuu.containers().count()).toBe(4);
+    expect(page.statusBar().getText()).toBe('maximum of 4 people are allowed');
+  });
 });

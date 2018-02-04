@@ -69,20 +69,29 @@ export class SeiyuuService {
   addSearch(search$: Observable<string>) {
     let [found, notFound] = search$
       .withLatestFrom(this.totalList$)
-      .map(([name,list]) => list.filter(seiyuu => !!Utils.unorderedEquals(name, seiyuu.name)).map(seiyuu => seiyuu._id))
+      .map(([name,list]) => list
+        .filter(seiyuu => !!Utils.unorderedEquals(name, seiyuu.name))
+        .map(seiyuu => seiyuu._id))
       .partition(equals => !!equals.length);
 
-    let [single, multiple] = found.do(_=>this.messageSvc.blank()).partition(list => list.length === 1);
+    let [single, multiple] = found
+      .withLatestFrom(this.displayList$
+        .map(list => list.length))
+      .filter(([,count]) => count < 4 || !!this.messageSvc.status('maximum of 4 people are allowed'))
+      .do(_ => this.messageSvc.blank())
+      .map(([list]) => list)
+      .share()
+      .partition(list => list.length === 1);
 
-    multiple.map(ids => new Namesake(ids.map(id => this.totalMap[id])))
+    multiple
+      .map(ids => new Namesake(ids.map(id => this.totalMap[id])))
       .withLatestFrom(this.namesake$, (New, old) => Utils.unique([...old, New], 'name'))
       .subscribe(namesakes => this.namesake$.next(namesakes));
 
     single
       .map(ids => ids[0])
       .merge(this.picked$
-        .do(id => this.removed$.next(this.totalMap[id].name))
-      )
+        .do(id => this.removed$.next(this.totalMap[id].name)))
       .withLatestFrom(this.routeId$)
       .map(([id, ids]) => this.routingSvc.add(id, ids))
       .filter(id => !!id)
