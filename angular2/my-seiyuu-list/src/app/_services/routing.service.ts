@@ -5,8 +5,8 @@ import {Utils} from "./utils.service";
 
 @Injectable()
 export class RoutingService {
+  routeId$: Observable<number[]>;
   private mode: string = '';
-  public routeId$: Observable<number[]>;
 
   constructor(private router: Router, private route: ActivatedRoute) {
    this.router.events

@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import {BasicSeiyuu, Namesake, Seiyuu} from "../_models/seiyuu.model";
 import {Observable} from "rxjs/Observable";
+import {BehaviorSubject} from "rxjs/BehaviorSubject";
+import {Subject} from "rxjs/Subject";
+
+import {BasicSeiyuu, Namesake, Seiyuu} from "../_models/seiyuu.model";
 import {RestService} from "./rest.service";
 import {MessagesService} from "./messages.service";
-import {Subject} from "rxjs/Subject";
-import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {Utils} from "./utils.service";
 import {RoutingService} from "./routing.service";
 import {AnimeService} from "./anime.service";

@@ -58,7 +58,6 @@ export class Seiyuu extends BasicSeiyuu {
     super(obj);
   }
 
-
 }
 
 export class Namesake extends NamedEntity {
