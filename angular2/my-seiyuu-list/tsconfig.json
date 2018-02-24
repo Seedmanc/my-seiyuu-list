@@ -1,5 +1,8 @@
 {
   "compileOnSave": false,
+  "preserveWhitespaces": false,
+  "fullTemplateTypeCheck": false,
+  "strictInjectionParameters": false,
   "compilerOptions": {
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
@@ -8,6 +11,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "target": "es2015",
+
     "typeRoots": [
       "node_modules/@types"
     ],
