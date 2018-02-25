@@ -1,3 +1,4 @@
 export const env = {
-  production: true
+  production: true,
+  loglevel: 0
 };

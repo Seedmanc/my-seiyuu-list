@@ -14,6 +14,7 @@ import { MagazineListComponent } from './magazine-list/magazine-list.component';
 import { PhotoListComponent } from './photo-list/photo-list.component';
 import { SeiyuuPanelComponent } from './seiyuu-panel/seiyuu-panel.component';
 import {OrderByPipe} from "./orderBy.pipe";
+import {Router} from "@angular/router";
 
 import {HttpClientModule} from '@angular/common/http';
 import {RestService} from "./_services/rest.service";
@@ -23,6 +24,7 @@ import { BaseComponent } from './base/base.component';
 import {UniqPipe} from "./uniq.pipe";
 import {Utils} from "./_services/utils.service";
 import {AnimeService} from "./_services/anime.service";
+import {env} from "../environments/environment";
 
 @NgModule({
   declarations: [
@@ -50,4 +52,8 @@ import {AnimeService} from "./_services/anime.service";
   providers: [RestService, MessagesService, Utils, AnimeService],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+  constructor(router: Router) {
+    env.loglevel > 1 && console.log('Routes: ', JSON.stringify(router.config, undefined, 2));
+  }
+}

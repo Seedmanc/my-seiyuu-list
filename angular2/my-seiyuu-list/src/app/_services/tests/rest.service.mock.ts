@@ -21,7 +21,7 @@ export class RestServiceMock {
     }
 
     let options = Object.keys(query).reduce((total, key) => total + `&${key}=${JSON.stringify(query[key])}`, '');
-    console.info(arguments);
+    console.log(arguments);
 
     return query['q'] && query['q']._id ? Observable.of([model,model2]) : Observable.of([basicModel,basicModel2]);
   }

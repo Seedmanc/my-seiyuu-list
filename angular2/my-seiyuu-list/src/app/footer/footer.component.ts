@@ -22,7 +22,7 @@ export class FooterComponent implements OnInit {
 
     if (window['DISQUS']) return;
 
-    let script = this.renderer.createElement('script');
+    const script = this.renderer.createElement('script');
     script.src = `//my-seiyuu-list.disqus.com/embed.js`;
     script.async = true;
     script.type = 'text/javascript';

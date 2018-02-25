@@ -1,28 +1,26 @@
 import {Injectable} from '@angular/core';
-import {ActivatedRoute, NavigationEnd, Router} from "@angular/router";
-import {Observable} from "rxjs/Observable";
+import {NavigationEnd, Router} from "@angular/router";
 import {Utils} from "./utils.service";
 import {Subject} from "rxjs/Subject";
 
 @Injectable()
 export class RoutingService {
-  routeId$: Observable<number[]>;
+  routeId$: Subject<number[]> = new Subject();
   paramMap$ = new Subject<any>();
   private mode: string = '';
 
   constructor(private router: Router) {
    this.router.events
-      .filter(e => e instanceof NavigationEnd)
-      .do((e:any) => this.mode = e.urlAfterRedirects.split('/')[1])
-     .subscribe(()=>console.log(this.mode));
+      .filter(e => e instanceof NavigationEnd)                                   .do(Utils.lg('mode'))
+      .subscribe((e:any) => this.mode = e.urlAfterRedirects.split('/')[1]);
 
-   this.routeId$ = this.paramMap$
+    this.paramMap$                                                               .do(Utils.log('parammap'))
      .map(params => (params.get('ids')||''))
      .distinctUntilChanged()
      .map(ids => ids.split(',')
         .map(el => +el.replace(/\D/g, ''))
         .filter(el=>!!el)
-     );
+     ).subscribe(this.routeId$);
   }
 
   add(id, list): number {

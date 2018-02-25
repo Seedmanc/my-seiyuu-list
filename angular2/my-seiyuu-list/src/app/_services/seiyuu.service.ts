@@ -30,18 +30,20 @@ export class SeiyuuService {
   constructor(private rest:RestService, private messageSvc: MessagesService,
               private routingSvc: RoutingService, private animeSvc:AnimeService) {
 
-    this.totalList$ = this.getTotalList()
+    this.totalList$ = this.getTotalList()                                   .do(Utils.lg('totalList'))
       .do(list => this.animeSvc.animeCount$
-        .subscribe(number => this.messageSvc.status(list.length + ` seiyuu & ${number} anime records cached`))
+        .subscribe(number =>
+          this.messageSvc.status(list.length + ` seiyuu & ${number} anime records cached`)
+        )
       )
       .do(() => this.pending = false)
       .publishLast().refCount();
 
-    this.routeId$ = this.routingSvc.routeId$
+    this.routeId$ = this.routingSvc.routeId$                                  .do(Utils.lg('routeId'))
       .delayWhen(()=>this.totalList$)
       .map(ids => ids.filter(id => !!this.totalMap[id]));
 
-    this.updateRequest$
+    this.updateRequest$                                                 .do(Utils.lg('updateRequest'))
       .bufferToggle(this.updateRequest$.throttleTime(200), ()=>Observable.timer(200))
       .flatMap(ids => this.loadByIds(ids))
       .subscribe(seiyuus => {
@@ -50,7 +52,7 @@ export class SeiyuuService {
         });
       });
 
-    this.displayList$ = this.routeId$
+    this.displayList$ = this.routeId$                                     .do(Utils.lg('displayList'))
       .map(ids => ids.map(id => this.totalMap[id]))
       .do(seiyuus => document.title = 'My Seiyuu List' +
         (seiyuus.length ? ' - ' + seiyuus.map(seiyuu => seiyuu.name).join(', ') : '')
@@ -58,38 +60,37 @@ export class SeiyuuService {
       .combineLatest(this.namesake$)
       .map(([seiyuus, namesakes]) => [...seiyuus, ...namesakes]);
 
-    this.removed$.withLatestFrom(this.routeId$)
+    this.removed$.withLatestFrom(this.routeId$)                               .do(Utils.lg('removed'))
       .do(([removed,current]) => this.routingSvc.remove(removed, current))
       .map(([removed]) => removed)
       .withLatestFrom(this.namesake$)
       .map(([removed,current]) => current.filter(nmsk => nmsk.name !== removed))
-      .do(filtered => this.namesake$.next(filtered))
-      .subscribe();
+      .subscribe(this.namesake$);
   }
 
   addSearch(search$: Observable<string>) {
-    let [found, notFound] = search$
+    let [found, notFound] = search$                                            .do(Utils.lg('search'))
       .withLatestFrom(this.totalList$)
       .map(([name,list]) => list
         .filter(seiyuu => !!Utils.unorderedEquals(name, seiyuu.name))
         .map(seiyuu => seiyuu._id))
       .partition(equals => !!equals.length);
 
-    let [single, multiple] = found
+    let [single, multiple] = found                                              .do(Utils.lg('found'))
       .withLatestFrom(this.displayList$
         .map(list => list.length))
       .filter(([,count]) => count < 4 || !!this.messageSvc.status('maximum of 4 people are allowed'))
-      .do(_ => this.messageSvc.blank())
+      .do(() => this.messageSvc.blank())
       .map(([list]) => list)
-      .share()
+      .share()  // is this even necessary at this point
       .partition(list => list.length === 1);
 
-    multiple
+    multiple                                                                 .do(Utils.lg('multiple'))
       .map(ids => new Namesake(ids.map(id => this.totalMap[id])))
       .withLatestFrom(this.namesake$, (New, old) => Utils.unique([...old, New], 'name'))
       .subscribe(namesakes => this.namesake$.next(namesakes));
 
-    single
+    single                                                                     .do(Utils.lg('single'))
       .map(ids => ids[0])
       .merge(this.picked$
         .do(id => this.removed$.next(this.totalMap[id].name)))
@@ -99,7 +100,8 @@ export class SeiyuuService {
       .do(id => this.messageSvc.status(`"${this.totalMap[id].name}" is already selected`))
       .subscribe();
 
-    notFound.withLatestFrom(search$)
+    notFound                                                                 .do(Utils.lg('notFound'))
+      .withLatestFrom(search$)
       .subscribe(([,search]) => this.messageSvc.error(`"${search}" is not found`));
   }
 

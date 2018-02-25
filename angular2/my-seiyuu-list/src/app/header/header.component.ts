@@ -2,6 +2,8 @@ import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {SeiyuuService} from "../_services/seiyuu.service";
 import {MessagesService} from "../_services/messages.service";
 import {Observable} from "rxjs/Observable";
+import {Subject} from "rxjs/Subject";
+import {Utils} from "../_services/utils.service";
 
 @Component({
   selector: 'msl-header',
@@ -13,7 +15,7 @@ export class HeaderComponent implements OnInit {
   @ViewChild('search') searchInput: ElementRef;
   status$;
   name$: Observable<string[]>;
-  search$: Observable<string>;
+  search$: Subject<string> = new Subject();
 
   searchQuery: string = '';
 
@@ -29,12 +31,13 @@ export class HeaderComponent implements OnInit {
       .filter(([event,list]) => list.some(el=>el.name.toLowerCase() === event['target'].value.toLowerCase()))
       .map(([event]) => event);
 
-    this.search$ = Observable.fromEvent(this.searchInput.nativeElement, 'change')
-      .merge(input)
+    Observable.fromEvent(this.searchInput.nativeElement, 'change')
+      .merge(input)                                                             .do(Utils.lg('input'))
       .map((event:Event) => event.target['value'] && event.target['value'].trim().toLowerCase())
       .filter(value => !!(value && value.length > 2))
       .distinctUntilChanged()
-      .do(_ => this.selectAll());
+      .do(() => this.selectAll())
+      .subscribe(this.search$);
 
     this.seiyuuSvc.addSearch(this.search$);
   }
