@@ -12,26 +12,27 @@ export class RoutingService {
   constructor(private router: Router) {
    this.router.events
       .filter(e => e instanceof NavigationEnd)                                   .do(Utils.lg('mode'))
-      .subscribe((e:any) => this.mode = e.urlAfterRedirects.split('/')[1]);
+      .subscribe((e: any) => this.mode = e.urlAfterRedirects.split('/')[1]);
 
     this.paramMap$                                                               .do(Utils.log('parammap'))
      .map(params => (params.get('ids')||''))
      .distinctUntilChanged()
      .map(ids => ids.split(',')
         .map(el => +el.replace(/\D/g, ''))
-        .filter(el=>!!el)
+        .filter(el => !!el)
      ).subscribe(this.routeId$);
   }
 
   add(id, list): number {
-    let newList = Utils.unique([...list, id]);
+    const newList = Utils.unique([...list, id]);
     this.router.navigate([this.mode, newList.join(',')]);
     // was it a duplicate?
-    return list.length == newList.length ? id : null;
+    return list.length === newList.length ? id : null;
   }
 
   remove(id, list) {
-    let newList = list.filter(el => el !== id);
+    const newList = list.filter(el => el !== id);
+
     return this.router.navigate([this.mode, newList.join(',')]);
   }
 

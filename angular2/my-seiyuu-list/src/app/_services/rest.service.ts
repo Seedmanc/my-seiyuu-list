@@ -15,12 +15,12 @@ export class RestService {
       payload = undefined;
     }
 
-    if (mode == "runCommand") {
+    if (mode === "runCommand") {
       path = mode;
       mode = "POST";
     }
 
-    let options = Object.keys(query).reduce((total, key) => total + `&${key}=${JSON.stringify(query[key])}`, '');
+    const options = Object.keys(query).reduce((total, key) => total + `&${key}=${JSON.stringify(query[key])}`, '');
 
     return this.http[mode.toLowerCase()](
       `${env.mongoUrl}/${path}?apiKey=${env.apiKey}${options}`,

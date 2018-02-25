@@ -1,18 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute } from "@angular/router";
 import {RoutingService} from "../_services/routing.service";
+import {ChildParamsComponent} from "../child-params.component";
 
 @Component({
   selector: 'msl-magazine-list',
   templateUrl: './magazine-list.component.html',
   styleUrls: ['./magazine-list.component.css']
 })
-export class MagazineListComponent implements OnInit {
+export class MagazineListComponent extends ChildParamsComponent implements OnInit {
 
-  constructor(private route: ActivatedRoute, private routingSvc: RoutingService) { }
-
-  ngOnInit() {
-    this.route.paramMap.subscribe(this.routingSvc.paramMap$);
+  constructor(protected route: ActivatedRoute, protected routingSvc: RoutingService) {
+    super(route, routingSvc);
   }
 
 }

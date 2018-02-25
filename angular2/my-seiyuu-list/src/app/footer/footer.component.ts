@@ -12,7 +12,7 @@ export class FooterComponent implements OnInit {
 
   disqusVisible: boolean;
 
-  constructor(private el:ElementRef, private renderer:Renderer2, public seiyuuSvc:SeiyuuService) { }
+  constructor(private el: ElementRef, private renderer: Renderer2, public seiyuuSvc: SeiyuuService) { }
 
   ngOnInit() {
   }

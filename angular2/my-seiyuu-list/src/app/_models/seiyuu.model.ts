@@ -4,7 +4,7 @@ abstract class NamedEntity {
   protected name: string;
 }
 
-export class BasicSeiyuu extends NamedEntity{
+export class BasicSeiyuu extends NamedEntity {
   public _id?: number;
   public name: string;
   public hits?: number;
@@ -14,7 +14,7 @@ export class BasicSeiyuu extends NamedEntity{
 
   constructor(obj) {
     super();
-    let temp ={...obj,
+    const temp = {...obj,
         updated: new Date(obj.updated),
         accessed: obj.accessed && new Date(obj.accessed) || new Date(obj.updated)
       };
@@ -23,7 +23,7 @@ export class BasicSeiyuu extends NamedEntity{
 
   public get pending(): boolean {
     return !this['roles'] && !!this.name;
-  };
+  }
 
   public get link(): string {
     return `//${Utils.theSite}/people/${this._id}`;
@@ -31,7 +31,7 @@ export class BasicSeiyuu extends NamedEntity{
 
   public upgrade(obj) {
     Object.keys(obj).forEach(key => {
-      if (this[key] === undefined) this[key] = obj[key]
+      if (this[key] === undefined) this[key] = obj[key];
     });
     return this;
   }
@@ -51,8 +51,8 @@ export class Seiyuu extends BasicSeiyuu {
     name: string,
     main: boolean,
   }[];
-  public l?:boolean;
-  public c?:boolean;
+  public l?: boolean;
+  public c?: boolean;
 
   constructor(obj) {
     super(obj);
@@ -63,7 +63,7 @@ export class Seiyuu extends BasicSeiyuu {
 export class Namesake extends NamedEntity {
 
   get name() {
-    return this.namesakes && this.namesakes[0] && this.namesakes[0].name
+    return this.namesakes && this.namesakes[0] && this.namesakes[0].name;
   }
   namesakes: BasicSeiyuu[];
 

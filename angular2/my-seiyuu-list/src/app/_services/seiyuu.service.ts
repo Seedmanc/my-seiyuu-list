@@ -24,11 +24,11 @@ export class SeiyuuService {
 
   private routeId$: Observable<number[]>;
   private namesake$: Subject<Namesake[]> = new BehaviorSubject([]);
-  private totalMap: {[key:number]: BasicSeiyuu} = {};
+  private totalMap: {[key: number]: BasicSeiyuu} = {};
 
 
-  constructor(private rest:RestService, private messageSvc: MessagesService,
-              private routingSvc: RoutingService, private animeSvc:AnimeService) {
+  constructor(private rest: RestService, private messageSvc: MessagesService,
+              private routingSvc: RoutingService, private animeSvc: AnimeService) {
 
     this.totalList$ = this.getTotalList()                                   .do(Utils.lg('totalList'))
       .do(list => this.animeSvc.animeCount$
@@ -40,11 +40,11 @@ export class SeiyuuService {
       .publishLast().refCount();
 
     this.routeId$ = this.routingSvc.routeId$                                  .do(Utils.lg('routeId'))
-      .delayWhen(()=>this.totalList$)
+      .delayWhen(() => this.totalList$)
       .map(ids => ids.filter(id => !!this.totalMap[id]));
 
     this.updateRequest$                                                 .do(Utils.lg('updateRequest'))
-      .bufferToggle(this.updateRequest$.throttleTime(200), ()=>Observable.timer(200))
+      .bufferToggle(this.updateRequest$.throttleTime(200), () => Observable.timer(200))
       .flatMap(ids => this.loadByIds(ids))
       .subscribe(seiyuus => {
         seiyuus.forEach(seiyuu => {
@@ -61,22 +61,22 @@ export class SeiyuuService {
       .map(([seiyuus, namesakes]) => [...seiyuus, ...namesakes]);
 
     this.removed$.withLatestFrom(this.routeId$)                               .do(Utils.lg('removed'))
-      .do(([removed,current]) => this.routingSvc.remove(removed, current))
+      .do(([removed, current]) => this.routingSvc.remove(removed, current))
       .map(([removed]) => removed)
       .withLatestFrom(this.namesake$)
-      .map(([removed,current]) => current.filter(nmsk => nmsk.name !== removed))
+      .map(([removed, current]) => current.filter(nmsk => nmsk.name !== removed))
       .subscribe(this.namesake$);
   }
 
   addSearch(search$: Observable<string>) {
-    let [found, notFound] = search$                                            .do(Utils.lg('search'))
+    const [found, notFound] = search$                                            .do(Utils.lg('search'))
       .withLatestFrom(this.totalList$)
-      .map(([name,list]) => list
+      .map(([name, list]) => list
         .filter(seiyuu => !!Utils.unorderedEquals(name, seiyuu.name))
         .map(seiyuu => seiyuu._id))
       .partition(equals => !!equals.length);
 
-    let [single, multiple] = found                                              .do(Utils.lg('found'))
+    const [single, multiple] = found                                              .do(Utils.lg('found'))
       .withLatestFrom(this.displayList$
         .map(list => list.length))
       .filter(([,count]) => count < 4 || !!this.messageSvc.status('maximum of 4 people are allowed'))
@@ -122,8 +122,8 @@ export class SeiyuuService {
         console.warn(err.message, err.error && err.error.message);
         ids.forEach(id => this.removed$.next(id));
 
-        return Observable.of([])
-      })
+        return Observable.of([]);
+      });
   }
 
   private getTotalList(): Observable<BasicSeiyuu[]> {
@@ -143,7 +143,7 @@ export class SeiyuuService {
         this.pending = false;
 
         throw err;
-      })
+      });
   }
 
 }

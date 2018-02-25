@@ -25,15 +25,15 @@ export class HeaderComponent implements OnInit {
     this.status$ = this.messageSvc.message$;
     this.name$ = this.seiyuuSvc.totalList$.map(seiyuus => seiyuus.map(seiyuu => seiyuu.name));
 
-    let input = Observable.fromEvent(this.searchInput.nativeElement, 'input')
+    const input = Observable.fromEvent(this.searchInput.nativeElement, 'input')
       .debounceTime(500)
       .withLatestFrom(this.seiyuuSvc.totalList$)
-      .filter(([event,list]) => list.some(el=>el.name.toLowerCase() === event['target'].value.toLowerCase()))
+      .filter(([event,list]) => list.some(el => el.name.toLowerCase() === event['target'].value.toLowerCase()))
       .map(([event]) => event);
 
     Observable.fromEvent(this.searchInput.nativeElement, 'change')
       .merge(input)                                                             .do(Utils.lg('input'))
-      .map((event:Event) => event.target['value'] && event.target['value'].trim().toLowerCase())
+      .map((event: Event) => event.target['value'] && event.target['value'].trim().toLowerCase())
       .filter(value => !!(value && value.length > 2))
       .distinctUntilChanged()
       .do(() => this.selectAll())

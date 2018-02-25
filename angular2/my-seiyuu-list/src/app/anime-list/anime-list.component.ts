@@ -4,6 +4,7 @@ import {Utils} from "../_services/utils.service";
 
 import {ActivatedRoute } from "@angular/router";
 import {RoutingService} from "../_services/routing.service";
+import {ChildParamsComponent} from "../child-params.component";
 
 @Component({
   selector: 'msl-anime-list',
@@ -12,6 +13,7 @@ import {RoutingService} from "../_services/routing.service";
 })
 export class AnimeListComponent extends SortableComponent implements OnInit {
   theSite = Utils.theSite;
+  mixin: ChildParamsComponent;
 
   commonRoles: any[] = [
     {
@@ -44,11 +46,13 @@ export class AnimeListComponent extends SortableComponent implements OnInit {
     },
   ]
 
-  constructor(private route: ActivatedRoute, private routingSvc: RoutingService)
-    {super('title')}
+  constructor(private route: ActivatedRoute, private routingSvc: RoutingService) {
+      super('title');
+      this.mixin = new ChildParamsComponent(route, routingSvc);
+    }
 
   ngOnInit() {
-    this.route.paramMap.subscribe(this.routingSvc.paramMap$);
+    this.mixin.ngOnInit();
   }
 
 }

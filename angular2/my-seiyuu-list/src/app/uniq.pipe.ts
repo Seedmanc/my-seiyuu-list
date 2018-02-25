@@ -6,7 +6,7 @@ import {Utils} from "./_services/utils.service";
 })
 export class UniqPipe implements PipeTransform {
 
-  transform(value: any[], prop?:string): any[] {
+  transform(value: any[], prop?: string): any[] {
     return Utils.unique(value||[], prop);
   }
 
