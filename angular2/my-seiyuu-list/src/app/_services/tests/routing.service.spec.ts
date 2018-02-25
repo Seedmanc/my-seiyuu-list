@@ -41,14 +41,14 @@ describe('RoutingService', () => {
     expect(service).toBeTruthy();
   }));
 
-  it('navigate to "" redirects to /-/anime', async(() => {
+  it('navigate to "" redirects to /anime/', async(() => {
     router.navigate(['']).then(() => {
-      expect(location.path()).toBe('/-/anime');
+      expect(location.path()).toBe('/anime/');
     });
   }));
   it('navigate to "<id>/photos"', async(() => {
-    return router.navigate(['53', 'photos']).then(() => {
-      expect(location.path()).toBe('/53/photos');
+    return router.navigate(['photos', 53]).then(() => {
+      expect(location.path()).toBe('/photos/53');
     });
   }));
 
@@ -57,17 +57,17 @@ describe('RoutingService', () => {
         let navigateSpy = spyOn(router, 'navigate');
         let existing = service.add(53, [53, 24]);
 
-        expect(navigateSpy).toHaveBeenCalledWith(['/53,24','anime']);
+        expect(navigateSpy).toHaveBeenCalledWith(['anime', '53,24']);
         expect(existing).toBeTruthy();
       });
     })
    )
   );
   it('remove an existing ID from route', async(inject([RoutingService], (service: RoutingService) => {
-      router.navigate(['/-/photos']).then(()=>{
+      router.navigate(['/photos/53,24']).then(()=>{
         let navigateSpy = spyOn(router, 'navigate');
         service.remove(53, [53, 24]);
-        expect(navigateSpy).toHaveBeenCalledWith(['/24','photos']);
+        expect(navigateSpy).toHaveBeenCalledWith(['photos', '24']);
       });
     })
    )

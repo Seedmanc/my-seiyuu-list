@@ -9,7 +9,7 @@ describe('seiyuu lookups', () => {
   let cm = 'Chihara Minori';
   let mk = 'Maeda Konomi';
   let dj = 'Davidyuk Jenya';
-  let to = 10000;
+  let to = 5000;
 
   beforeEach(() => {
     seiyuu = new SeiyuuPage();

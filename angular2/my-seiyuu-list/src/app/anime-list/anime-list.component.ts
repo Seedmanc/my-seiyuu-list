@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import {SortableComponent} from "../sortable.component";
 import {Utils} from "../_services/utils.service";
 
+import {ActivatedRoute } from "@angular/router";
+import {RoutingService} from "../_services/routing.service";
+
 @Component({
   selector: 'msl-anime-list',
   templateUrl: './anime-list.component.html',
@@ -41,9 +44,11 @@ export class AnimeListComponent extends SortableComponent implements OnInit {
     },
   ]
 
-  constructor() {super('title')}
+  constructor(private route: ActivatedRoute, private routingSvc: RoutingService)
+    {super('title')}
 
   ngOnInit() {
+    this.route.paramMap.subscribe(this.routingSvc.paramMap$);
   }
 
 }

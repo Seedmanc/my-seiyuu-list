@@ -1,5 +1,8 @@
 <div class="btn-group btn-group-justified">
-  <a href="#" class="btn btn-default" routerLinkActive="btn-success" routerLink="anime"><b> anime </b></a>
-  <a href="#" class="btn btn-default" routerLinkActive="btn-success" routerLink="magazines"><b> magazines </b></a>
-  <a href="#" class="btn btn-default" routerLinkActive="btn-success" routerLink="photos"><b> photos </b></a>
+  <a class="btn btn-default" [routerLinkActiveOptions]="ids" routerLinkActive="btn-success"
+     [routerLink]="['', 'anime', ids]"><b> anime </b></a>
+  <a class="btn btn-default" [routerLinkActiveOptions]="ids" routerLinkActive="btn-success"
+     [routerLink]="['', 'magazines', ids]"><b> magazines </b></a>
+  <a class="btn btn-default" [routerLinkActiveOptions]="ids" routerLinkActive="btn-success"
+     [routerLink]="['', 'photos', ids]"><b> photos </b></a>
 </div>
