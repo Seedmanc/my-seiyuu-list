@@ -69,20 +69,22 @@ export class SeiyuuService {
   }
 
   addSearch(search$: Observable<string>) {
-    const [found, notFound] = search$                                            .do(Utils.lg('search'))
+    const [found, notFound] = search$                                          .do(Utils.lg('search'))
       .withLatestFrom(this.totalList$)
       .map(([name, list]) => list
-        .filter(seiyuu => !!Utils.unorderedEquals(name, seiyuu.name))
+        .filter(seiyuu =>
+          !!Utils.unorderedCompare(name, seiyuu.name) || Utils.kanjiCompare(name, seiyuu.alternate_name)
+        )
         .map(seiyuu => seiyuu._id))
       .partition(equals => !!equals.length);
 
-    const [single, multiple] = found                                              .do(Utils.lg('found'))
+    const [single, multiple] = found                                            .do(Utils.lg('found'))
       .withLatestFrom(this.displayList$
         .map(list => list.length))
       .filter(([,count]) => count < 4 || !!this.messageSvc.status('maximum of 4 people are allowed'))
       .do(() => this.messageSvc.blank())
       .map(([list]) => list)
-      .share()  // is this even necessary at this point
+      .share()
       .partition(list => list.length === 1);
 
     multiple                                                                 .do(Utils.lg('multiple'))
@@ -131,7 +133,7 @@ export class SeiyuuService {
       coll: 'seiyuu-test',
       mode: 'GET',
       query: {
-        f: {name: 1, hits: 1, updated: 1, count: 1, accessed: 1},
+        f: {name: 1, hits: 1, updated: 1, count: 1, accessed: 1, alternate_name: 1},
         s: {name: 1}
       }
     }).map(list => list.map(el => new BasicSeiyuu(el)))

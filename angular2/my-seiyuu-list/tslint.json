@@ -52,10 +52,6 @@
     "no-empty": false,
     "no-empty-interface": true,
     "no-eval": true,
-    "no-inferrable-types": [
-      true,
-      "ignore-params"
-    ],
     "no-misused-new": true,
     "no-non-null-assertion": true,
     "no-shadowed-variable": true,
@@ -109,13 +105,13 @@
     "directive-selector": [
       true,
       "attribute",
-      "app",
+      "msl",
       "camelCase"
     ],
     "component-selector": [
       true,
       "element",
-      "app",
+      "msl",
       "kebab-case"
     ],
     "no-output-on-prefix": true,

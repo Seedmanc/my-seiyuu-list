@@ -7,6 +7,7 @@ abstract class NamedEntity {
 export class BasicSeiyuu extends NamedEntity {
   public _id?: number;
   public name: string;
+  public alternate_name: string[];
   public hits?: number;
   public count?: number;
   public updated?: Date;
@@ -19,6 +20,7 @@ export class BasicSeiyuu extends NamedEntity {
         accessed: obj.accessed && new Date(obj.accessed) || new Date(obj.updated)
       };
      this.upgrade(temp);
+    this.alternate_name = this.alternate_name || [];
     }
 
   public get pending(): boolean {

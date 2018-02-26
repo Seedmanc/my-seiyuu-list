@@ -21,7 +21,8 @@ describe('SeiyuuService', () => {
     basicModel2
   ];
   let x; let mockList = (backend, returned) => backend.expectOne({
-    url: `${env.mongoUrl}/collections/seiyuu-test?apiKey=${env.apiKey}&f={"name":1,"hits":1,"updated":1,"count":1,"accessed":1}&s={"name":1}`,
+    url:
+`${env.mongoUrl}/collections/seiyuu-test?apiKey=${env.apiKey}&f={"name":1,"hits":1,"updated":1,"count":1,"accessed":1,"alternate_name":1}&s={"name":1}`,
     method:'GET'
   }, 'GET to count the # of records in the seiyuu DB').flush(...returned);
 
@@ -88,7 +89,7 @@ describe('SeiyuuService', () => {
           .subscribe(r => x=r);
 
         let request = backend.expectOne(
-          `${env.mongoUrl}/collections/seiyuu-test?apiKey=${env.apiKey}&f={"name":1,"hits":1,"updated":1,"count":1,"accessed":1}&s={"name":1}`
+          `${env.mongoUrl}/collections/seiyuu-test?apiKey=${env.apiKey}&f={"name":1,"hits":1,"updated":1,"count":1,"accessed":1,"alternate_name":1}&s={"name":1}`
         );
         request.error(new ErrorEvent(''));
       }).toThrow();

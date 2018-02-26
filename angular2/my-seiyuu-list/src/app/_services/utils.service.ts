@@ -4,13 +4,19 @@ export class Utils {
 
   static readonly theSite: string = 'myanimelist.net';
 
-  static unorderedEquals(input: string, name: string): string {
+  static unorderedCompare(input: string, name: string): string {
     if (name) {
       input = input.toLowerCase();
       name = name.toLowerCase();
 
       return (input === name || input.split(' ').reverse().join(' ') === name) && name;
     } else return '';
+  }
+
+  static kanjiCompare(input: string, names: string[]): boolean {
+    let joint = input.replace(/\s+/g,'');
+    debugger;
+    return  names.some(name => name === joint);
   }
 
   static pluralize(number) {

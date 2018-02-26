@@ -6,6 +6,7 @@ export const model = {
   "name": "Maeda Konomi",
   "count": 5,
   "hits": 2,
+  "alternate_name": ["前田このみ"],
   "updated": "Sun, 25 Oct 2015 10:02:56 GMT",
   "accessed": +date,
   "pic": "/images/voiceactors/3/33867.jpg",
@@ -22,6 +23,7 @@ export const basicModel = {
   "name": "Maeda Konomi",
   "count": 5,
   "hits": 2,
+  "alternate_name": ["前田このみ"],
   "updated": "Sun, 25 Oct 2015 10:02:56 GMT",
   "accessed": +date
 };
@@ -30,11 +32,13 @@ export const basicModel2 = {
   "name": "Test Name",
   "count": 1,
   "hits": 2,
+  "alternate_name": [],
   "updated": "Sun, 25 Oct 2015 10:02:56 GMT",
   "accessed": +date
 };
 export const model2 = Object.assign({}, basicModel2, {
   "pic": "/images/voiceactors/3/33867.jpg",
+  "alternate_name": [],
   "roles": [
     {
       "name": "Pierre",

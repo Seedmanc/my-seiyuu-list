@@ -42,11 +42,15 @@ describe('Utils', () => {
   });
 
   it('should choose proper order among 2 versions of space-delimited lists of words if they\'re same',
-    ()=> expect(Utils.unorderedEquals('first second third', 'Third Second First'))
+    ()=> expect(Utils.unorderedCompare('first second third', 'Third Second First'))
       .toBe('third second first')
   );
   it('should be falsy if the lists are different',
-    ()=> expect(Utils.unorderedEquals('first second third', 'third second first fourth'))
+    ()=> expect(Utils.unorderedCompare('first second third', 'third second first fourth'))
       .toBeFalsy()
-  )
+  );
+
+  it('should find a kanji name in the list', () =>
+    expect(Utils.kanjiCompare('茅原 実里', ['茅原実里'])).toBeTruthy()
+  );
 });

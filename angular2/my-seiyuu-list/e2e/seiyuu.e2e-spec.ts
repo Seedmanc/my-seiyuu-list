@@ -37,6 +37,13 @@ describe('seiyuu lookups', () => {
     expect(browser.getTitle()).toBe(`My Seiyuu List - ${cm}`)
   });
 
+  it('should find seiyuu by kanji name', () => {
+    expect(seiyuu.containers().count()).toBeFalsy();
+    page.searchInput().sendKeys('茅原実里\n');
+    expect(seiyuu.containers().count()).toBe(1);
+    expect(browser.getTitle()).toBe(`My Seiyuu List - ${cm}`)
+  });
+
   it('should show photo upon seiyuu loading', () => {
     page.searchInput().sendKeys(cm);
     let panel = seiyuu.panel(cm);
