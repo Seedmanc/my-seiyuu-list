@@ -1,6 +1,10 @@
 import {Injectable} from '@angular/core';
 import {NavigationEnd, Router} from "@angular/router";
 import {Utils} from "./utils.service";
+import 'rxjs/add/operator/do'
+import 'rxjs/add/operator/filter'
+import 'rxjs/add/operator/map'
+import 'rxjs/add/operator/distinctUntilChanged'
 import {Subject} from "rxjs/Subject";
 
 @Injectable()
