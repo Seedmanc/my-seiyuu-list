@@ -14,8 +14,8 @@ export class Utils {
   }
 
   static kanjiCompare(input: string, names: string[]): boolean {
-    let joint = input.replace(/\s+/g,'');
-    debugger;
+    const joint = input.replace(/\s+/g,'');
+
     return  names.some(name => name === joint);
   }
 

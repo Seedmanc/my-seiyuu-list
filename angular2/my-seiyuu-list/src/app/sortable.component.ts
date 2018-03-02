@@ -1,13 +1,13 @@
 export abstract class SortableComponent {
 
-  protected ascending: boolean;
-  protected orderByField: string;
+  public ascending: boolean;
+  public orderByField: string;
 
   constructor(defaultSort: string = 'name') {
     this.orderByField = defaultSort;
   }
 
-  protected sort(field) {
+  public sort(field) {
     this.ascending = !this.ascending;
     this.orderByField = field;
   }

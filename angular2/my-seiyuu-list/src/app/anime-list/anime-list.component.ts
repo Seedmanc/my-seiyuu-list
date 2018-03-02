@@ -55,4 +55,6 @@ export class AnimeListComponent extends SortableComponent implements OnInit {
     this.mixin.ngOnInit();
   }
 
+  onMainOnlyChange(x?){}
+
 }

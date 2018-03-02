@@ -12,6 +12,8 @@ import {ChildParamsComponent} from "../child-params.component";
 export class PhotoListComponent extends ChildParamsComponent implements OnInit {
   photoPage: string;
   pending: boolean = true;
+  hasNext: false;
+  hasPrev: false;
 
   constructor(private http: HttpClient, protected route: ActivatedRoute, protected routingSvc: RoutingService) {
     super(route, routingSvc);
