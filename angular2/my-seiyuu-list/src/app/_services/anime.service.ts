@@ -10,7 +10,6 @@ import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/merge';
 import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/partition';
 import 'rxjs/add/operator/distinctUntilChanged';
 
 @Injectable()
@@ -31,15 +30,14 @@ export class AnimeService {
 
     this.selected$.subscribe(id => Anime.activeSeiyuu = id);
 
-    let [present$, empty$] = this.currentSeiyuus$
+    this.displayAnime$ = this.currentSeiyuus$
       .distinctUntilChanged((x,y) =>
         x.map(el => el.name).join() === y.map(el => el.name).join()
-      )                                                                    .do(Utils.log('currentSeiyuus'))
-      .combineLatest(this.ready$                                                .do(Utils.lg('ready')))
-      .map(([seiyuus,ids]) => seiyuus.filter(s => !s.pending))
-      .partition(seiyuus => seiyuus.length > 0);
-
-    this.displayAnime$ = present$                                                 .do(Utils.log('present'))
+      )                                                                .do(Utils.lg('currentSeiyuus'))
+      .combineLatest(this.ready$                                                   .do(Utils.log('ready$')))
+      .filter(([seiyuus, ids]) => !seiyuus.length || !!seiyuus.find(s => s._id == ids[0]))         // ignore readyevents from namesakes
+      .map(([seiyuus]) => seiyuus.filter(s => !s.pending))                        .do(Utils.log('present'))
+      .do(() => msgSvc.blank())
       .map(seiyuus => {
         // turn objects with arrays of roles with animeIds into hashmaps of roles with seiyuuIds per anime
         return seiyuus.map(({_id, roles}) => {
@@ -97,9 +95,6 @@ export class AnimeService {
       .do(animes => {
         !animes.length && this.msgSvc.status('no shared anime found')
       })
-      .merge(empty$
-        .do(() => msgSvc.blank())
-      )
       .do(Utils.log('anime results'));
   }
 

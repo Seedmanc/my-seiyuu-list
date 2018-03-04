@@ -9,8 +9,9 @@ import {AnimeService} from "../_services/anime.service";
   styleUrls: ['./seiyuu-panel.component.css']
 })
 export class SeiyuuPanelComponent implements OnInit {
-
   @Input() seiyuu: Seiyuu & Namesake;
+
+  selected: number;
 
   constructor(private seiyuuSvc: SeiyuuService, private animeSvc: AnimeService) { }
 
@@ -24,6 +25,8 @@ export class SeiyuuPanelComponent implements OnInit {
         .filter(namesake => namesake.pending)
         .forEach(namesake => this.seiyuuSvc.updateRequest$.next(namesake._id));
     }
+
+    this.animeSvc.selected$.subscribe(id => this.selected = id);
   }
 
   pick(id: number) {

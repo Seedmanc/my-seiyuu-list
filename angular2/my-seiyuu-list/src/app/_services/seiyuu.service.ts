@@ -62,7 +62,7 @@ export class SeiyuuService {
         seiyuus.forEach(seiyuu => {
           this.totalMap[seiyuu._id].upgrade(seiyuu);
         });
-        this.animeSvc.ready$.next();
+        this.animeSvc.ready$.next(seiyuus.map(s => s._id));       // TODO ignore readyevents from namesakes
       });
 
     this.displayList$ = this.routeId$                                     .do(Utils.lg('displayList'))
@@ -70,11 +70,12 @@ export class SeiyuuService {
       .do(seiyuus => document.title = 'My Seiyuu List' +
         (seiyuus.length ? ' - ' + seiyuus.map(seiyuu => seiyuu.name).join(', ') : '')
        )
-      .do(seiyuus => seiyuus[0] && this.animeSvc.selected$.next(seiyuus[0]._id))
-      .do(seiyuus => this.animeSvc.currentSeiyuus$.next(seiyuus))
+      .do(seiyuus => seiyuus.length && this.animeSvc.selected$.next(seiyuus[0]._id))
       .do(seiyuus => {
+        this.animeSvc.currentSeiyuus$.next(seiyuus);
+
         if (seiyuus.length && seiyuus.every(seiyuu => !seiyuu.pending)) {
-          this.animeSvc.ready$.next();
+          this.animeSvc.ready$.next(seiyuus.map(s => s._id));
         }
       })
       .combineLatest(this.namesake$)
@@ -102,7 +103,6 @@ export class SeiyuuService {
       .withLatestFrom(this.displayList$
         .map(list => list.length))
       .filter(([,count]) => count < 4 || !!this.messageSvc.status('maximum of 4 people are allowed'))
-      .do(() => this.messageSvc.blank())
       .map(([list]) => list)
       .share()
       .partition(list => list.length === 1);

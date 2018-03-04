@@ -14,7 +14,7 @@ table.text-center {
 
   margin-bottom: 6px;
 }
-.well:not(.namesake):hover{
+.well:not(.namesake).hover{
   border: 1px black solid;
 }
 
@@ -24,11 +24,11 @@ table.text-center {
   z-index: 2;
 }
 
-.l:not(:hover) {
+.l:not(.hover) {
   border-color: magenta!important;
 }
 
-.c:not(:hover) {
+.c:not(.hover) {
   border-color: #ba6;
 }
 .c {
