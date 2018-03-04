@@ -1,4 +1,5 @@
 import {Utils} from "../_services/utils.service";
+import {Role} from "./anime.model";
 
 abstract class NamedEntity {
   protected name: string;
@@ -48,11 +49,7 @@ export class BasicSeiyuu extends NamedEntity {
 export class Seiyuu extends BasicSeiyuu {
 
   private pic?: string;
-  private roles?: {
-    _id: number,
-    name: string,
-    main: boolean,
-  }[];
+  public roles?: Role[];
   public l?: boolean;
   public c?: boolean;
 

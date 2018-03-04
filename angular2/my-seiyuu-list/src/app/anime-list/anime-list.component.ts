@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import {SortableComponent} from "../sortable.component";
-import {Utils} from "../_services/utils.service";
 
 import {ActivatedRoute } from "@angular/router";
 import {RoutingService} from "../_services/routing.service";
 import {ChildParamsComponent} from "../child-params.component";
+import {AnimeService} from "../_services/anime.service";
 
 @Component({
   selector: 'msl-anime-list',
@@ -12,42 +12,11 @@ import {ChildParamsComponent} from "../child-params.component";
   styleUrls: ['./anime-list.component.css']
 })
 export class AnimeListComponent extends SortableComponent implements OnInit {
-  theSite = Utils.theSite;
   mixin: ChildParamsComponent;
 
-  commonRoles: any[] = [
-    {
-      _id: 0,
-      pic: '/images/anime/7/6797v.jpg',
-      title: 'kemofure',
-      character: 'serval',
-      main: true
-    },
-    {
-      _id: 1,
-      pic: '/images/anime/7/6797v.jpg',
-      title: 'kemofure',
-      character: 'serval',
-      main: false
-    },
-    {
-      _id: 2,
-      pic: '/images/anime/7/6797v.jpg',
-      title: 'kemofure',
-      character: 'kaban',
-      main: false
-    },
-    {
-      _id: 3,
-      pic: '/images/anime/7/6797v.jpg',
-      title: 'idolmaster',
-      character: 'kaban',
-      main: false
-    },
-  ]
-
-  constructor(private route: ActivatedRoute, private routingSvc: RoutingService) {
-      super('title');
+  constructor(private route: ActivatedRoute, private routingSvc: RoutingService,
+              public animeSvc: AnimeService) {
+      super('_id');
       this.mixin = new ChildParamsComponent(route, routingSvc);
     }
 

@@ -1,11 +1,13 @@
 <div class="col-md-12 no-gutter table-responsive">
 
-  <table class="table table-striped  header-fixed" id="rolesTable">
+  <table class="table table-striped" id="rolesTable">
     <thead>
       <tr>
-        <th class="text-center">#</th>
+        <th class="text-center">
+          <a href="javascript:void(0)" (click)="sort('_id')" id="anime-id" title="sort by release date">▴⏰▾</a>
+        </th>
         <th>
-          <a href="javascript:void(0)" (click)="sort('title')" id="anime-title">
+          <a href="javascript:void(0)" (click)="sort('titleText')" id="anime-title">
             ▴title▾</a>
           <a id="mainOnly-wrapper">
             <input type="checkbox" #mainOnly (ngModelChange)="onMainOnlyChange(mainOnly.value)"
@@ -16,7 +18,7 @@
           </a>
         </th>
         <th class="text-right">
-          <a href="javascript:void(0)" (click)="sort('character')">
+          <a href="javascript:void(0)" (click)="sort('mainCharacter')">
             ▴character▾</a>
         </th>
         <th class="text-center tier">
@@ -26,20 +28,20 @@
     </thead>
 
     <tbody>
-      <tr *ngFor="let show of commonRoles | orderBy:orderByField:ascending; let idx=index">
+      <tr *ngFor="let anime of animeSvc.displayAnime$ | async | orderBy:orderByField:ascending; let idx=index">
         <td class="text-center">{{idx + 1}}</td>
         <td>
-          <a href="http://{{theSite+'/anime/'+show._id}}" target="_blank">
-            <img *ngIf="show.pic" src="//{{theSite+show.pic}}" class="show-pic"/> <!--fallback-->
+          <a [href]="anime.link" target="_blank">
+            <img *ngIf="anime.pic" [src]="anime.thumb" class="show-pic"/> <!--fallback-->
           </a>
           &nbsp;
-          <a href="http://{{theSite+'/anime/'+show._id}}" target="_blank">{{show.title}}</a>
+          <a [href]="anime.link" target="_blank">{{anime.titleText}}</a>
         </td>
         <td class="text-right">
-          {{show.character}}
+          {{anime.mainCharacter}}
         </td>
-        <td class="text-center" [attr.data-main]="show.main">
-          {{show.main ? 'main':'supporting'}}
+        <td class="text-center" [attr.data-main]="anime.main">
+          {{anime.main ? 'main':'supporting'}}
         </td>
       </tr>
     </tbody>

@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import {SeiyuuService} from "../_services/seiyuu.service";
 import {Namesake, Seiyuu} from "../_models/seiyuu.model";
+import {AnimeService} from "../_services/anime.service";
 
 @Component({
   selector: 'msl-seiyuu-panel',
@@ -11,7 +12,7 @@ export class SeiyuuPanelComponent implements OnInit {
 
   @Input() seiyuu: Seiyuu & Namesake;
 
-  constructor(private seiyuuSvc: SeiyuuService) { }
+  constructor(private seiyuuSvc: SeiyuuService, private animeSvc: AnimeService) { }
 
   ngOnInit() {
     if (this.seiyuu.pending) {
@@ -35,7 +36,7 @@ export class SeiyuuPanelComponent implements OnInit {
 
   select() {
     if (!this.seiyuu.pending && !this.seiyuu.namesakes)
-      this.seiyuuSvc.selected$.next(this.seiyuu);
+      this.animeSvc.selected$.next(this.seiyuu._id);
   }
 
 }
