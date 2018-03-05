@@ -42,7 +42,7 @@ export class SeiyuuService {
   constructor(private rest: RestService, private messageSvc: MessagesService,
               private routingSvc: RoutingService, private animeSvc: AnimeService) {
 
-    this.totalList$ = this.getTotalList()                                   .do(Utils.lg('totalList'))
+    this.totalList$ = this.getTotalList()                                                                  .do(Utils.lg('totalList'))
       .do(list => this.animeSvc.animeCount$
         .subscribe(number =>
           this.messageSvc.status(list.length + ` seiyuu & ${number} anime records cached`)
@@ -51,37 +51,38 @@ export class SeiyuuService {
       .do(() => this.pending = false)
       .publishLast().refCount();
 
-    this.routeId$ = this.routingSvc.routeId$                                  .do(Utils.lg('routeId'))
-      .delayWhen(() => this.totalList$)
+    this.routeId$ = this.routingSvc.routeId$
+      .delayWhen(() => this.totalList$)                                                                    .do(Utils.log('routeId'))
       .map(ids => ids.filter(id => !!this.totalMap[id]));
 
-    this.updateRequest$                                                 .do(Utils.lg('updateRequest'))
+    this.updateRequest$                                                                                   .do(Utils.lg('updateRequest'))
       .bufferToggle(this.updateRequest$.throttleTime(200), () => Observable.timer(200))
       .flatMap(ids => this.loadByIds(ids))
-      .subscribe(seiyuus => {
+      .withLatestFrom(this.routeId$)
+      .do(([seiyuus, ids]) => {
         seiyuus.forEach(seiyuu => {
           this.totalMap[seiyuu._id].upgrade(seiyuu);
         });
-        this.animeSvc.ready$.next(seiyuus.map(s => s._id));       // TODO ignore readyevents from namesakes
-      });
+        let ready = ids.map(id => this.totalMap[id]).filter(s => !s.pending);
+        if (~ids.indexOf(seiyuus[0]._id) && ready.length) {
+          this.animeSvc.currentSeiyuus$.next(ready);
+        }
+      }).subscribe();
 
-    this.displayList$ = this.routeId$                                     .do(Utils.lg('displayList'))
+    this.displayList$ = this.routeId$                                                                      .do(Utils.lg('displayList'))
       .map(ids => ids.map(id => this.totalMap[id]))
       .do(seiyuus => document.title = 'My Seiyuu List' +
         (seiyuus.length ? ' - ' + seiyuus.map(seiyuu => seiyuu.name).join(', ') : '')
        )
-      .do(seiyuus => seiyuus.length && this.animeSvc.selected$.next(seiyuus[0]._id))
       .do(seiyuus => {
-        this.animeSvc.currentSeiyuus$.next(seiyuus);
-
-        if (seiyuus.length && seiyuus.every(seiyuu => !seiyuu.pending)) {
-          this.animeSvc.ready$.next(seiyuus.map(s => s._id));
+        if (seiyuus.every(seiyuu => !seiyuu.pending)) {
+          this.animeSvc.currentSeiyuus$.next(seiyuus);
         }
       })
       .combineLatest(this.namesake$)
       .map(([seiyuus, namesakes]) => [...seiyuus, ...namesakes]);
 
-    this.removed$.withLatestFrom(this.routeId$)                               .do(Utils.lg('removed'))
+    this.removed$.withLatestFrom(this.routeId$)                                                            .do(Utils.lg('removed'))
       .do(([removed, current]) => this.routingSvc.remove(removed, current))
       .map(([removed]) => removed)
       .withLatestFrom(this.namesake$)
@@ -90,7 +91,7 @@ export class SeiyuuService {
   }
 
   addSearch(search$: Observable<string>) {
-    const [found$, notFound$] = search$                                        .do(Utils.lg('search'))
+    const [found$, notFound$] = search$                                                                    .do(Utils.lg('search'))
       .withLatestFrom(this.totalList$)
       .map(([name, list]) => list
         .filter(seiyuu =>
@@ -99,7 +100,7 @@ export class SeiyuuService {
         .map(seiyuu => seiyuu._id))
       .partition(equals => !!equals.length);
 
-    const [single$, multiple$] = found$                                         .do(Utils.lg('found'))
+    const [single$, multiple$] = found$                                                                    .do(Utils.lg('found'))
       .withLatestFrom(this.displayList$
         .map(list => list.length))
       .filter(([,count]) => count < 4 || !!this.messageSvc.status('maximum of 4 people are allowed'))
@@ -107,12 +108,12 @@ export class SeiyuuService {
       .share()
       .partition(list => list.length === 1);
 
-    multiple$                                                                .do(Utils.lg('multiple'))
+    multiple$                                                                                              .do(Utils.lg('multiple'))
       .map(ids => new Namesake(ids.map(id => this.totalMap[id])))
       .withLatestFrom(this.namesake$, (New, old) => Utils.unique([...old, New], 'name'))
       .subscribe(namesakes => this.namesake$.next(namesakes));
 
-    single$                                                                    .do(Utils.lg('single'))
+    single$                                                                                                .do(Utils.lg('single'))
       .map(ids => ids[0])
       .merge(this.picked$
         .do(id => this.removed$.next(this.totalMap[id].name)))
@@ -122,7 +123,7 @@ export class SeiyuuService {
       .do(id => this.messageSvc.status(`"${this.totalMap[id].name}" is already selected`))
       .subscribe();
 
-    notFound$                                                                .do(Utils.lg('notFound'))
+    notFound$                                                                                              .do(Utils.lg('notFound'))
       .withLatestFrom(search$)
       .subscribe(([,search]) => this.messageSvc.error(`"${search}" is not found`));
   }

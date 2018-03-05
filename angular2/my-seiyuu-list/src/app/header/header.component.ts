@@ -34,7 +34,7 @@ export class HeaderComponent implements OnInit {
       .map(([event]) => event);
 
     Observable.fromEvent(this.searchInput.nativeElement, 'change')
-      .merge(input)                                                             .do(Utils.lg('input'))
+      .merge(input)                                                                                        .do(Utils.lg('input'))
       .map((event: Event) => event.target['value'] && event.target['value'].trim().toLowerCase())
       .filter(value => !!(value && value.length > 2))
       .distinctUntilChanged()

@@ -18,7 +18,6 @@ export class AnimeService {
   displayAnime$: Observable<Anime[]>;
 
   currentSeiyuus$: Subject<Seiyuu[]> = new Subject();
-  ready$: Subject<any> = new Subject();
   selected$: Subject<number> = new Subject();
 
   constructor(private rest: RestService, private msgSvc: MessagesService) {
@@ -30,14 +29,14 @@ export class AnimeService {
 
     this.selected$.subscribe(id => Anime.activeSeiyuu = id);
 
-    this.displayAnime$ = this.currentSeiyuus$
+    this.displayAnime$ = this.currentSeiyuus$                                                              .do(Utils.log('ready'))
       .distinctUntilChanged((x,y) =>
         x.map(el => el.name).join() === y.map(el => el.name).join()
-      )                                                                .do(Utils.lg('currentSeiyuus'))
-      .combineLatest(this.ready$                                                   .do(Utils.log('ready$')))
-      .filter(([seiyuus, ids]) => !seiyuus.length || !!seiyuus.find(s => s._id == ids[0]))         // ignore readyevents from namesakes
-      .map(([seiyuus]) => seiyuus.filter(s => !s.pending))                        .do(Utils.log('present'))
-      .do(() => msgSvc.blank())
+      )                                                                                                    .do(Utils.lg('currentSeiyuus'))
+      .do(seiyuus => {
+        msgSvc.blank();
+        seiyuus.length && this.selected$.next(seiyuus[seiyuus.length-1]._id);
+      })
       .map(seiyuus => {
         // turn objects with arrays of roles with animeIds into hashmaps of roles with seiyuuIds per anime
         return seiyuus.map(({_id, roles}) => {
@@ -93,9 +92,9 @@ export class AnimeService {
         return result;
       })
       .do(animes => {
-        !animes.length && this.msgSvc.status('no shared anime found')
+        !animes.length && this.msgSvc.status('no shared anime found');
       })
-      .do(Utils.log('anime results'));
+                                                                                                           .do(Utils.log('anime results'));
   }
 
 }

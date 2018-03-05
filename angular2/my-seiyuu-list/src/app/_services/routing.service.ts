@@ -15,10 +15,10 @@ export class RoutingService {
 
   constructor(private router: Router) {
    this.router.events
-      .filter(e => e instanceof NavigationEnd)                                   .do(Utils.lg('mode'))
+      .filter(e => e instanceof NavigationEnd)                                                             .do(Utils.lg('mode'))
       .subscribe((e: any) => this.mode = e.urlAfterRedirects.split('/')[1]);
 
-    this.paramMap$                                                               .do(Utils.log('parammap'))
+    this.paramMap$                                                                                         .do(Utils.log('parammap'))
      .map(params => (params.get('ids')||''))
      .distinctUntilChanged()
      .map(ids => ids.split(',')

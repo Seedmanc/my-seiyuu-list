@@ -1,17 +1,6 @@
-import { TestBed, inject } from '@angular/core/testing';
 import {Utils} from "../utils.service";
 
 describe('Utils', () => {
-  it('should be injectable', () => {
-    TestBed.configureTestingModule({
-      providers: [Utils],
-    });
-    inject([Utils], (service: Utils) => {
-      expect(service).toBeTruthy();
-    })
-   }
-  );
-
   it('should provide correct MAL link', ()=>{
     expect(Utils.theSite).toBe('myanimelist.net');
   });
