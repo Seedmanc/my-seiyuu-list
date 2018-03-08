@@ -22,13 +22,14 @@
             ▴character▾</a>
         </th>
         <th class="text-center tier">
-          <b>role tier</b>
+          <a href="javascript:void(0)" (click)="type=!type">
+            ▴role tier▾</a>
         </th>
       </tr>
     </thead>
 
-    <tbody>
-      <tr *ngFor="let anime of animeSvc.displayAnime$ | async | orderBy:[orderByField]:ascending; let idx=index">
+    <tbody *ngFor="let tier of output | orderBy:['type']:type">
+      <tr *ngFor="let anime of tier.list | orderBy:[orderByField]:ascending; let idx=index">
         <td class="text-center">{{idx + 1}}</td>
         <td>
           <a [href]="anime.link" target="_blank">

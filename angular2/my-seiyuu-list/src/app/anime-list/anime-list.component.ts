@@ -5,6 +5,10 @@ import {ActivatedRoute } from "@angular/router";
 import {RoutingService} from "../_services/routing.service";
 import {ChildParamsComponent} from "../child-params.component";
 import {AnimeService} from "../_services/anime.service";
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/combineLatest';
+import 'rxjs/add/operator/distinctUntilChanged';
+import 'rxjs/add/operator/delay';
 
 @Component({
   selector: 'msl-anime-list',
@@ -13,6 +17,18 @@ import {AnimeService} from "../_services/anime.service";
 })
 export class AnimeListComponent extends SortableComponent implements OnInit {
   mixin: ChildParamsComponent;
+  output = [
+    {
+      type: 'main',
+      list: []
+    },
+    {
+      type: 'supporting',
+      list: []
+    },
+  ];
+  test:any[]=[];
+  type: boolean = true;
 
   constructor(private route: ActivatedRoute, private routingSvc: RoutingService,
               public animeSvc: AnimeService) {
@@ -22,6 +38,15 @@ export class AnimeListComponent extends SortableComponent implements OnInit {
 
   ngOnInit() {
     this.mixin.ngOnInit();
+
+    this.animeSvc.displayAnime$
+      .combineLatest(this.animeSvc.selected$.distinctUntilChanged().delay(0))
+      .map(([anime])=>anime)
+      .subscribe(animes => {
+        this.test = animes;
+        this.output[0].list = animes.filter(a => a.main);
+        this.output[1].list = animes.filter(a => !a.main);
+      });
   }
 
   onMainOnlyChange(x?){}
