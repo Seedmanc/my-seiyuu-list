@@ -18,7 +18,7 @@ export class Anime {
     return this.title || this._id+'';
   }
 
-  get main() {
+  get main(): boolean {
     return this.rolesBySeiyuu[Anime.activeSeiyuu].some(role => role.main);
   }
   get characters() {

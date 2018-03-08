@@ -4,7 +4,7 @@
     <thead>
       <tr>
         <th class="text-center">
-          <a href="javascript:void(0)" (click)="sort('_id')" id="anime-id" title="sort by recency">▴⏰▾</a>
+          <a href="javascript:void(0)" (click)="sort('_id')" id="anime-id" title="sort by recency">▴#▾</a>
         </th>
         <th>
           <a href="javascript:void(0)" (click)="sort('titleText')" id="anime-title">
@@ -28,7 +28,7 @@
     </thead>
 
     <tbody>
-      <tr *ngFor="let anime of animeSvc.displayAnime$ | async | orderBy:orderByField:ascending; let idx=index">
+      <tr *ngFor="let anime of animeSvc.displayAnime$ | async | orderBy:[orderByField]:ascending; let idx=index">
         <td class="text-center">{{idx + 1}}</td>
         <td>
           <a [href]="anime.link" target="_blank">

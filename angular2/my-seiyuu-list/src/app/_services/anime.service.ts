@@ -85,16 +85,16 @@ export class AnimeService {
           })
         });
 
-        this.msgSvc.status(
-          `${result.length} ${rolesByAnimeSets.length > 1 ? 'shared ': ''}anime found`
-        );
-
-        return result;
+        return {anime: result, seiyuuCount: rolesByAnimeSets.length};
       })
-      .do(animes => {
-        !animes.length && this.msgSvc.status('no shared anime found');
+      .do(({anime, seiyuuCount}) => {
+        if (seiyuuCount) {
+          this.msgSvc.status(
+            `${anime.length || 'no'} ${seiyuuCount > 1 ? 'shared ' : ''}anime found`
+          );
+        }
       })
-                                                                                                           .do(Utils.log('anime results'));
+      .map(({anime}) => anime)                                                                             .do(Utils.log('anime results'));
   }
 
 }
