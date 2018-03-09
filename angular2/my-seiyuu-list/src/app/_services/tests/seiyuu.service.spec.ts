@@ -5,7 +5,6 @@ import {RestService} from "../rest.service";
 import {HttpClientModule} from "@angular/common/http";
 import {MessagesService} from "../messages.service";
 import {RouterTestingModule} from "@angular/router/testing";
-import {AnimeService} from "../anime.service";
 import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
 import {env} from "../../../environments/environment";
 import {basicModel, basicModel2, model, model2} from "../../_models/tests/seiyuu.model.spec";
@@ -29,7 +28,7 @@ describe('SeiyuuService', () => {
   beforeEach(() => {
     x = undefined;
     TestBed.configureTestingModule({
-      providers: [SeiyuuService, RestService, MessagesService, {provide: RoutingService, useClass: RoutingServiceMock} , AnimeService ],
+      providers: [SeiyuuService, RestService, MessagesService, {provide: RoutingService, useClass: RoutingServiceMock} ],
       imports:[HttpClientModule, RouterTestingModule, HttpClientTestingModule ]
     });
   });
@@ -38,23 +37,17 @@ describe('SeiyuuService', () => {
     expect(service).toBeTruthy();
   }));
 
-  it('should on init fetch the record count from seiyuu and anime, toggling pending state and setting status',
+  it('should on init fetch the record count from seiyuu, toggling pending state',
     inject([SeiyuuService, HttpTestingController, MessagesService],
       (service:SeiyuuService, backend:HttpTestingController, msgSvc:MessagesService) => {
-      let spy = spyOn(msgSvc, 'status');
 
       expect(service.pending).toBeTruthy();
       service.totalList$.subscribe(data => x=data);
 
       mockList(backend, [basicList]);
 
-      backend.expectOne({
-        url: `${env.mongoUrl}/collections/anime?apiKey=${env.apiKey}&c=true`,
-        method:'GET'
-      }, 'GET to count the # of records in the anime DB').flush(7);
       expect(x).toBeTruthy();
       expect(service.pending).toBeFalsy();
-      expect(spy).toHaveBeenCalledWith(basicList.length + ` seiyuu & 7 anime records cached`);
     })
    );
 

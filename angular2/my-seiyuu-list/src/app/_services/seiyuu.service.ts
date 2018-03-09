@@ -31,6 +31,8 @@ export class SeiyuuService {
   updateRequest$: Subject<number> = new Subject();
   picked$: Subject<number> = new Subject();
   removed$: Subject<number|string> = new Subject();
+  loadedSeiyuu$: Subject<Seiyuu[]> = new Subject();
+  seiyuuCount$: Subject<number> = new Subject();
 
   pending: boolean = true;
 
@@ -40,22 +42,20 @@ export class SeiyuuService {
 
 
   constructor(private rest: RestService, private messageSvc: MessagesService,
-              private routingSvc: RoutingService, private animeSvc: AnimeService) {
+              private routingSvc: RoutingService) {
 
     this.totalList$ = this.getTotalList()                                                                  .do(Utils.lg('totalList'))
-      .do(list => this.animeSvc.animeCount$
-        .subscribe(number =>
-          this.messageSvc.status(list.length + ` seiyuu & ${number} anime records cached`)
-        )
-      )
-      .do(() => this.pending = false)
+      .do(list => {
+        this.seiyuuCount$.next(list.length);
+        this.pending = false;
+      })
       .publishLast().refCount();
 
     this.routeId$ = this.routingSvc.routeId$
       .delayWhen(() => this.totalList$)                                                                    .do(Utils.log('routeId'))
       .map(ids => ids.filter(id => !!this.totalMap[id]));
 
-    this.updateRequest$                                                                                   .do(Utils.lg('updateRequest'))
+    this.updateRequest$                                                                                    .do(Utils.lg('updateRequest'))
       .bufferToggle(this.updateRequest$.throttleTime(200), () => Observable.timer(200))
       .flatMap(ids => this.loadByIds(ids))
       .withLatestFrom(this.routeId$)
@@ -64,8 +64,8 @@ export class SeiyuuService {
           this.totalMap[seiyuu._id].upgrade(seiyuu);
         });
         let ready = ids.map(id => this.totalMap[id]).filter(s => !s.pending);
-        if (~ids.indexOf(seiyuus[0]._id) && ready.length) {
-          this.animeSvc.currentSeiyuus$.next(ready);
+        if (seiyuus.length &&~ids.indexOf(seiyuus[0]._id) && ready.length) {
+          this.loadedSeiyuu$.next(ready);
         }
       }).subscribe();
 
@@ -76,7 +76,7 @@ export class SeiyuuService {
        )
       .do(seiyuus => {
         if (seiyuus.every(seiyuu => !seiyuu.pending)) {
-          this.animeSvc.currentSeiyuus$.next(seiyuus);
+          this.loadedSeiyuu$.next(seiyuus);
         }
       })
       .combineLatest(this.namesake$)

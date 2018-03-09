@@ -29,11 +29,14 @@ label {
 
   top: -2px;
   z-index:2;
+  margin-right: -30%;
 
+  width: 0;
   height: 0;
   text-align:center;
 
   text-decoration: none;
+  white-space: nowrap;
 }
 #anime-title {
   float: left;

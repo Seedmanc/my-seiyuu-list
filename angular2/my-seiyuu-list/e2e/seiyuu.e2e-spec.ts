@@ -167,7 +167,6 @@ describe('seiyuu lookups', () => {
     page.searchInput().sendKeys(cm);
     page.searchInput().sendKeys(dj);
 
-    expect(page.statusBar().getText()).toBeFalsy();
     expect(seiyuu.containers().count()).toBe(4);
     page.searchInput().sendKeys(mk);
     expect(seiyuu.containers().count()).toBe(4);

@@ -1,29 +1,27 @@
 import {Injectable} from '@angular/core';
 import {Observable} from "rxjs/Observable";
 import {RestService} from "./rest.service";
-import {Seiyuu} from "../_models/seiyuu.model";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {Subject} from "rxjs/Subject";
 import {Utils} from "./utils.service";
 import {MessagesService} from "./messages.service";
 import {Anime, Role} from "../_models/anime.model";
-import 'rxjs/add/operator/filter';
+import {SeiyuuService} from "./seiyuu.service";
 import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/merge';
 import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/distinctUntilChanged';
 
 @Injectable()
 export class AnimeService {
-  mainOnly: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
   animeCount$: Observable<number>;
   displayAnime$: Observable<Anime[]>;
 
-  currentSeiyuus$: Subject<Seiyuu[]> = new Subject();
   selected$: Subject<number> = new Subject();
+  mainOnly$: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
-  constructor(private rest: RestService, private msgSvc: MessagesService) {
+  constructor(private rest: RestService, private msgSvc: MessagesService, private seiyuuSvc: SeiyuuService) {
     this.animeCount$ = this.rest.mongoCall({
       coll: 'anime',
       mode: 'GET',
@@ -32,15 +30,20 @@ export class AnimeService {
 
     this.selected$.subscribe(id => Anime.activeSeiyuu = id);
 
-    this.displayAnime$ = this.currentSeiyuus$                                                              .do(Utils.log('ready'))
+    this.displayAnime$ = this.seiyuuSvc.loadedSeiyuu$                                                      .do(Utils.log('ready'))
       .distinctUntilChanged((x,y) =>
         x.map(el => el.name).join() === y.map(el => el.name).join()
-      )                                                                                                    .do(Utils.lg('currentSeiyuus'))
-      .do(seiyuus => {
-        msgSvc.blank();
-        seiyuus.length && this.selected$.next(seiyuus[seiyuus.length-1]._id);
+      )                                                                                                    .do(Utils.lg('loadedSeiyuu'))
+      .withLatestFrom(this.seiyuuSvc.seiyuuCount$, this.animeCount$)
+      .do(([seiyuus, scount, acount]) => {
+        if (seiyuus.length) {
+          this.selected$.next(seiyuus[seiyuus.length-1]._id);
+        } else {
+          msgSvc.totals(scount, acount);
+        }
       })
-      .combineLatest(this.mainOnly)
+      .map(([seiyuus]) => seiyuus)
+      .combineLatest(this.mainOnly$)
       .map(([seiyuus, mainOnly]) => {
         // turn objects with arrays of roles with animeIds into hashmaps of roles with seiyuuIds per anime
         return seiyuus.map(({_id, roles}) => {

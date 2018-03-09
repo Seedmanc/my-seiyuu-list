@@ -4,8 +4,10 @@ import {MessagesService} from "../_services/messages.service";
 import {Observable} from "rxjs/Observable";
 import {Subject} from "rxjs/Subject";
 import {Utils} from "../_services/utils.service";
-import 'rxjs/add/observable/fromEvent'
-import 'rxjs/add/operator/debounceTime'
+import {AnimeService} from "../_services/anime.service";
+import 'rxjs/add/observable/fromEvent';
+import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/operator/combineLatest';
 
 @Component({
   selector: 'msl-header',
@@ -21,7 +23,7 @@ export class HeaderComponent implements OnInit {
 
   searchQuery: string = '';
 
-  constructor(public seiyuuSvc: SeiyuuService, private messageSvc: MessagesService) { }
+  constructor(public seiyuuSvc: SeiyuuService, private messageSvc: MessagesService, private animeSvc: AnimeService) { }
 
   ngOnInit() {
     this.status$ = this.messageSvc.message$;
@@ -42,6 +44,12 @@ export class HeaderComponent implements OnInit {
       .subscribe(this.search$);
 
     this.seiyuuSvc.addSearch(this.search$);
+
+    this.seiyuuSvc.seiyuuCount$
+      .combineLatest(this.animeSvc.animeCount$)
+      .subscribe(([scount, acount]) =>
+        this.messageSvc.totals(scount, acount)
+      );
   }
 
   selectAll() {

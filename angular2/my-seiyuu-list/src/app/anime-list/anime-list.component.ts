@@ -49,7 +49,7 @@ export class AnimeListComponent extends SortableComponent implements OnInit {
   }
 
   onMainOnlyChange(value){
-    this.animeSvc.mainOnly.next(value);
+    this.animeSvc.mainOnly$.next(value);
   }
 
 }

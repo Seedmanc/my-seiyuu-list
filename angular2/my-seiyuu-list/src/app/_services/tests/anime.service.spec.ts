@@ -4,11 +4,15 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import {AnimeService} from "../anime.service";
 import {RestService} from "../rest.service";
 import {env} from "../../../environments/environment";
+import {MessagesService} from "../messages.service";
+import {SeiyuuService} from "../seiyuu.service";
+import {RoutingServiceMock} from "./routing.service.mock";
+import {RoutingService} from "../routing.service";
 
 describe('AnimeService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [AnimeService, RestService],
+      providers: [AnimeService, RestService, MessagesService, SeiyuuService, {provide: RoutingService, useClass: RoutingServiceMock} ],
       imports: [
         HttpClientModule, HttpClientTestingModule
       ],
