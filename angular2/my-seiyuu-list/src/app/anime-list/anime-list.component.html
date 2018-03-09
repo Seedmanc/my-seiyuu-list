@@ -10,8 +10,8 @@
           <a href="javascript:void(0)" (click)="sort('titleText')" id="anime-title">
             ▴title▾</a>
           <a id="mainOnly-wrapper">
-            <input type="checkbox" #mainOnly (ngModelChange)="onMainOnlyChange(mainOnly.value)"
-                   class="form-control" id="mainOnly">
+            <input type="checkbox" (ngModelChange)="onMainOnlyChange($event)"
+                   class="form-control" id="mainOnly" [(ngModel)]="mainOnly">
             <label for="mainOnly" class="checkbox-inline">
               main only
             </label>
@@ -38,10 +38,13 @@
           &nbsp;
           <a [href]="anime.link" target="_blank">{{anime.titleText}}</a>
         </td>
-        <td class="text-right">
-          {{anime.mainCharacter}}
+        <td class="text-right characters">
+          <div [class.more-chars]="anime.characters.length > 1">{{anime.mainCharacter}}</div>
+          <div class="char-list">
+            <div *ngFor="let char of anime.characters" [class.main]="char.main">{{char.name}}</div>
+          </div>
         </td>
-        <td class="text-center" [attr.data-main]="anime.main">
+        <td class="text-center" [class.main]="anime.main">
           {{anime.main ? 'main':'supporting'}}
         </td>
       </tr>

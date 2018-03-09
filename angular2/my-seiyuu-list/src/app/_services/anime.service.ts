@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from "rxjs/Observable";
 import {RestService} from "./rest.service";
 import {Seiyuu} from "../_models/seiyuu.model";
+import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {Subject} from "rxjs/Subject";
 import {Utils} from "./utils.service";
 import {MessagesService} from "./messages.service";
@@ -14,6 +15,8 @@ import 'rxjs/add/operator/distinctUntilChanged';
 
 @Injectable()
 export class AnimeService {
+  mainOnly: BehaviorSubject<boolean> = new BehaviorSubject(false);
+
   animeCount$: Observable<number>;
   displayAnime$: Observable<Anime[]>;
 
@@ -37,16 +40,19 @@ export class AnimeService {
         msgSvc.blank();
         seiyuus.length && this.selected$.next(seiyuus[seiyuus.length-1]._id);
       })
-      .map(seiyuus => {
+      .combineLatest(this.mainOnly)
+      .map(([seiyuus, mainOnly]) => {
         // turn objects with arrays of roles with animeIds into hashmaps of roles with seiyuuIds per anime
         return seiyuus.map(({_id, roles}) => {
           let rolesByAnime: {[key: number]: Role[]} = {};
 
           roles.forEach(role => {
-            if (rolesByAnime[role._id]) {
-              rolesByAnime[role._id].push({...role, _id});
-            } else {
-              rolesByAnime[role._id] = [{...role, _id}];
+            if (!mainOnly || role.main) {
+              if (rolesByAnime[role._id]) {
+                rolesByAnime[role._id].push({...role, _id});
+              } else {
+                rolesByAnime[role._id] = [{...role, _id}];
+              }
             }
           });
 

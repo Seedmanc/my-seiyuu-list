@@ -23,11 +23,11 @@ export class Anime {
   }
   get characters() {
     return this.rolesBySeiyuu[Anime.activeSeiyuu]
-      .sort((role1, role2) => +(role1.main > role2.main))
-      .map(role => role.name);
+      .sort((role1, role2) => +(role1.main < role2.main))
+      .map(({name, main}) => {return {name, main}});
   }
   get mainCharacter() {
-    return this.characters[0];
+    return this.characters[0].name;
   }
 
   get thumb(): string {

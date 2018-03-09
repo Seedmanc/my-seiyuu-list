@@ -2,7 +2,7 @@ input:checked + label {
   font-weight: bold;
 }
 
-td[data-main=true] {
+.main {
   font-weight: bold;
 }
 
@@ -40,4 +40,32 @@ label {
 }
 .tier {
   width: 120px;
+}
+
+.characters {
+  position: relative;
+}
+
+.char-list {
+  position: absolute;
+  right: 0;
+  z-index: 1;
+  display: none;
+
+  background: white;
+  padding: 0.5rem 1rem;
+  border: 1px solid lightgrey;
+  box-shadow: 1px 1px 2px 0;
+  border-radius: 3px;
+}
+
+.more-chars {
+  text-decoration: underline;
+  cursor: pointer;
+}
+.more-chars::after {
+  content: ' *';
+}
+.more-chars:hover + .char-list {
+  display: block;
 }

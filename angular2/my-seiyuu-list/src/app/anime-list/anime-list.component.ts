@@ -27,8 +27,8 @@ export class AnimeListComponent extends SortableComponent implements OnInit {
       list: []
     },
   ];
-  test:any[]=[];
   type: boolean = true;
+  mainOnly: boolean = false;
 
   constructor(private route: ActivatedRoute, private routingSvc: RoutingService,
               public animeSvc: AnimeService) {
@@ -43,12 +43,13 @@ export class AnimeListComponent extends SortableComponent implements OnInit {
       .combineLatest(this.animeSvc.selected$.distinctUntilChanged().delay(0))
       .map(([anime])=>anime)
       .subscribe(animes => {
-        this.test = animes;
         this.output[0].list = animes.filter(a => a.main);
         this.output[1].list = animes.filter(a => !a.main);
       });
   }
 
-  onMainOnlyChange(x?){}
+  onMainOnlyChange(value){
+    this.animeSvc.mainOnly.next(value);
+  }
 
 }
