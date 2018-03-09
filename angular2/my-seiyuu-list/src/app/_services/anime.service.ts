@@ -5,7 +5,7 @@ import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {Subject} from "rxjs/Subject";
 import {Utils} from "./utils.service";
 import {MessagesService} from "./messages.service";
-import {Anime, Role} from "../_models/anime.model";
+import {Anime, HashOfRoles, Role} from "../_models/anime.model";
 import {SeiyuuService} from "./seiyuu.service";
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/do';
@@ -47,7 +47,7 @@ export class AnimeService {
       .map(([seiyuus, mainOnly]) => {
         // turn objects with arrays of roles with animeIds into hashmaps of roles with seiyuuIds per anime
         return seiyuus.map(({_id, roles}) => {
-          let rolesByAnime: {[key: number]: Role[]} = {};
+          let rolesByAnime: HashOfRoles = {};
 
           roles.forEach(role => {
             if (!mainOnly || role.main) {
@@ -62,7 +62,7 @@ export class AnimeService {
           return rolesByAnime
         })
       })
-      .map(rolesByAnimeSets => {
+      .map((rolesByAnimeSets: HashOfRoles[]) => {
         // find shared anime by checking the shortest list for inclusion in all other lists
         let leastAnime = rolesByAnimeSets
           .sort((s1, s2) => Object.keys(s1).length - Object.keys(s2).length);
@@ -102,8 +102,26 @@ export class AnimeService {
             `${anime.length || 'no'} ${seiyuuCount > 1 ? 'shared ' : ''}anime found`
           );
         }
+
+        this.loadDetails(anime.map(a => a._id).filter(id => !Anime.detailsCache[id]))                       .do(Utils.log('details'))
+          .subscribe();
       })
       .map(({anime}) => anime)                                                                             .do(Utils.log('anime results'));
+  }
+
+  private loadDetails(ids: number[]): Observable<any> {
+    return (ids.length ?
+      this.rest.mongoCall({
+        coll: 'anime',
+        mode: 'GET',
+        query: {
+          f: {title: 1, pic: 1},
+          q: {'_id': {'$in': ids}}
+        }
+      }) :
+      Observable.of([])
+     )
+      .do(details => details.forEach(detail => Anime.detailsCache[detail._id] = detail));
   }
 
 }

@@ -7,7 +7,7 @@
           <a href="javascript:void(0)" (click)="sort('_id')" id="anime-id" title="sort by recency">▴#▾</a>
         </th>
         <th>
-          <a href="javascript:void(0)" (click)="sort('titleText')" id="anime-title">
+          <a href="javascript:void(0)" (click)="sort('title')" id="anime-title">
             ▴title▾</a>
           <a id="mainOnly-wrapper">
             <input type="checkbox" (ngModelChange)="onMainOnlyChange($event)"
@@ -31,12 +31,12 @@
     <tbody *ngFor="let tier of output | orderBy:['type']:type">
       <tr *ngFor="let anime of tier.list | orderBy:[orderByField]:ascending; let idx=index">
         <td class="text-center">{{idx + 1}}</td>
-        <td>
+        <td class="anime-title">
           <a [href]="anime.link" target="_blank">
-            <img *ngIf="anime.pic" [src]="anime.thumb" class="show-pic"/> <!--fallback-->
+            <img class="anime-thumb" *ngIf="anime.thumb" [src]="anime.thumb" /> <!--fallback-->
           </a>
           &nbsp;
-          <a [href]="anime.link" target="_blank">{{anime.titleText}}</a>
+          <a [href]="anime.link" target="_blank">{{anime.title}}</a>
         </td>
         <td class="text-right characters">
           <div [class.more-chars]="anime.characters.length > 1">{{anime.mainCharacter}}</div>

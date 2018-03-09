@@ -6,8 +6,16 @@ input:checked + label {
   font-weight: bold;
 }
 
-.table>tbody>tr>td {
+.table > tbody > tr > td {
   vertical-align: inherit;
+}
+
+.anime-title {
+  white-space: initial;
+  min-width: 150px;
+}
+.anime-thumb {
+  max-width: 23px;
 }
 
 label {
@@ -29,9 +37,7 @@ label {
 
   top: -2px;
   z-index:2;
-  margin-right: -30%;
 
-  width: 0;
   height: 0;
   text-align:center;
 

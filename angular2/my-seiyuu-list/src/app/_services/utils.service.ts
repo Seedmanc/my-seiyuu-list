@@ -1,6 +1,7 @@
 import {env} from "../../environments/environment";
 
 export class Utils {
+  private static readonly parser = document.createElement("textarea");
 
   static readonly theSite: string = 'myanimelist.net';
 
@@ -33,6 +34,15 @@ export class Utils {
   }
   static lg(msg: any, mode: string = 'info') {
     return env.loglevel ? () => console[mode](msg) : ()=>{};
+  }
+
+  static decodeHtml(html: string): string {
+    if (!html.match(/&\S{4};/))
+      return html;
+
+    Utils.parser.innerHTML = html;
+
+    return Utils.parser.value;
   }
 
 }
