@@ -2,7 +2,6 @@ import {Injectable} from '@angular/core';
 import {Observable} from "rxjs/Observable";
 import {RestService} from "./rest.service";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
-import {Subject} from "rxjs/Subject";
 import {Utils} from "./utils.service";
 import {MessagesService} from "./messages.service";
 import {Anime, HashOfRoles, Role} from "../_models/anime.model";
@@ -14,23 +13,24 @@ import 'rxjs/add/operator/distinctUntilChanged';
 
 @Injectable()
 export class AnimeService {
-
   animeCount$: Observable<number>;
-  displayAnime$: Observable<Anime[]>;
 
-  selected$: Subject<number> = new Subject();
+  displayAnime$: BehaviorSubject<any[]> = new BehaviorSubject([]);
+  selected$: BehaviorSubject<number> = new BehaviorSubject(null);
   mainOnly$: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
-  constructor(private rest: RestService, private msgSvc: MessagesService, private seiyuuSvc: SeiyuuService) {
+
+  constructor(private rest: RestService, private msgSvc: MessagesService,
+              private seiyuuSvc: SeiyuuService) {
     this.animeCount$ = this.rest.mongoCall({
       coll: 'anime',
       mode: 'GET',
       query: {c: true}
     });
 
-    this.selected$.subscribe(id => Anime.activeSeiyuu = id);
+    this.selected$.subscribe(id => {if (id) Anime.activeSeiyuu = id});
 
-    this.displayAnime$ = this.seiyuuSvc.loadedSeiyuu$                                                      .do(Utils.log('ready'))
+    this.seiyuuSvc.loadedSeiyuu$                                                                           .do(Utils.log('ready'))
       .distinctUntilChanged((x,y) =>
         x.map(el => el.name).join() === y.map(el => el.name).join()
       )                                                                                                    .do(Utils.lg('loadedSeiyuu'))
@@ -106,10 +106,12 @@ export class AnimeService {
         this.loadDetails(anime.map(a => a._id).filter(id => !Anime.detailsCache[id]))                       .do(Utils.log('details'))
           .subscribe();
       })
-      .map(({anime}) => anime)                                                                             .do(Utils.log('anime results'));
+      .map(({anime}) => anime)                                                                             .do(Utils.log('anime results'))
+      .subscribe(this.displayAnime$);
   }
 
   private loadDetails(ids: number[]): Observable<any> {
+
     return (ids.length ?
       this.rest.mongoCall({
         coll: 'anime',

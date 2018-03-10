@@ -8,6 +8,7 @@ input:checked + label {
 
 .table {
   margin-top: -0.9rem;
+  margin-bottom: 10px;
 }
 
 .table > tbody > tr > td {
@@ -62,7 +63,7 @@ label {
 
 .char-list {
   position: absolute;
-  right: 0;
+  right: -0.2rem;
   z-index: 1;
   display: none;
 
@@ -79,6 +80,7 @@ label {
 }
 .more-chars::after {
   content: ' *';
+  margin-right: -0.5rem;
 }
 .more-chars:hover + .char-list {
   display: block;

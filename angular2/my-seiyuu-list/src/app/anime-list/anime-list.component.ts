@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import {SortableComponent} from "../sortable.component";
-
 import {ActivatedRoute } from "@angular/router";
 import {RoutingService} from "../_services/routing.service";
 import {ChildParamsComponent} from "../child-params.component";
@@ -27,7 +26,7 @@ export class AnimeListComponent extends SortableComponent implements OnInit {
       list: []
     },
   ];
-  type: boolean = true;
+  tierOrder: boolean = true;
   mainOnly: boolean = false;
 
   constructor(private route: ActivatedRoute, private routingSvc: RoutingService,
@@ -38,6 +37,8 @@ export class AnimeListComponent extends SortableComponent implements OnInit {
 
   ngOnInit() {
     this.mixin.ngOnInit();
+
+    this.animeSvc.mainOnly$.subscribe(value => this.mainOnly = value);
 
     this.animeSvc.displayAnime$
       .combineLatest(this.animeSvc.selected$.distinctUntilChanged().delay(0))
