@@ -6,12 +6,22 @@ input:checked + label {
   font-weight: bold;
 }
 
+.table {
+  margin-top: -0.9rem;
+}
+
 .table > tbody > tr > td {
   vertical-align: inherit;
 }
 
+tr th:first-child,
+tr td:first-child {
+  max-width:28px;
+  width:28px;
+}
+
 .anime-title {
-  white-space: initial;
+  white-space: initial!important;
   min-width: 150px;
 }
 .anime-thumb {
@@ -32,17 +42,12 @@ label {
 }
 
 #mainOnly-wrapper {
-  position:relative;
-  float: right;
-
-  top: -2px;
-  z-index:2;
-
+  display: block;
+  z-index: 2;
   height: 0;
-  text-align:center;
-
+  margin-top: 0.8rem;
+  margin-bottom: -0.8rem;
   text-decoration: none;
-  white-space: nowrap;
 }
 #anime-title {
   float: left;

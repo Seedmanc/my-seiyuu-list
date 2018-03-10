@@ -1,7 +1,20 @@
 <div class="col-md-12 no-gutter table-responsive">
 
-  <table class="table table-striped" id="rolesTable">
+  <table class="table table-condensed table-striped" id="rolesTable">
     <thead>
+    <tr>
+      <td></td>
+      <td colspan="2" class="text-center">
+        <a id="mainOnly-wrapper">
+          <input type="checkbox" (ngModelChange)="onMainOnlyChange($event)"
+                 class="form-control" id="mainOnly" [(ngModel)]="mainOnly">
+          <label for="mainOnly" class="checkbox-inline">
+            main only
+          </label>
+        </a>
+      </td>
+      <td></td>
+    </tr>
       <tr>
         <th class="text-center">
           <a href="javascript:void(0)" (click)="sort('_id')" id="anime-id" title="sort by recency">▴#▾</a>
@@ -9,13 +22,7 @@
         <th>
           <a href="javascript:void(0)" (click)="sort('title')" id="anime-title">
             ▴title▾</a>
-          <a id="mainOnly-wrapper">
-            <input type="checkbox" (ngModelChange)="onMainOnlyChange($event)"
-                   class="form-control" id="mainOnly" [(ngModel)]="mainOnly">
-            <label for="mainOnly" class="checkbox-inline">
-              main only
-            </label>
-          </a>
+
         </th>
         <th class="text-right">
           <a href="javascript:void(0)" (click)="sort('mainCharacter')">
