@@ -37,7 +37,7 @@ describe('SeiyuuService', () => {
     expect(service).toBeTruthy();
   }));
 
-  it('should on init fetch the record count from seiyuu, toggling pending state',
+  it('should on init fetch the brief list from seiyuu, toggling pending state',
     inject([SeiyuuService, HttpTestingController, MessagesService],
       (service:SeiyuuService, backend:HttpTestingController, msgSvc:MessagesService) => {
 
@@ -51,7 +51,7 @@ describe('SeiyuuService', () => {
     })
    );
 
-  it('should report if loading the total list fails with 404',
+  it('should report if loading the brief list fails with 404',
     inject([SeiyuuService, HttpTestingController, MessagesService],
       (service:SeiyuuService, backend:HttpTestingController, msgSvc:MessagesService) => {
       let spy = spyOn(msgSvc, 'error');
@@ -69,7 +69,7 @@ describe('SeiyuuService', () => {
     })
    );
 
-  it('should report if loading the total list fails with a network error',
+  it('should report if loading the brief list fails with a network error',
     inject([SeiyuuService, HttpTestingController, MessagesService],
       (service:SeiyuuService, backend:HttpTestingController, msgSvc:MessagesService) => {
       let spy = spyOn(msgSvc, 'error');
@@ -113,14 +113,19 @@ describe('SeiyuuService', () => {
       })
   ));
 
-  it('should load seiyuu details upon an update request', fakeAsync(
-    inject([SeiyuuService, HttpTestingController, RestService],
-      (service:SeiyuuService, backend:HttpTestingController, restSvc:RestService) => {
-      service.totalList$.subscribe(data => x=data);
+  it('should load seiyuu details upon an update request and emit to loaded list', fakeAsync(
+    inject([SeiyuuService, HttpTestingController, RestService, RoutingService],
+      (service:SeiyuuService, backend:HttpTestingController, restSvc:RestService, routingSvc:RoutingService) => {
+      let loaded;
+      service.totalList$.subscribe(data => x=data );
+      service.loadedSeiyuu$.subscribe(data => loaded=data );
       let spy = spyOn(restSvc, 'mongoCall').and.returnValue(Observable.of([model,model2]));
+
+      routingSvc.add(0,[578]);
 
       mockList(backend, [basicList]);
 
+      expect(x[0].pending).toBeTruthy();
       service.updateRequest$.next(53);
       service.updateRequest$.next(0);
       tick(200);
@@ -136,6 +141,38 @@ describe('SeiyuuService', () => {
       });
 
       expect(JSON.stringify(x)).toBe(JSON.stringify([new Seiyuu(model), new BasicSeiyuu(model2)]));
+      expect(JSON.stringify(loaded)).toBe(JSON.stringify([new Seiyuu(model), new BasicSeiyuu(model2)]));
+      expect(loaded[0].pending).toBeFalsy();
+
+      discardPeriodicTasks();
+    })
+  ));
+
+  it('should emit to loaded list from cache immediately', fakeAsync(
+    inject([SeiyuuService, HttpTestingController, RestService, RoutingService],
+      (service:SeiyuuService, backend:HttpTestingController, restSvc:RestService, routingSvc:RoutingService) => {
+      let loaded, display:any = [1];
+      service.totalList$.subscribe(data => x=data );
+      service.loadedSeiyuu$.subscribe(data => loaded=data );
+      service.displayList$.subscribe(data => display=data );
+      let spy = spyOn(restSvc, 'mongoCall').and.returnValue(Observable.of([model]));
+
+      routingSvc.add(0,[578]);
+
+      mockList(backend, [[basicModel]]);
+
+      expect(x[0].pending).toBeTruthy();
+      service.updateRequest$.next(578);
+      tick(200);
+
+      expect(JSON.stringify(x)).toBe(JSON.stringify([new Seiyuu(model) ]));
+      expect(loaded[0].pending).toBeFalsy();
+
+      service.removed$.next(578);
+      expect(loaded.length).toBeFalsy();
+      routingSvc.add(0,[578]);
+      expect(display.length).toBeTruthy();
+      expect(loaded[0].pending).toBeFalsy();
 
       discardPeriodicTasks();
     })
