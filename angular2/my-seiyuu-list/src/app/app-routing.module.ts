@@ -16,7 +16,7 @@ export const appRoutes: Routes = [
 @NgModule({
   imports: [
     RouterModule.forRoot(appRoutes,
-      { enableTracing: env.loglevel > 1 }
+      { enableTracing: env.loglevel > 1, useHash: true }
       )
   ],
   exports: [RouterModule]
