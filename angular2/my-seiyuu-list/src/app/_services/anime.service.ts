@@ -9,6 +9,7 @@ import {SeiyuuService} from "./seiyuu.service";
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/withLatestFrom';
+import 'rxjs/add/operator/combineLatest';
 import 'rxjs/add/operator/distinctUntilChanged';
 
 @Injectable()
@@ -105,8 +106,9 @@ export class AnimeService {
 
         this.loadDetails(anime.map(a => a._id).filter(id => !Anime.detailsCache[id]))                       .do(Utils.log('details'))
           .subscribe();
-      })
-      .map(({anime}) => anime)                                                                             .do(Utils.log('anime results'))
+      })                                                                                                   .do(Utils.log('anime results'))
+      .combineLatest(this.selected$.distinctUntilChanged())
+      .map(([data]) => data.anime)                                                                         .do(Utils.lg('combined'))
       .subscribe(this.displayAnime$);
   }
 

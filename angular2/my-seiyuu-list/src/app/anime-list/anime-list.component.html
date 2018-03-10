@@ -1,5 +1,4 @@
 <div class="col-md-12 no-gutter table-responsive">
-
   <table class="table table-condensed table-striped" id="rolesTable">
     <thead>
     <tr>
@@ -35,12 +34,12 @@
       </tr>
     </thead>
 
-    <tbody *ngFor="let tier of output | orderBy:['type']:tierOrder">
+    <tbody *ngFor="let tier of output | orderBy:['type']:!tierOrder">
       <tr *ngFor="let anime of tier.list | orderBy:[orderByField]:ascending; let idx=index">
         <td class="text-center">{{idx + 1}}</td>
         <td class="anime-title">
           <a [href]="anime.link" target="_blank">
-            <img class="anime-thumb" *ngIf="anime.thumb" [src]="anime.thumb" /> <!--fallback-->
+            <img class="anime-thumb" *ngIf="anime.thumb" [src]="anime.thumb" /> <!--TODO fallback-->
           </a>
           &nbsp;
           <a [href]="anime.link" target="_blank">{{anime.title}}</a>

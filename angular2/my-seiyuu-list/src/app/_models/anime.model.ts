@@ -27,15 +27,15 @@ export class Anime {
   }
 
   get main(): boolean {
-    return this.rolesBySeiyuu[Anime.activeSeiyuu].some(role => role.main);
+    return (this.rolesBySeiyuu[Anime.activeSeiyuu]||[]).some(role => role.main);
   }
   get characters(): Role[] {
-    return this.rolesBySeiyuu[Anime.activeSeiyuu]
+    return (this.rolesBySeiyuu[Anime.activeSeiyuu]||[])
       .sort((role1, role2) => +(role1.main < role2.main))
       .map(({name, main}) => {return {name: Utils.decodeHtml(name), main}});
   }
   get mainCharacter(): string {
-    return this.characters[0].name;
+    return this.characters[0] && this.characters[0].name;
   }
 
   get thumb(): string {
