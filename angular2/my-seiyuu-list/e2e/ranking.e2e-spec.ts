@@ -39,14 +39,6 @@ describe('ranking', () => {
     page.sortHits().click();
     expect(page.tbody().$$('tr').first().$$('td').get(2).getText()).toBeGreaterThanOrEqual(last);
   });
-  it('should sort ranking upon header click on date', () =>{
-    let last = tbody.$$('tr').last().$$('td').get(3).getAttribute('data-date');
-    expect(last).toBeTruthy();
-
-    page.sortDates().click();
-    page.tbody().$$('tr').first().$$('td').get(3).getAttribute('data-date')
-      .then(el => {expect(el).toBeGreaterThanOrEqual(last)});
-  });
 
   it('should close ranking by [x]', ()=>{
     page.close().click();

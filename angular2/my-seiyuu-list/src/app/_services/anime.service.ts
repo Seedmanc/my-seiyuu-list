@@ -27,7 +27,7 @@ export class AnimeService {
       coll: 'anime',
       mode: 'GET',
       query: {c: true}
-    });
+    }).share();
 
     this.selected$.subscribe(id => {if (id) Anime.activeSeiyuu = id});
 
