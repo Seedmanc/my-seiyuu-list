@@ -1,6 +1,6 @@
 <div class="seiyuu col-sm-12 col-xs-6 well well-sm"
      [ngClass]="{l: seiyuu.l, c: seiyuu.c, namesake: seiyuu.namesakes, hover: selected === seiyuu._id}"
-     (touchstart)="select()" (mouseenter)="select()">
+     (touchstart)="select()" (mouseenter)="select()" (click)="select()">
 
   <a class="remove close" (click)="remove()">&times;</a>
 
