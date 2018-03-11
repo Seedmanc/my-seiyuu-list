@@ -32,7 +32,7 @@ export class SeiyuuService {
   picked$: Subject<number> = new Subject();
   removed$: Subject<number|string> = new Subject();
   loadedSeiyuu$: Subject<Seiyuu[]> = new Subject();
-  seiyuuCount$: Subject<number> = new Subject();
+  seiyuuCount$: BehaviorSubject<number> = new BehaviorSubject(0);
 
   pending: boolean = true;
 

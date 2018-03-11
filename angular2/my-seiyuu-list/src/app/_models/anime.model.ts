@@ -52,4 +52,29 @@ export class Anime {
     Object.assign(this, anime);
     this._id = +this._id;
   }
+
+  toJSON() {
+//->stackoverflow whatever
+    // start with an empty object (see other alternatives below)
+    const jsonObj = Object.assign({}, this);
+
+    // add all properties
+    const proto = Object.getPrototypeOf(this);
+    for (const key of Object.keys(proto)) {
+      const desc = Object.getOwnPropertyDescriptor(proto, key);
+      const hasGetter = desc && typeof desc.get === 'function';
+      if (hasGetter) {
+        jsonObj[key] = desc.get();
+      }
+    }
+    // do I look like I know what I'm doing, motherfucker?
+    jsonObj['main'+''] = this.main;
+    jsonObj['link'+''] = this.link;
+    jsonObj['thumb'+''] = this.thumb;
+    jsonObj['mainCharacter'+''] = this.mainCharacter;
+    jsonObj['characters'+''] = this.characters;
+    jsonObj['title'+''] = this.title;
+
+    return jsonObj;
+  }
 }
