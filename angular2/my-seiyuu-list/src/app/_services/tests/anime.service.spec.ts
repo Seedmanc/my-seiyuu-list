@@ -29,10 +29,11 @@ let roles =  [{
     "name": "Character 3",
     "main": false,
     "_id": 3
-  }]
-fdescribe('AnimeService', () => {
+  }];
+describe('AnimeService', () => {
   x = undefined;
   beforeEach(() => {
+    Anime.detailsCache = {};
     TestBed.configureTestingModule({
       providers: [AnimeService, RestService, MessagesService, SeiyuuService, {provide: RoutingService, useClass: RoutingServiceMock} ],
       imports: [
@@ -92,12 +93,11 @@ fdescribe('AnimeService', () => {
      })
   );
 
-  fit('should display shared anime for multiple seiyuu, also for mainOnly',
+  it('should display shared anime for multiple seiyuu, also for mainOnly',
     inject([AnimeService, HttpTestingController, SeiyuuService, MessagesService],
       (service:AnimeService, backend:HttpTestingController, seiyuuSvc:SeiyuuService, msgSvc:MessagesService) => {
       let y;
       let spy = spyOn(msgSvc, 'status');
-       // Anime.detailsCache = {};
 
       service.displayAnime$.subscribe(data => x = data);
       service.selected$.subscribe(data => y = data);
@@ -137,14 +137,11 @@ fdescribe('AnimeService', () => {
       expect(Anime.detailsCache[3].pic).toBe('/pic3.jpg');
 
       expect(JSON.stringify(x[0])).toBe(
-'{"_id":2,"rolesBySeiyuu":{"0":[{"name":"Character 1","main":true,"_id":0}],"578":[{"name":"Character 1","main":true,"_id":578}]},"main":false,"link":"//myanimelist.net/anime/2","thumb":"//myanimelist.net/pic2v.jpg","characters":[],"title":"title 2"}'
-      );
+        '{"_id":2,"rolesBySeiyuu":{"0":[{"name":"Character 1","main":true,"_id":0}],"578":[{"name":"Character 1","main":true,"_id":578},{"name":"Character 1","main":true,"_id":578}]},"main":true,"link":"//myanimelist.net/anime/2","thumb":"//myanimelist.net/pic2v.jpg","mainCharacter":"Character 1","characters":[{"name":"Character 1","main":true},{"name":"Character 1","main":true}],"title":"title 2"}'      );
       expect(JSON.stringify(x[1])).toBe(
-'{"_id":3,"rolesBySeiyuu":{"0":[{"name":"Character 3","main":false,"_id":0}],"578":[{"name":"Character 3","main":false,"_id":578}]},"main":false,"link":"//myanimelist.net/anime/3","thumb":"//myanimelist.net/pic3v.jpg","characters":[],"title":"title 3"}'
-      );
+        '{"_id":3,"rolesBySeiyuu":{"0":[{"name":"Character 3","main":false,"_id":0}],"578":[{"name":"Character 3","main":false,"_id":578},{"name":"Character 3","main":false,"_id":578}]},"main":false,"link":"//myanimelist.net/anime/3","thumb":"//myanimelist.net/pic3v.jpg","mainCharacter":"Character 3","characters":[{"name":"Character 3","main":false},{"name":"Character 3","main":false}],"title":"title 3"}'      );
       expect(JSON.stringify(x[2])).toBe(
-'{"_id":2829,"rolesBySeiyuu":{"0":[{"name":"Pierre","main":false,"_id":0}],"578":[{"name":"Pierre","main":false,"_id":578}]},"main":false,"link":"//myanimelist.net/anime/2829","thumb":"//myanimelist.net/images/anime/12/26250v.jpg","characters":[],"title":"Ie Naki Ko Remi"}'
-      );
+        '{"_id":2829,"rolesBySeiyuu":{"0":[{"name":"Pierre","main":false,"_id":0}],"578":[{"name":"Pierre","main":false,"_id":578}]},"main":false,"link":"//myanimelist.net/anime/2829","thumb":"//myanimelist.net/images/anime/12/26250v.jpg","mainCharacter":"Pierre","characters":[{"name":"Pierre","main":false}],"title":"Ie Naki Ko Remi"}'      );
 
       service.mainOnly$.next(true);
       expect(spy).toHaveBeenCalledWith('1 shared anime found');
@@ -153,7 +150,7 @@ fdescribe('AnimeService', () => {
           method:'GET'
         }, 'should not request cached anime again');
       expect(JSON.stringify(x[0])).toBe(
-        '{"_id":2,"rolesBySeiyuu":{"0":[{"name":"Character 1","main":true,"_id":0}],"578":[{"name":"Character 1","main":true,"_id":578}]},"main":false,"link":"//myanimelist.net/anime/2","thumb":"//myanimelist.net/pic2v.jpg","characters":[],"title":"title 2"}'
+        '{"_id":2,"rolesBySeiyuu":{"0":[{"name":"Character 1","main":true,"_id":0}],"578":[{"name":"Character 1","main":true,"_id":578},{"name":"Character 1","main":true,"_id":578}]},"main":true,"link":"//myanimelist.net/anime/2","thumb":"//myanimelist.net/pic2v.jpg","mainCharacter":"Character 1","characters":[{"name":"Character 1","main":true},{"name":"Character 1","main":true}],"title":"title 2"}'
       );
   }));
 
