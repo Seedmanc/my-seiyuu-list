@@ -13,17 +13,18 @@ import {RoutingServiceMock} from "./routing.service.mock";
 import {RoutingService} from "../routing.service";
 import {Observable} from "rxjs/Observable";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
+export const mockList = (backend, returned) => backend.expectOne({
+  url:
+    `${env.mongoUrl}/collections/seiyuu-test?apiKey=${env.apiKey}&f={"name":1,"hits":1,"updated":1,"count":1,"accessed":1,"alternate_name":1}&s={"name":1}`,
+  method:'GET'
+}, 'GET to count the # of records in the seiyuu DB').flush(...returned);
+export const basicList = [
+  basicModel,
+  basicModel2
+];
 
 describe('SeiyuuService', () => {
-  let basicList = [
-    basicModel,
-    basicModel2
-  ];
-  let x; let mockList = (backend, returned) => backend.expectOne({
-    url:
-`${env.mongoUrl}/collections/seiyuu-test?apiKey=${env.apiKey}&f={"name":1,"hits":1,"updated":1,"count":1,"accessed":1,"alternate_name":1}&s={"name":1}`,
-    method:'GET'
-  }, 'GET to count the # of records in the seiyuu DB').flush(...returned);
+  let x;
 
   beforeEach(() => {
     x = undefined;

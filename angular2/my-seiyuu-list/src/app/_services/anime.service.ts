@@ -11,6 +11,7 @@ import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/combineLatest';
 import 'rxjs/add/operator/distinctUntilChanged';
+import 'rxjs/add/operator/startWith';
 
 @Injectable()
 export class AnimeService {
@@ -27,14 +28,11 @@ export class AnimeService {
       coll: 'anime',
       mode: 'GET',
       query: {c: true}
-    }).share();
+    }).startWith(0).share();
 
     this.selected$.subscribe(id => {if (id) Anime.activeSeiyuu = id});
 
-    this.seiyuuSvc.loadedSeiyuu$                                                                           .do(Utils.log('ready'))
-      .distinctUntilChanged((x,y) =>
-        x.map(el => el.name).join() === y.map(el => el.name).join()
-      )                                                                                                    .do(Utils.lg('loadedSeiyuu'))
+    this.seiyuuSvc.loadedSeiyuu$                                                                           .do(Utils.log('loadedSeiyuu'))
       .withLatestFrom(this.seiyuuSvc.seiyuuCount$, this.animeCount$)
       .do(([seiyuus, scount, acount]) => {
         if (seiyuus.length) {
@@ -43,9 +41,8 @@ export class AnimeService {
           msgSvc.totals(scount, acount);
         }
       })
-      .map(([seiyuus]) => seiyuus)
       .combineLatest(this.mainOnly$)
-      .map(([seiyuus, mainOnly]) => {
+      .map(([[seiyuus], mainOnly]) => {
         // turn objects with arrays of roles with animeIds into hashmaps of roles with seiyuuIds per anime
         return seiyuus.map(({_id, roles}) => {
           let rolesByAnime: HashOfRoles = {};
@@ -108,11 +105,11 @@ export class AnimeService {
           .subscribe();
       })                                                                                                   .do(Utils.log('anime results'))
       .combineLatest(this.selected$.distinctUntilChanged())
-      .map(([data]) => data.anime)                                                                         .do(Utils.lg('combined'))
+      .map(([data]) => data.anime)
       .subscribe(this.displayAnime$);
   }
 
-  private loadDetails(ids: number[]): Observable<any> {
+  private loadDetails(ids: number[]): Observable<any[]> {
 
     return (ids.length ?
       this.rest.mongoCall({
