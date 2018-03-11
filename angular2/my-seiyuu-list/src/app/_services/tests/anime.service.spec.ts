@@ -73,13 +73,20 @@ describe('AnimeService', () => {
         method:'GET'
       }, 'GET to count the # of records in the anime DB').flush([
           {_id:2829, title: 'Ie Naki Ko Remi', pic:'/images/anime/12/26250v.jpg'},
-          {_id:1, title: 'title 1', pic:'pic1.jpg'},
-          {_id:2, title: 'title 2', pic:'pic2.jpg'},
-          {_id:3, title: 'title 3', pic:'pic3.jpg'},
+          {_id:1, title: 'title 1', pic:'/pic1.jpg'},
+          {_id:2, title: 'title 2', pic:'/pic2.jpg'},
+          {_id:3, title: 'title 3', pic:'/pic3.jpg'},
         ]
       );
 
-      expect(JSON.stringify(x[3])).toBe('{"_id":2829,"rolesBySeiyuu":{"578":[{"name":"Pierre","main":false,"_id":578}]},"main":false,"link":"//myanimelist.net/anime/2829","thumb":"//myanimelist.net/images/anime/12/26250v.jpg","mainCharacter":"Pierre","characters":[{"name":"Pierre","main":false}],"title":"Ie Naki Ko Remi"}')
-    })
+      expect(JSON.stringify(x[3])).toBe(
+'{"_id":2829,"rolesBySeiyuu":{"578":[{"name":"Pierre","main":false,"_id":578}]},"main":false,"link":"//myanimelist.net/anime/2829","thumb":"//myanimelist.net/images/anime/12/26250v.jpg","mainCharacter":"Pierre","characters":[{"name":"Pierre","main":false}],"title":"Ie Naki Ko Remi"}')
+      expect(JSON.stringify(x[0])).toBe(
+'{"_id":1,"rolesBySeiyuu":{"578":[{"name":"Character 2","main":true,"_id":578},{"name":"Character 1","main":false,"_id":578}]},"main":true,"link":"//myanimelist.net/anime/1","thumb":"//myanimelist.net/pic1v.jpg","mainCharacter":"Character 2","characters":[{"name":"Character 2","main":true},{"name":"Character 1","main":false}],"title":"title 1"}' )
+      expect(JSON.stringify(x[1])).toBe(
+'{"_id":2,"rolesBySeiyuu":{"578":[{"name":"Character 1","main":true,"_id":578}]},"main":true,"link":"//myanimelist.net/anime/2","thumb":"//myanimelist.net/pic2v.jpg","mainCharacter":"Character 1","characters":[{"name":"Character 1","main":true}],"title":"title 2"}')
+      expect(JSON.stringify(x[2])).toBe(
+'{"_id":3,"rolesBySeiyuu":{"578":[{"name":"Character 3","main":false,"_id":578}]},"main":false,"link":"//myanimelist.net/anime/3","thumb":"//myanimelist.net/pic3v.jpg","mainCharacter":"Character 3","characters":[{"name":"Character 3","main":false}],"title":"title 3"}')
+     })
   )
 });
