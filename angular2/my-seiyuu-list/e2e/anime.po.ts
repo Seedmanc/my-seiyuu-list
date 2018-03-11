@@ -21,4 +21,12 @@ export class AnimePage {
     return element(by.css('#mainOnly'));
   }
 
+  tier() {
+    return element(by.css('.tier a'));
+  }
+
+  char() {
+    return element(by.css('.char a'));
+  }
+
 }

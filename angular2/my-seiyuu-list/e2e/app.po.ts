@@ -28,4 +28,8 @@ export class AppPage {
   listOption(name:string) {
     return element(by.css(`#vanames option[value="${name}"]`))
   }
+
+  tabs() {
+    return element(by.css(`msl-tabs`)).$$('a');
+  }
 }
