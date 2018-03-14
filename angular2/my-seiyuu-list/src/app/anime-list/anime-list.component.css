@@ -17,8 +17,8 @@ input:checked + label {
 
 tr th:first-child,
 tr td:first-child {
-  max-width:28px;
-  width:28px;
+  max-width: 32px;
+  width: 32px;
 }
 
 .anime-title {
