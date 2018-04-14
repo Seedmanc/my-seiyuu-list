@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute } from "@angular/router";
-import {RoutingService} from "../_services/routing.service";
-import {ChildParamsComponent} from "../child-params.component";
+import {RoutingService} from "../../_services/routing.service";
+import {ChildParamsComponent} from "../../child-params.component";
 
 @Component({
   selector: 'msl-magazine-list',

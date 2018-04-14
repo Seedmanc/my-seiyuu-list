@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {RoutingService} from "../_services/routing.service";
 import {ActivatedRoute } from "@angular/router";
-import {ChildParamsComponent} from "../child-params.component";
+import {ChildParamsComponent} from "../../child-params.component";
+import {RoutingService} from "../../_services/routing.service";
 
 @Component({
   selector: 'msl-photo-list',

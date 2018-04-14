@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import {RouterModule, Routes} from "@angular/router";
-import {AnimeListComponent} from "./anime-list/anime-list.component";
-import {MagazineListComponent} from "./magazine-list/magazine-list.component";
-import {PhotoListComponent} from "./photo-list/photo-list.component";
+import {AnimeListComponent} from "./_pages/anime-list/anime-list.component";
+import {MagazineListComponent} from "./_pages/magazine-list/magazine-list.component";
+import {PhotoListComponent} from "./_pages/photo-list/photo-list.component";
 import {env} from "../environments/environment";
 
 export const appRoutes: Routes = [

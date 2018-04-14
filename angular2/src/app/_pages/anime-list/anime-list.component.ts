@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import {SortableComponent} from "../sortable.component";
+import {SortableComponent} from "../../sortable.component";
 import {ActivatedRoute } from "@angular/router";
-import {RoutingService} from "../_services/routing.service";
-import {ChildParamsComponent} from "../child-params.component";
-import {AnimeService} from "../_services/anime.service";
+import {RoutingService} from "../../_services/routing.service";
+import {ChildParamsComponent} from "../../child-params.component";
+import {AnimeService} from "../../_services/anime.service";
 
 @Component({
   selector: 'msl-anime-list',
