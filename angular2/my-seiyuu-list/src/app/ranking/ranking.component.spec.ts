@@ -32,10 +32,6 @@ describe('RankingComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
   it('should list the seiyuu when toggled', () => {
     component.visible = true;
     fixture.detectChanges();

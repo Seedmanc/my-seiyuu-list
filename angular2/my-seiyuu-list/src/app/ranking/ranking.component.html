@@ -18,8 +18,8 @@
       </tr>
       </thead>
     </table>
-    <div class="table-container">
-      <table class="ranking table table-striped" id="rankingTable">
+    <div class="table-container" [class.has-scroll]="hasScroll">
+      <table class="ranking table table-striped" id="rankingTable" #rankingTable>
         <colgroup>
           <col width="40%">
           <col width="12%">

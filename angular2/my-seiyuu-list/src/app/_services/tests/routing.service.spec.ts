@@ -37,10 +37,6 @@ describe('RoutingService', () => {
     router.initialNavigation();
   });
 
-  it('should be created', inject([RoutingService], (service: RoutingService) => {
-    expect(service).toBeTruthy();
-  }));
-
   it('navigate to "" redirects to /anime/', async(() => {
     router.navigate(['']).then(() => {
       expect(location.path()).toBe('/anime/');

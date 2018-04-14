@@ -34,10 +34,6 @@ describe('HeaderComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
   it('should list names',() => {
     let x;
     component.name$.subscribe(r => x=r);

@@ -34,10 +34,6 @@ describe('SeiyuuService', () => {
     });
   });
 
-  it('should be created', inject([SeiyuuService], (service: SeiyuuService) => {
-    expect(service).toBeTruthy();
-  }));
-
   it('should on init fetch the brief list from seiyuu, toggling pending state',
     inject([SeiyuuService, HttpTestingController, MessagesService],
       (service:SeiyuuService, backend:HttpTestingController, msgSvc:MessagesService) => {

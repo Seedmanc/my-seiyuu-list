@@ -44,12 +44,6 @@ export class HeaderComponent implements OnInit {
       .subscribe(this.search$);
 
     this.seiyuuSvc.addSearch(this.search$);
-
-    this.seiyuuSvc.seiyuuCount$
-      .combineLatest(this.animeSvc.animeCount$)
-      .subscribe(([scount, acount]) =>
-        this.messageSvc.totals(scount, acount)
-      );
   }
 
   selectAll() {

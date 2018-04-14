@@ -35,9 +35,12 @@
 
 .table-container {
   max-height: calc(83vh - 100px);
-  margin-right: -10px;
 
   overflow-y: auto;
+}
+
+.table-container.has-scroll {
+  margin-right: -10px;
 }
 
 caption {

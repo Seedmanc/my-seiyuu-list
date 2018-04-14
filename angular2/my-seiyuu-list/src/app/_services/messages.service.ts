@@ -15,7 +15,7 @@ export class MessagesService {
     this.message$.next({isError: false, data: text});
   }
 
-  totals(s: number, a?: number) {
+  totals(s?: number, a?: number) {
     if (s)
       this.status(s + ` seiyuu ${a ? '& ' +a+' anime ' : ''}records cached`)
     else

@@ -9,10 +9,6 @@ describe('MessagesService', () => {
     });
   });
 
-  it('should be created', inject([MessagesService], (service: MessagesService) => {
-    expect(service).toBeTruthy();
-  }));
-
   it('should emit an error upon such method',
     inject([MessagesService], (service:MessagesService) => {
       let x;

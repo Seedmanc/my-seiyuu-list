@@ -34,10 +34,6 @@ describe('SeiyuuPanelComponent', () => {
     component.seiyuu = <Seiyuu&Namesake>(new Seiyuu(basicModel));
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
   it('should display name and spinner for basicSeiyuu or namesakes',  () => {
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('h4').textContent).toContain('Maeda Konomi');

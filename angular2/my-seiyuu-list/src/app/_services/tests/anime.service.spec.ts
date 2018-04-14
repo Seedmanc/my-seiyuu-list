@@ -42,10 +42,6 @@ describe('AnimeService', () => {
     });
   });
 
-  it('should be created', inject([AnimeService], (service: AnimeService) => {
-    expect(service).toBeTruthy();
-  }));
-
   it('should fetch the record count from anime db',
     inject([AnimeService, HttpTestingController], (service:AnimeService, backend:HttpTestingController) => {
       service.animeCount$.subscribe(data => expect(data).toEqual(4286));

@@ -14,10 +14,6 @@ describe('RestService', () => {
     });
   });
 
-  it('should be created', inject([RestService], (service: RestService) => {
-    expect(service).toBeTruthy();
-  }));
-
   it('should make a GET to the specified DB',
     inject([RestService, HttpTestingController], (service:RestService, backend:HttpTestingController) => {
       service.mongoCall({coll:'seiyuu-test',mode:'GET',query:{c:true}}).subscribe(data => expect(data).toEqual(7));

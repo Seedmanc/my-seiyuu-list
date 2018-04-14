@@ -34,11 +34,11 @@ export class AnimeService {
 
     this.seiyuuSvc.loadedSeiyuu$                                                                           .do(Utils.log('loadedSeiyuu'))
       .withLatestFrom(this.seiyuuSvc.seiyuuCount$, this.animeCount$)
-      .do(([seiyuus, scount, acount]) => {
+      .do(([seiyuus, ...counts]) => {
         if (seiyuus.length) {
           this.selected$.next(seiyuus[seiyuus.length-1]._id);
         } else {
-          msgSvc.totals(scount, acount);
+          msgSvc.totals(...counts);   //to reset status when all seiyuu removed
         }
       })
       .combineLatest(this.mainOnly$)
@@ -108,6 +108,7 @@ export class AnimeService {
       .map(([data]) => data.anime)
       .subscribe(this.displayAnime$);
   }
+
 
   private loadDetails(ids: number[]): Observable<any[]> {
 
