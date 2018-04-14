@@ -30,7 +30,7 @@
       </tr>
     </thead>
 
-    <tbody *ngFor="let tier of output | orderBy:['type']:!tierOrder" [id]="tier.type">
+    <tbody *ngFor="let tier of output | orderBy:['type']:tierOrder" [id]="tier.type">
       <tr *ngFor="let anime of tier.list | orderBy:[sorter.orderByField]:sorter.ascending; let idx=index">
         <td class="text-center">{{idx + 1}}</td>
         <td class="anime-title">
