@@ -1,0 +1,7 @@
+<a href="javascript:void(0)" (click)="sort()"
+   [class.active]="sorter.orderByField == field"
+   [class.asc]="sorter.ascending"
+   [class.desc]="!sorter.ascending"
+>
+  <span class="content" #content><ng-content></ng-content></span>
+</a>

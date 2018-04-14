@@ -1,0 +1,18 @@
+.content::before {
+  content: '▴';
+}
+.content::after {
+  content: '▾';
+}
+
+.content::before,
+.content::after {
+  opacity: 0.4;
+}
+
+.active.asc .content::before {
+  opacity: 1;
+}
+.active.desc .content::after {
+  opacity: 1;
+}

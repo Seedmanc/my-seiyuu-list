@@ -10,6 +10,8 @@ import {RestService} from "../../_services/rest.service";
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import {MessagesService} from "../../_services/messages.service";
 import {SeiyuuService} from "../../_services/seiyuu.service";
+import {SortLinkComponent} from "../../sort-link/sort-link.component";
+import {SorterService} from "../../_services/sorter.service";
 
 describe('AnimeListComponent', () => {
   let component: AnimeListComponent;
@@ -17,8 +19,8 @@ describe('AnimeListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AnimeListComponent, OrderByPipe ],
-      providers: [{provide: RoutingService, useClass: RoutingServiceMock}, AnimeService, RestService, MessagesService, SeiyuuService],
+      declarations: [ AnimeListComponent, OrderByPipe, SortLinkComponent],
+      providers: [SorterService, {provide: RoutingService, useClass: RoutingServiceMock}, AnimeService, RestService, MessagesService, SeiyuuService],
       imports: [RouterTestingModule, FormsModule, HttpClientTestingModule]
     })
     .compileComponents();

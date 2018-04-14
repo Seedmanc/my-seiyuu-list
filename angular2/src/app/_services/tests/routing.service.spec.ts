@@ -17,6 +17,8 @@ import {SpinnerComponent} from "../../spinner/spinner.component";
 import {FormsModule} from "@angular/forms";
 import {UniqPipe} from "../../uniq.pipe";
 import { Location} from '@angular/common';
+import {SortLinkComponent} from "../../sort-link/sort-link.component";
+import {SorterService} from "../sorter.service";
 
 describe('RoutingService', () => {
   let location: Location;
@@ -24,9 +26,9 @@ describe('RoutingService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [RoutingService],
+      providers: [RoutingService, SorterService],
 
-      declarations: [BaseComponent, AnimeListComponent, MagazineListComponent, FooterComponent, RankingComponent,
+      declarations: [BaseComponent, SortLinkComponent, AnimeListComponent, MagazineListComponent, FooterComponent, RankingComponent,
         PhotoListComponent, HeaderComponent, SeiyuuPanelComponent, TabsComponent, OrderByPipe, SpinnerComponent, UniqPipe],
 
       imports: [RouterTestingModule.withRoutes(appRoutes), FormsModule ],

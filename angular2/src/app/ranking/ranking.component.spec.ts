@@ -11,6 +11,8 @@ import {RoutingService} from "../_services/routing.service";
 import {RouterTestingModule} from "@angular/router/testing";
 import {RestServiceMock} from "../_services/tests/rest.service.mock";
 import {RoutingServiceMock} from "../_services/tests/routing.service.mock";
+import {SortLinkComponent} from "../sort-link/sort-link.component";
+import {SorterService} from "../_services/sorter.service";
 
 describe('RankingComponent', () => {
   let component: RankingComponent;
@@ -18,8 +20,8 @@ describe('RankingComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RankingComponent, OrderByPipe ],
-      providers: [SeiyuuService, AnimeService,  {provide: RestService, useClass: RestServiceMock}, MessagesService,
+      declarations: [ RankingComponent, OrderByPipe, SortLinkComponent ],
+      providers: [SorterService, SeiyuuService, AnimeService,  {provide: RestService, useClass: RestServiceMock}, MessagesService,
         {provide: RoutingService, useClass: RoutingServiceMock}],
       imports: [HttpClientModule, RouterTestingModule]
     })

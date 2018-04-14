@@ -25,6 +25,7 @@ import {UniqPipe} from "./uniq.pipe";
 import {Utils} from "./_services/utils.service";
 import {AnimeService} from "./_services/anime.service";
 import {env} from "../environments/environment";
+import { SortLinkComponent } from './sort-link/sort-link.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import {env} from "../environments/environment";
     OrderByPipe,
     UniqPipe,
     SpinnerComponent,
-    BaseComponent
+    BaseComponent,
+    SortLinkComponent
   ],
   imports: [
     BrowserModule,

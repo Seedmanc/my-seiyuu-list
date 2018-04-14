@@ -94,7 +94,7 @@ describe('anime lookups', () => {
     let l;
       anime.tbody('main').$$('tr').count().then(d => l= d).then(() => {
         anime.cell(0,2).getText().then(first => {
-          anime.cell(l-1,2).getText().then(last => {expect(first >= last).toBeTruthy(); return null} )
+          anime.cell(l-1,2).getText().then(last => {expect(first <= last).toBeTruthy(); return null} )
         })
       });
 
@@ -102,7 +102,7 @@ describe('anime lookups', () => {
 
     anime.tbody('main').$$('tr').count().then(d => l= d).then(() => {
       anime.cell(0,2).getText().then(first => {
-        anime.cell(l-1,2).getText().then(last => {expect(first <= last).toBeTruthy(); return null} )
+        anime.cell(l-1,2).getText().then(last => {expect(first >= last).toBeTruthy(); return null} )
       })
     });
 

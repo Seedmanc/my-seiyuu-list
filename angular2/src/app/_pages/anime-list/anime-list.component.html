@@ -16,25 +16,22 @@
     </tr>
       <tr>
         <th class="text-center">
-          <a href="javascript:void(0)" (click)="sort('_id')" id="anime-id" title="sort by recency">▴#▾</a>
+          <msl-sort-link field="_id" default title="sort by recency">#</msl-sort-link>
         </th>
         <th>
-          <a href="javascript:void(0)" (click)="sort('title')" id="anime-title">
-            ▴title▾</a>
+          <msl-sort-link field="title" id="anime-title">anime</msl-sort-link>
         </th>
         <th class="text-right char">
-          <a href="javascript:void(0)" (click)="sort('mainCharacter')">
-            ▴character▾</a>
+          <msl-sort-link field="mainCharacter">character</msl-sort-link>
         </th>
         <th class="text-center tier">
-          <a href="javascript:void(0)" (click)="tierOrder=!tierOrder">
-            ▴role tier▾</a>
+          <a href="javascript:void(0)" (click)="tierOrder=!tierOrder">role tier</a>
         </th>
       </tr>
     </thead>
 
     <tbody *ngFor="let tier of output | orderBy:['type']:!tierOrder" [id]="tier.type">
-      <tr *ngFor="let anime of tier.list | orderBy:[orderByField]:ascending; let idx=index">
+      <tr *ngFor="let anime of tier.list | orderBy:[sorter.orderByField]:sorter.ascending; let idx=index">
         <td class="text-center">{{idx + 1}}</td>
         <td class="anime-title">
           <a [href]="anime.link" target="_blank">

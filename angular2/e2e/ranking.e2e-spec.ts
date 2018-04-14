@@ -30,7 +30,7 @@ describe('ranking', () => {
 
     page.sortTitles().click();
     last = tbody.$$('tr').last().$$('td').get(1).getText() ;
-    page.tbody().$$('tr').first().$$('td').get(1).getText().then(el=>{expect(parseInt(el)).toBeLessThanOrEqual(last)});
+    page.tbody().$$('tr').first().$$('td').get(1).getText().then(el=>{expect(parseInt(el)).toBeGreaterThanOrEqual(last)});
   });
   it('should sort ranking upon header click on hits', () =>{
     let last = tbody.$$('tr').last().$$('td').get(2).getText();

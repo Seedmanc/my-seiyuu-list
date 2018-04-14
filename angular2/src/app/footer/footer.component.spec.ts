@@ -12,6 +12,8 @@ import {RouterTestingModule} from "@angular/router/testing";
 import {AnimeService} from "../_services/anime.service";
 import {RestServiceMock} from "../_services/tests/rest.service.mock";
 import {RoutingServiceMock} from "../_services/tests/routing.service.mock";
+import {SorterService} from "../_services/sorter.service";
+import {SortLinkComponent} from "../sort-link/sort-link.component";
 
 describe('FooterComponent', () => {
   let component: FooterComponent;
@@ -19,8 +21,8 @@ describe('FooterComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FooterComponent, RankingComponent, OrderByPipe],
-      providers: [
+      declarations: [ FooterComponent, RankingComponent, OrderByPipe, SortLinkComponent],
+      providers: [SorterService,
         SeiyuuService, {provide: RestService, useClass: RestServiceMock}, MessagesService,
         {provide: RoutingService, useClass: RoutingServiceMock}, AnimeService
       ],

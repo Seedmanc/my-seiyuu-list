@@ -1,17 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import {SortableComponent} from "../../sortable.component";
 import {ActivatedRoute } from "@angular/router";
 import {RoutingService} from "../../_services/routing.service";
 import {ChildParamsComponent} from "../../child-params.component";
 import {AnimeService} from "../../_services/anime.service";
+import {SorterService} from "../../_services/sorter.service";
 
 @Component({
   selector: 'msl-anime-list',
   templateUrl: './anime-list.component.html',
-  styleUrls: ['./anime-list.component.css']
+  styleUrls: ['./anime-list.component.css'],
+  providers: [SorterService]
 })
-export class AnimeListComponent extends SortableComponent implements OnInit {
-  mixin: ChildParamsComponent;
+export class AnimeListComponent extends ChildParamsComponent implements OnInit {
   output = [
     {
       type: 'main',
@@ -25,14 +25,14 @@ export class AnimeListComponent extends SortableComponent implements OnInit {
   tierOrder: boolean = true;
   mainOnly: boolean = false;
 
-  constructor(private route: ActivatedRoute, private routingSvc: RoutingService,
-              public animeSvc: AnimeService) {
-      super('_id');
-      this.mixin = new ChildParamsComponent(route, routingSvc);
+  constructor(protected route: ActivatedRoute, protected routingSvc: RoutingService,
+              public animeSvc: AnimeService,
+              public sorter: SorterService) {
+      super(route, routingSvc);
     }
 
   ngOnInit() {
-    this.mixin.ngOnInit();
+    super.ngOnInit();
 
     this.animeSvc.mainOnly$.subscribe(value => this.mainOnly = value);
 
@@ -43,7 +43,7 @@ export class AnimeListComponent extends SortableComponent implements OnInit {
       });
   }
 
-  onMainOnlyChange(value){
+  onMainOnlyChange(value) {
     this.animeSvc.mainOnly$.next(value);
   }
 
