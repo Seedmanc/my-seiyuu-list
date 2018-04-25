@@ -1,13 +1,23 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {env} from "../../environments/environment";
+import {Observable} from "rxjs/Observable";
+
+interface YQLresponse {
+  query: {
+    count: number,
+    results: {
+      result: string[]
+    }
+  }
+}
 
 @Injectable()
 export class RestService {
 
   constructor(private http: HttpClient) { }
 
-  mongoCall({coll, mode, payload={}, query={}}) {
+  mongoCall({coll, mode, payload={}, query={}}): Observable<any> {
     let path = "collections/" + coll;
 
     if (JSON.stringify(payload) === '{}') {
@@ -25,7 +35,6 @@ export class RestService {
       `${env.mongoUrl}/${path}?apiKey=${env.apiKey}${options}`,
       payload
     );
-
 
 /*        if ( failCount <= 2) {
         failCount++;
@@ -47,6 +56,21 @@ $scope.debug += '\n\r' + JSON.stringify(error) + ' Error accessing database.';
         );
       }*/
 
+  }
+
+  yahooQueryCall(tags: string, pid: number): Observable<YQLresponse> {
+    let koeurl = encodeURIComponent(`${env.koeurl}${tags}&pid=${pid}`);
+
+    return this.http.get<YQLresponse>([
+      'https://query.yahooapis.com/v1/public/yql?q=',
+        `SELECT * FROM htmlstring WHERE url = '${koeurl}' AND xpath IN (`,
+          `'//div[@id="tag_list"]//h5',`,
+          `'//div[@class = "content"]//span[@class = "thumb"]'`,
+        ')',
+        '&format=json',
+        '&env=store://datatables.org/alltableswithkeys'
+      ].join('')
+    )
   }
 
 }

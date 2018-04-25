@@ -26,6 +26,7 @@ import {Utils} from "./_services/utils.service";
 import {AnimeService} from "./_services/anime.service";
 import {env} from "../environments/environment";
 import { SortLinkComponent } from './sort-link/sort-link.component';
+import {PhotoService} from "./_services/photo.service";
 
 @NgModule({
   declarations: [
@@ -51,7 +52,7 @@ import { SortLinkComponent } from './sort-link/sort-link.component';
     FormsModule,
     RouterModule
   ],
-  providers: [RestService, MessagesService, Utils, AnimeService],
+  providers: [RestService, MessagesService, Utils, AnimeService, PhotoService],
   bootstrap: [AppComponent]
 })
 export class AppModule {
