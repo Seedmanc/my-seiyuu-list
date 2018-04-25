@@ -13,9 +13,22 @@ export class PhotoService {
       pid
     )
       .map(result => {
-        return result.query.results.result[1]
-          .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
-          .replace(/class="thumb"/g, 'class="thumb img-thumbnail"');
+        let html =  result.query.results.result[1]
+          .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+        let newDoc = document.implementation.createHTMLDocument('newDoc');
+        newDoc.documentElement.innerHTML = html;
+        let spans  = newDoc.querySelectorAll('span.thumb');
+
+        [].slice.call(spans)
+          .forEach(span => {
+            span.classList.add('img-thumbnail');
+            let a = span.querySelector('a');
+            let img = span.querySelector('img');
+            a.href = img.src.replace('thumbs', 'img').replace('thumbnails', 'images').replace('thumbnail_', '');
+            a.target = "_blank";
+          });
+
+        return newDoc.body.innerHTML;
       })
   }
 
