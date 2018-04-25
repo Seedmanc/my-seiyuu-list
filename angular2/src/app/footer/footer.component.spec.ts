@@ -9,7 +9,6 @@ import { HttpClientModule} from "@angular/common/http";
 import {MessagesService} from "../_services/messages.service";
 import {RoutingService} from "../_services/routing.service";
 import {RouterTestingModule} from "@angular/router/testing";
-import {AnimeService} from "../_services/anime.service";
 import {RestServiceMock} from "../_services/tests/rest.service.mock";
 import {RoutingServiceMock} from "../_services/tests/routing.service.mock";
 import {SorterService} from "../_services/sorter.service";
@@ -24,7 +23,7 @@ describe('FooterComponent', () => {
       declarations: [ FooterComponent, RankingComponent, OrderByPipe, SortLinkComponent],
       providers: [SorterService,
         SeiyuuService, {provide: RestService, useClass: RestServiceMock}, MessagesService,
-        {provide: RoutingService, useClass: RoutingServiceMock}, AnimeService
+        {provide: RoutingService, useClass: RoutingServiceMock}
       ],
       imports:[HttpClientModule, RouterTestingModule]
     })

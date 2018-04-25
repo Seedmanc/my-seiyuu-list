@@ -4,7 +4,6 @@ import {MessagesService} from "../_services/messages.service";
 import {Observable} from "rxjs/Observable";
 import {Subject} from "rxjs/Subject";
 import {Utils} from "../_services/utils.service";
-import {AnimeService} from "../_services/anime.service";
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/combineLatest';
@@ -23,7 +22,7 @@ export class HeaderComponent implements OnInit {
 
   searchQuery: string = '';
 
-  constructor(public seiyuuSvc: SeiyuuService, private messageSvc: MessagesService, private animeSvc: AnimeService) { }
+  constructor(public seiyuuSvc: SeiyuuService, private messageSvc: MessagesService) { }
 
   ngOnInit() {
     this.status$ = this.messageSvc.message$;

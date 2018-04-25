@@ -3,7 +3,6 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RankingComponent } from './ranking.component';
 import {OrderByPipe} from "../orderBy.pipe";
 import {SeiyuuService} from "../_services/seiyuu.service";
-import {AnimeService} from "../_services/anime.service";
 import {RestService} from "../_services/rest.service";
 import {HttpClientModule} from "@angular/common/http";
 import {MessagesService} from "../_services/messages.service";
@@ -21,7 +20,7 @@ describe('RankingComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ RankingComponent, OrderByPipe, SortLinkComponent ],
-      providers: [SorterService, SeiyuuService, AnimeService,  {provide: RestService, useClass: RestServiceMock}, MessagesService,
+      providers: [SorterService, SeiyuuService, {provide: RestService, useClass: RestServiceMock}, MessagesService,
         {provide: RoutingService, useClass: RoutingServiceMock}],
       imports: [HttpClientModule, RouterTestingModule]
     })

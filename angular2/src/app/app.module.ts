@@ -22,11 +22,8 @@ import {MessagesService} from "./_services/messages.service";
 import { SpinnerComponent } from './spinner/spinner.component';
 import { BaseComponent } from './base/base.component';
 import {UniqPipe} from "./uniq.pipe";
-import {Utils} from "./_services/utils.service";
-import {AnimeService} from "./_services/anime.service";
 import {env} from "../environments/environment";
 import { SortLinkComponent } from './sort-link/sort-link.component';
-import {PhotoService} from "./_services/photo.service";
 
 @NgModule({
   declarations: [
