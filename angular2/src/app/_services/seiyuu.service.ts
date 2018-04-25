@@ -39,10 +39,15 @@ export class SeiyuuService {
   private routeId$: Observable<number[]>;
   private namesake$: Subject<Namesake[]> = new BehaviorSubject([]);
   private totalMap: {[key: number]: BasicSeiyuu} = {};
+  private loaded$: Subject<Seiyuu[]> = new Subject();
 
 
   constructor(private rest: RestService, private messageSvc: MessagesService,
               private routingSvc: RoutingService) {
+
+    this.loaded$
+      .distinctUntilChanged((p,n) => p.map(s=>s.name).join() == n.map(s=>s.name).join())
+      .subscribe(this.loadedSeiyuu$);
 
     this.totalList$ = this.getTotalList()                                                                  .do(Utils.lg('totalList'))
       .do(list => {
@@ -65,7 +70,7 @@ export class SeiyuuService {
         });
         let ready = ids.map(id => this.totalMap[id]).filter(s => !s.pending);
         if (seiyuus.length &&~ids.indexOf(seiyuus[0]._id) && ready.length) {
-          this.loadedSeiyuu$.next(ready);
+          this.loaded$.next(ready);
         }
       }).subscribe();
 
@@ -76,7 +81,7 @@ export class SeiyuuService {
        )
       .do(seiyuus => {
         if (seiyuus.every(seiyuu => !seiyuu.pending)) {
-          this.loadedSeiyuu$.next(seiyuus);
+          this.loaded$.next(seiyuus);
         }
       })
       .combineLatest(this.namesake$)

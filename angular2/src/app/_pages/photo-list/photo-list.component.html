@@ -2,18 +2,18 @@
   <div class="col-sm-12">
     <div class="row">
       <div class="col-sm-12 text-center">
-        <div id="photos-spinner" *ngIf="pending">
+        <div id="photos-spinner" *ngIf="photoSvc.pending">
           <msl-spinner size="calc(15vmin)"></msl-spinner>
         </div>
-        <div id="thumbContainer" [innerHTML]="photoPage" *ngIf="!pending"></div>
+        <div id="thumbContainer" [innerHTML]="page" *ngIf="!photoSvc.pending"></div>
       </div>
     </div>
     <div id="nav" class="row">
       <div class="btn-group btn-group-justified">
         <button id="prev" class="btn btn-default btn-block glyphicon glyphicon-arrow-left"
-           [disabled]="pending || !hasPrev"> </button>
+           [disabled]="photoSvc.pending || !prev" (click)="switchPage(-1)"> </button>
         <button id="next" class="btn btn-default btn-block glyphicon glyphicon-arrow-right"
-           [disabled]="pending || !hasNext"> </button>
+           [disabled]="photoSvc.pending || !next" (click)="switchPage(1)"> </button>
       </div>
     </div>
   </div>

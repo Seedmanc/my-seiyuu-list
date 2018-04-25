@@ -52,7 +52,7 @@ import {PhotoService} from "./_services/photo.service";
     FormsModule,
     RouterModule
   ],
-  providers: [RestService, MessagesService, Utils, AnimeService, PhotoService],
+  providers: [RestService, MessagesService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

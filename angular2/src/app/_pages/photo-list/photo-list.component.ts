@@ -3,6 +3,7 @@ import {ActivatedRoute } from "@angular/router";
 import {ChildParamsComponent} from "../../child-params.component";
 import {RoutingService} from "../../_services/routing.service";
 import {PhotoService} from "../../_services/photo.service";
+import {Utils} from "../../_services/utils.service";
 
 @Component({
   selector: 'msl-photo-list',
@@ -10,12 +11,11 @@ import {PhotoService} from "../../_services/photo.service";
   styleUrls: ['./photo-list.component.css']
 })
 export class PhotoListComponent extends ChildParamsComponent implements OnInit {
-  photoPage: string;
-  pending: boolean = true;
-  hasNext: false;
-  hasPrev: false;
+  page: string;
+  next: false;
+  prev: false;
 
-  constructor(private photoSvc: PhotoService,
+  constructor(public photoSvc: PhotoService,
               protected route: ActivatedRoute,
               protected routingSvc: RoutingService) {
     super(route, routingSvc);
@@ -24,9 +24,12 @@ export class PhotoListComponent extends ChildParamsComponent implements OnInit {
   ngOnInit() {
     super.ngOnInit();
 
-    this.photoSvc.getPhotoPage(['Mizuki Nana', 'solo'], 0)
-      .do(() => this.pending = false)
-      .subscribe(result => this.photoPage = result);
+    this.photoSvc.displayPhotos$                                                                  .do(Utils.log('photo'))
+      .subscribe(result => Object.assign(this, result));
+  }
+
+  switchPage(delta: number) {
+    this.photoSvc.pageDelta.next(delta);
   }
 
 }

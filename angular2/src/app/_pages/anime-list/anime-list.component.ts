@@ -25,7 +25,8 @@ export class AnimeListComponent extends ChildParamsComponent implements OnInit {
   tierOrder: boolean = true;
   mainOnly: boolean = false;
 
-  constructor(protected route: ActivatedRoute, protected routingSvc: RoutingService,
+  constructor(protected route: ActivatedRoute,
+              protected routingSvc: RoutingService,
               public animeSvc: AnimeService,
               public sorter: SorterService) {
       super(route, routingSvc);

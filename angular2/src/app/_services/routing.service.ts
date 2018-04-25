@@ -11,14 +11,18 @@ import 'rxjs/add/operator/distinctUntilChanged';
 export class RoutingService {
   routeId$: Subject<number[]> = new Subject();
   paramMap$ = new Subject<any>();
-  private mode: string = '';
+  tab$ = new Subject<string>();
+
+  private tab: string = '';
 
   constructor(private router: Router) {
    this.router.events
-      .filter(e => e instanceof NavigationEnd)                                                             .do(Utils.lg('mode'))
-      .subscribe((e: any) => this.mode = e.urlAfterRedirects.split('/')[1]);
+     .filter(e => e instanceof NavigationEnd)                                                             .do(Utils.lg('tab'))
+     .map((e: any) => e.urlAfterRedirects.split('/')[1])
+     .do(t => this.tab = t)
+     .subscribe(this.tab$);
 
-    this.paramMap$                                                                                         .do(Utils.log('parammap'))
+    this.paramMap$                                                                                         .do(Utils.log('paramMap'))
      .map(params => (params.get('ids')||''))
      .distinctUntilChanged()
      .map(ids => ids.split(',')
@@ -29,7 +33,7 @@ export class RoutingService {
 
   add(id, list): number {
     const newList = Utils.unique([...list, id]);
-    this.router.navigate([this.mode, newList.join(',')]);
+    this.router.navigate([this.tab, newList.join(',')]);
     // was it a duplicate?
     return list.length === newList.length ? id : null;
   }
@@ -37,7 +41,7 @@ export class RoutingService {
   remove(id, list) {
     const newList = list.filter(el => el !== id);
 
-    return this.router.navigate([this.mode, newList.join(',')]);
+    return this.router.navigate([this.tab, newList.join(',')]);
   }
 
 }

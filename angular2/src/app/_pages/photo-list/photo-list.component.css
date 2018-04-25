@@ -3,18 +3,18 @@
   margin-bottom: 20%;
 }
 
-:host /deep/ .img-thumbnail {
+/deep/ .img-thumbnail {
   padding: 0!important;
 }
-:host /deep/ span.thumb {
+/deep/ span.thumb {
   display:inline-block;
-  width:160px;
-  height:160px;
+  width:  160px;
+  height: 160px;
 
   text-align:center;
-  margin: 2px;
+  margin:    2px;
 }
-:host /deep/ .thumb:before {
+/deep/ .thumb:before {
   display: inline-block;
   height: 100%;
 
@@ -25,7 +25,7 @@
 #thumbContainer {
   min-height: 660px;
 
-  padding-top:5px;
+  padding-top:   5px;
   margin-bottom: 4px;
 
   text-align:center;
@@ -37,4 +37,8 @@
 
 #nav button {
   width: 50%;
+}
+
+/deep/ .more {
+  margin-top: -71.5%;
 }
