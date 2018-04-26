@@ -31,22 +31,28 @@ export class SeiyuuService {
   updateRequest$: Subject<number> = new Subject();
   picked$: Subject<number> = new Subject();
   removed$: Subject<number|string> = new Subject();
-  loadedSeiyuu$: Subject<Seiyuu[]> = new Subject();
+  loadedSeiyuu$: BehaviorSubject<Seiyuu[]> = new BehaviorSubject(null);
   seiyuuCount$: BehaviorSubject<number> = new BehaviorSubject(0);
+  selected$: BehaviorSubject<number> = new BehaviorSubject(null);
 
   pending: boolean = true;
 
   private routeId$: Observable<number[]>;
   private namesake$: Subject<Namesake[]> = new BehaviorSubject([]);
   private totalMap: {[key: number]: BasicSeiyuu} = {};
-  private loaded$: Subject<Seiyuu[]> = new Subject();
+/*private*/ loaded$: Subject<Seiyuu[]> = new Subject();
 
 
-  constructor(private rest: RestService, private messageSvc: MessagesService,
+  constructor(private rest: RestService,
+              private messageSvc: MessagesService,
               private routingSvc: RoutingService) {
 
-    this.loaded$
+    this.loaded$                                                                                            .do(Utils.log('loaded'))
       .distinctUntilChanged((p,n) => p.map(s=>s.name).join() == n.map(s=>s.name).join())
+      .do(seiyuus => {
+        if (seiyuus.length)
+          this.selected$.next(seiyuus[seiyuus.length-1]._id);
+      })
       .subscribe(this.loadedSeiyuu$);
 
     this.totalList$ = this.getTotalList()                                                                  .do(Utils.lg('totalList'))

@@ -6,6 +6,7 @@ import {Utils} from "./utils.service";
 import {MessagesService} from "./messages.service";
 import {Anime, HashOfRoles, Role} from "../_models/anime.model";
 import {SeiyuuService} from "./seiyuu.service";
+//import {RoutingService} from "./routing.service";
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/withLatestFrom';
@@ -18,31 +19,34 @@ export class AnimeService {
   animeCount$: Observable<number>;
 
   displayAnime$: BehaviorSubject<any[]> = new BehaviorSubject([]);
-  selected$: BehaviorSubject<number> = new BehaviorSubject(null);
   mainOnly$: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
-
-  constructor(private rest: RestService, private msgSvc: MessagesService,
+  constructor(private rest: RestService,
+              //private routingSvc: RoutingService,
+              private msgSvc: MessagesService,
               private seiyuuSvc: SeiyuuService) {
+
     this.animeCount$ = this.rest.mongoCall({
       coll: 'anime',
       mode: 'GET',
       query: {c: true}
-    }).startWith(0).share();
+    }).startWith(0)
+      .share();
 
-    this.selected$.subscribe(id => {if (id) Anime.activeSeiyuu = id});
+    this.seiyuuSvc.selected$.subscribe(id => {if (id) Anime.activeSeiyuu = id});
 
-    this.seiyuuSvc.loadedSeiyuu$                                                                           .do(Utils.log('loadedSeiyuu'))
-      .withLatestFrom(this.seiyuuSvc.seiyuuCount$, this.animeCount$)
-      .do(([seiyuus, ...counts]) => {
-        if (seiyuus.length) {
-          this.selected$.next(seiyuus[seiyuus.length-1]._id);
-        } else {
-          msgSvc.totals(...counts);   //to reset status when all seiyuu removed
-        }
-      })
+    this.seiyuuSvc.loadedSeiyuu$
+      .filter(list => list && list.length === 0)
+      .combineLatest(this.seiyuuSvc.seiyuuCount$, this.animeCount$)
+      .subscribe(([, scount, acount]) => {
+          msgSvc.totals(scount, acount);   //to reset status when all seiyuu removed
+      });
+
+    this.seiyuuSvc.loadedSeiyuu$                                                                           .do(Utils.log('loadedSeiyuuA'))
+     // .combineLatest(this.routingSvc.tab$.filter(tab => tab == 'anime')).map(([seiyuus,]) => seiyuus)      .do(Utils.log('tabbed'))
+      .filter(list => list)
       .combineLatest(this.mainOnly$)
-      .map(([[seiyuus], mainOnly]) => {
+      .map(([seiyuus, mainOnly]) => {
         // turn objects with arrays of roles with animeIds into hashmaps of roles with seiyuuIds per anime
         return seiyuus.map(({_id, roles}) => {
           let rolesByAnime: HashOfRoles = {};
@@ -104,7 +108,7 @@ export class AnimeService {
         this.loadDetails(anime.map(a => a._id).filter(id => !Anime.detailsCache[id]))                       .do(Utils.log('details'))
           .subscribe();
       })                                                                                                   .do(Utils.log('anime results'))
-      .combineLatest(this.selected$.distinctUntilChanged())
+      .combineLatest(this.seiyuuSvc.selected$.distinctUntilChanged())
       .map(([data]) => data.anime)
       .subscribe(this.displayAnime$);
   }

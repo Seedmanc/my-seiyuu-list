@@ -79,7 +79,7 @@ label {
   cursor: pointer;
 }
 .more-chars::after {
-  content: ' *';
+  content: '...';
   margin-right: -0.5rem;
 }
 .more-chars:hover + .char-list {

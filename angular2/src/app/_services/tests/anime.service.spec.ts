@@ -59,11 +59,11 @@ describe('AnimeService', () => {
       let spy = spyOn(msgSvc, 'status');
 
       service.displayAnime$.subscribe(data => x = data);
-      service.selected$.subscribe(data => y = data);
+      seiyuuSvc.selected$.subscribe(data => y = data);
 
       let loaded = Object.assign({}, model);
       loaded.roles.push(...roles);
-      seiyuuSvc.loadedSeiyuu$.next([new Seiyuu(loaded)]);
+      seiyuuSvc.loaded$.next([new Seiyuu(loaded)]);
 
       expect(y).toBe(model._id);
       expect(spy).toHaveBeenCalledWith('4 anime found');
@@ -96,7 +96,7 @@ describe('AnimeService', () => {
       let spy = spyOn(msgSvc, 'status');
 
       service.displayAnime$.subscribe(data => x = data);
-      service.selected$.subscribe(data => y = data);
+      seiyuuSvc.selected$.subscribe(data => y = data);
 
       let loaded = Object.assign({}, model);
       loaded.roles.push(...roles);
@@ -115,7 +115,7 @@ describe('AnimeService', () => {
         "main": false,
         "_id": 4
       });
-      seiyuuSvc.loadedSeiyuu$.next([new Seiyuu(loaded),new Seiyuu(loaded2)]);
+      seiyuuSvc.loaded$.next([new Seiyuu(loaded),new Seiyuu(loaded2)]);
 
       expect(y).toBe(model2._id);
       expect(spy).toHaveBeenCalledWith('3 shared anime found');
@@ -157,21 +157,21 @@ describe('AnimeService', () => {
         let spy = spyOn(msgSvc, 'status');
 
         service.displayAnime$.subscribe(data => x = data);
-        service.selected$.subscribe(data => y = data);
+        seiyuuSvc.selected$.subscribe(data => y = data);
 
         let loaded = Object.assign({}, model);
         loaded.roles.push(...roles);
 
         let loaded2 = Object.assign({}, model2);
         loaded2.roles = [];
-        seiyuuSvc.loadedSeiyuu$.next([new Seiyuu(loaded),new Seiyuu(loaded2)]);
+        seiyuuSvc.loaded$.next([new Seiyuu(loaded),new Seiyuu(loaded2)]);
 
         expect(y).toBe(model2._id);
         expect(spy).toHaveBeenCalledWith('no shared anime found');
 
         expect(JSON.stringify(x)).toBe('[]');
 
-        service.selected$.next(578);
+        seiyuuSvc.selected$.next(578);
         expect(Anime.activeSeiyuu).toBe(578);
     })
   );
