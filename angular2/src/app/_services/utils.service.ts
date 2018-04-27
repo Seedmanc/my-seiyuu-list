@@ -45,4 +45,8 @@ export class Utils {
     return Utils.parser.value;
   }
 
+  static compareLists(x: any[], y: any[], field = 'name'): boolean {
+    return x.map(e => e[field]).join() == y.map(y => y[field]).join();
+  }
+
 }

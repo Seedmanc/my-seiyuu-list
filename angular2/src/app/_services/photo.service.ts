@@ -1,30 +1,36 @@
 import { Injectable } from '@angular/core';
 import {Observable} from "rxjs/Observable";
 import {RestService} from "./rest.service";
-import {Subject} from "rxjs/Subject";
 import {SeiyuuService} from "./seiyuu.service";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {Utils} from "./utils.service";
+import {RoutingService} from "./routing.service";
 import {env} from "../../environments/environment";
 import 'rxjs/add/operator/switchMap';
 
 @Injectable()
 export class PhotoService {
-  displayPhotos$: Subject<any> = new Subject();
+  displayPhotos$: BehaviorSubject<any> = new BehaviorSubject({});
   pageDelta: BehaviorSubject<number> = new BehaviorSubject(0);
   pending: boolean;
 
   private page: number = 0;
 
   constructor(private rest: RestService,
+              private routingSvc: RoutingService,
               private seiyuuSvc: SeiyuuService) {
 
     this.pageDelta
       .subscribe(delta => this.page = Math.max(0, this.page+delta));
 
-    this.seiyuuSvc.loadedSeiyuu$                                                                      .do(Utils.log('loadedInside'))
+    this.seiyuuSvc.loadedSeiyuu$                                                                       .do(Utils.log('loadedInside'))
       .do(() => this.page = 0)
+      .filter(list => list)
       .map(seiyuus => seiyuus.map(seiyuu => seiyuu.name))
+      .combineLatest(this.routingSvc.tab$)
+        .filter(([,tab]) => tab == 'photos')
+        .distinctUntilChanged(([x,],[y,]) => Utils.compareLists(x,y))
+        .map(([names,]) => names)
       .combineLatest(this.pageDelta)                                                                   .do(Utils.log('photoPage'))
       .switchMap(([names,]) => {
         return this.getPhotoPage(names.join('+').toLowerCase().replace(/\s+/g, '_'), this.page*20);
@@ -35,7 +41,7 @@ export class PhotoService {
 
   private getPhotoPage(tags: string, pid: number): Observable<{page: string, next: boolean, prev: boolean}> {
     this.pending = true;
-    tags += '+solo';
+    //if (tags) tags += '+solo';
 
     return this.rest.yahooQueryCall(tags, pid)
       .map(result => {

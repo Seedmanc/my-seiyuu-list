@@ -5,6 +5,7 @@ import {Utils} from "../utils.service";
 @Injectable()
 export class RoutingServiceMock {
   public routeId$: BehaviorSubject<number[]>  = new BehaviorSubject([]);
+  public tab$: BehaviorSubject<string>  = new BehaviorSubject('anime');
   public paramMap$: BehaviorSubject<any>  = new BehaviorSubject({get(){return 0}});
 
   constructor() {

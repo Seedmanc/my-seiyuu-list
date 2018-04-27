@@ -6,7 +6,6 @@ import {Utils} from "./utils.service";
 import {MessagesService} from "./messages.service";
 import {Anime, HashOfRoles, Role} from "../_models/anime.model";
 import {SeiyuuService} from "./seiyuu.service";
-//import {RoutingService} from "./routing.service";
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/withLatestFrom';
@@ -22,7 +21,6 @@ export class AnimeService {
   mainOnly$: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
   constructor(private rest: RestService,
-              //private routingSvc: RoutingService,
               private msgSvc: MessagesService,
               private seiyuuSvc: SeiyuuService) {
 
@@ -43,7 +41,6 @@ export class AnimeService {
       });
 
     this.seiyuuSvc.loadedSeiyuu$                                                                           .do(Utils.log('loadedSeiyuuA'))
-     // .combineLatest(this.routingSvc.tab$.filter(tab => tab == 'anime')).map(([seiyuus,]) => seiyuus)      .do(Utils.log('tabbed'))
       .filter(list => list)
       .combineLatest(this.mainOnly$)
       .map(([seiyuus, mainOnly]) => {
