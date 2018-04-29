@@ -12,6 +12,8 @@ import {PhotoService} from "../_services/photo.service";
 })
 export class BaseComponent {
 
-  constructor(public seiyuuSvc: SeiyuuService) {}
+  constructor(public seiyuuSvc: SeiyuuService) {
+    console.clear();
+  }
 
 }

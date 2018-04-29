@@ -6,6 +6,7 @@ import {Utils} from "./utils.service";
 import {MessagesService} from "./messages.service";
 import {Anime, HashOfRoles, Role} from "../_models/anime.model";
 import {SeiyuuService} from "./seiyuu.service";
+import {RoutingService} from "./routing.service";
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/withLatestFrom';
@@ -22,6 +23,7 @@ export class AnimeService {
 
   constructor(private rest: RestService,
               private msgSvc: MessagesService,
+              //private routingSvc: RoutingService,
               private seiyuuSvc: SeiyuuService) {
 
     this.animeCount$ = this.rest.mongoCall({
@@ -42,6 +44,10 @@ export class AnimeService {
 
     this.seiyuuSvc.loadedSeiyuu$                                                                           .do(Utils.log('loadedSeiyuuA'))
       .filter(list => list)
+      /*.combineLatest(this.routingSvc.tab$)
+        .filter(([,tab]) => tab == 'anime')
+        .distinctUntilChanged(([x,],[y,]) => Utils.compareLists(x,y))
+        .map(([seiyuus,]) => seiyuus)*/
       .combineLatest(this.mainOnly$)
       .map(([seiyuus, mainOnly]) => {
         // turn objects with arrays of roles with animeIds into hashmaps of roles with seiyuuIds per anime
@@ -121,9 +127,10 @@ export class AnimeService {
           f: {title: 1, pic: 1},
           q: {'_id': {'$in': ids}}
         }
-      }) :
+      }).do(Utils.lg('anime requested', 'warn')) :
       Observable.of([])
      )
+
       .do(details => details.forEach(detail => Anime.detailsCache[detail._id] = detail));
   }
 

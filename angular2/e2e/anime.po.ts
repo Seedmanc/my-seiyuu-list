@@ -2,7 +2,7 @@ import { browser, by, element } from 'protractor';
 
 export class AnimePage {
   static navigateTo() {
-    return browser.get('/');
+    return browser.get('/anime');
   }
 
   rolesTable() {

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute } from "@angular/router";
 import {RoutingService} from "../../_services/routing.service";
-import {ChildParamsComponent} from "../../child-params.component";
+import {ChildParamsComponent} from "../../_misc/child-params.component";
 import {AnimeService} from "../../_services/anime.service";
 import {SorterService} from "../../_services/sorter.service";
 

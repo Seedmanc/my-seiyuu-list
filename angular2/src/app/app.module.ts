@@ -13,7 +13,7 @@ import { AnimeListComponent } from './_pages/anime-list/anime-list.component';
 import { MagazineListComponent } from './_pages/magazine-list/magazine-list.component';
 import { PhotoListComponent } from './_pages/photo-list/photo-list.component';
 import { SeiyuuPanelComponent } from './seiyuu-panel/seiyuu-panel.component';
-import {OrderByPipe} from "./orderBy.pipe";
+import {OrderByPipe} from "./_misc/orderBy.pipe";
 import {Router} from "@angular/router";
 
 import {HttpClientModule} from '@angular/common/http';
@@ -21,7 +21,7 @@ import {RestService} from "./_services/rest.service";
 import {MessagesService} from "./_services/messages.service";
 import { SpinnerComponent } from './spinner/spinner.component';
 import { BaseComponent } from './base/base.component';
-import {UniqPipe} from "./uniq.pipe";
+import {UniqPipe} from "./_misc/uniq.pipe";
 import {env} from "../environments/environment";
 import { SortLinkComponent } from './sort-link/sort-link.component';
 

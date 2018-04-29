@@ -2,7 +2,7 @@ import {async, ComponentFixture, discardPeriodicTasks, fakeAsync, inject, TestBe
 
 import { HeaderComponent } from './header.component';
 import {FormsModule} from "@angular/forms";
-import {UniqPipe} from "../uniq.pipe";
+import {UniqPipe} from "../_misc/uniq.pipe";
 import {SpinnerComponent} from "../spinner/spinner.component";
 import {SeiyuuService} from "../_services/seiyuu.service";
 import {RestService} from "../_services/rest.service";

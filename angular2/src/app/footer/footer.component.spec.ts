@@ -2,7 +2,7 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import { FooterComponent } from './footer.component';
 import {RankingComponent} from "../ranking/ranking.component";
-import {OrderByPipe} from "../orderBy.pipe";
+import {OrderByPipe} from "../_misc/orderBy.pipe";
 import {SeiyuuService} from "../_services/seiyuu.service";
 import {RestService} from "../_services/rest.service";
 import { HttpClientModule} from "@angular/common/http";

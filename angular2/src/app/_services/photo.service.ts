@@ -44,6 +44,7 @@ export class PhotoService {
     //if (tags) tags += '+solo';
 
     return this.rest.yahooQueryCall(tags, pid)
+      .do(Utils.lg('photos requested', 'warn'))
       .map(result => {
         let html =  result.query.results.result[1]
           .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');

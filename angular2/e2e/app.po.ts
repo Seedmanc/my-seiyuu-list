@@ -1,8 +1,8 @@
 import { browser, by, element } from 'protractor';
 
 export class AppPage {
-  static navigateTo() {
-    return browser.get('/');
+  static navigateTo(url = '') {
+    return browser.get('/' + url);
   }
 
   searchInput() {

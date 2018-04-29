@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute } from "@angular/router";
-import {ChildParamsComponent} from "../../child-params.component";
+import {ChildParamsComponent} from "../../_misc/child-params.component";
 import {RoutingService} from "../../_services/routing.service";
 import {PhotoService} from "../../_services/photo.service";
 import {Utils} from "../../_services/utils.service";
