@@ -48,7 +48,6 @@ export class SeiyuuService {
               private routingSvc: RoutingService) {
 
     this.loaded$                                                                                            .do(Utils.log('loaded'))
-      .distinctUntilChanged(Utils.compareLists)
       .do(seiyuus => {
         if (seiyuus.length)
           this.selected$.next(seiyuus[seiyuus.length-1]._id);

@@ -12,7 +12,7 @@ describe('my-seiyuu-list App', () => {
     AppPage.navigateTo();
   });
 
-  it('should only issue a request to load data when on its page', () => {
+  fit('should only issue a request to load data when on its page', () => {
     AppPage.navigateTo('#/magazines/578').then(()=> {
       let seiyuu = new SeiyuuPage();
       let panel = seiyuu.panel('Maeda Konomi');
@@ -39,7 +39,7 @@ describe('my-seiyuu-list App', () => {
       page.tabs().get(0).click();
       browser.wait(EC.presenceOf(anime.mainOnly()), 5000);
       browser.manage().logs().get('browser')
-        .then(browserLog => {expect(browserLog.filter(event => !!~event.message.indexOf('anime requested')).length).toBeLessThanOrEqual(1);});
+        .then(browserLog => {expect(browserLog.filter(event => !!~event.message.indexOf('anime requested')).length).toBeFalsy();});
       console.log('no extra anime requests');
 
       page.tabs().get(1).click();
@@ -53,8 +53,8 @@ describe('my-seiyuu-list App', () => {
 
       browser.manage().logs().get('browser')
         .then(browserLog => {expect(browserLog.filter(event =>
-          /*!!~event.message.indexOf('anime requested') ||*/ !!~event.message.indexOf('photo requested')).length).toBeFalsy();});
-      console.log('no extra photo requests');
+          !!~event.message.indexOf('anime requested') || !!~event.message.indexOf('photo requested')).length).toBeFalsy();});
+      console.log('no extra photo or anime requests');
     });
   });
 

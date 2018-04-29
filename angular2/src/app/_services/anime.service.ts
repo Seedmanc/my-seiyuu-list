@@ -23,7 +23,7 @@ export class AnimeService {
 
   constructor(private rest: RestService,
               private msgSvc: MessagesService,
-              //private routingSvc: RoutingService,
+              private routingSvc: RoutingService,
               private seiyuuSvc: SeiyuuService) {
 
     this.animeCount$ = this.rest.mongoCall({
@@ -44,10 +44,10 @@ export class AnimeService {
 
     this.seiyuuSvc.loadedSeiyuu$                                                                           .do(Utils.log('loadedSeiyuuA'))
       .filter(list => list)
-      /*.combineLatest(this.routingSvc.tab$)
+      .combineLatest(this.routingSvc.tab$)
         .filter(([,tab]) => tab == 'anime')
         .distinctUntilChanged(([x,],[y,]) => Utils.compareLists(x,y))
-        .map(([seiyuus,]) => seiyuus)*/
+        .map(([seiyuus,]) => seiyuus)
       .combineLatest(this.mainOnly$)
       .map(([seiyuus, mainOnly]) => {
         // turn objects with arrays of roles with animeIds into hashmaps of roles with seiyuuIds per anime
