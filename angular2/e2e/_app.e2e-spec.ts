@@ -2,6 +2,7 @@ import { AppPage } from './app.po';
 import {browser, by, element, protractor} from "protractor";
 import {SeiyuuPage} from "./seiyuu.po";
 import {AnimePage} from "./anime.po";
+import {PhotoPage} from "./photos.po";
 
 describe('my-seiyuu-list App', () => {
   let page: AppPage;
@@ -12,9 +13,10 @@ describe('my-seiyuu-list App', () => {
     AppPage.navigateTo();
   });
 
-  fit('should only issue a request to load data when on its page', () => {
+  it('should only issue a request to load data when on its page', () => {
     AppPage.navigateTo('#/magazines/578').then(()=> {
       let seiyuu = new SeiyuuPage();
+      let photo = new PhotoPage();
       let panel = seiyuu.panel('Maeda Konomi');
       let anime = new AnimePage();
 
@@ -31,7 +33,7 @@ describe('my-seiyuu-list App', () => {
       console.log('1 anime request');
 
       page.tabs().get(2).click();
-      browser.wait(EC.presenceOf(element(by.css('#thumbContainer'))), 5000);
+      browser.wait(EC.presenceOf(photo.thumbContainer()), 5000);
       browser.manage().logs().get('browser')
         .then(browserLog => {expect(browserLog.find(event => !!~event.message.indexOf('photos requested'))).toBeTruthy();});
       console.log('1 photo request');

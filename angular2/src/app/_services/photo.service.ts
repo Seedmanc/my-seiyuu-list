@@ -26,11 +26,11 @@ export class PhotoService {
     this.seiyuuSvc.loadedSeiyuu$                                                                       .do(Utils.log('loadedInside'))
       .do(() => this.page = 0)
       .filter(list => list)
-      .map(seiyuus => seiyuus.map(seiyuu => seiyuu.name))
       .combineLatest(this.routingSvc.tab$)
         .filter(([,tab]) => tab == 'photos')
         .distinctUntilChanged(([x,],[y,]) => Utils.compareLists(x,y))
-        .map(([names,]) => names)
+        .map(([seiyuus,]) => seiyuus)
+      .map(seiyuus => seiyuus.map(seiyuu => seiyuu.name))
       .combineLatest(this.pageDelta)                                                                   .do(Utils.log('photoPage'))
       .switchMap(([names,]) => {
         return this.getPhotoPage(names.join('+').toLowerCase().replace(/\s+/g, '_'), this.page*20);
