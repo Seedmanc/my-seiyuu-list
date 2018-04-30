@@ -58,7 +58,7 @@ $scope.debug += '\n\r' + JSON.stringify(error) + ' Error accessing database.';
 
   }
 
-  yahooQueryCall(tags: string, pid: number): Observable<YQLresponse> {
+  yahooQueryCall(tags: string, pid: number): Observable<any> {
     let koeurl = encodeURIComponent(`${env.koeurl}${tags}&pid=${pid}`);
 
     return this.http.get<YQLresponse>([
@@ -70,7 +70,12 @@ $scope.debug += '\n\r' + JSON.stringify(error) + ' Error accessing database.';
         '&format=json',
         '&env=store://datatables.org/alltableswithkeys'
       ].join('')
-    )
+    ).map(response => {
+      if (!response.query || !response.query.count || !response.query.results.result[1])
+        throw({message: 'Couldn\'t load the photos, try the koebooru link'});
+      //TODO global error reporting
+      return response.query.results.result[1];
+    })
   }
 
 }

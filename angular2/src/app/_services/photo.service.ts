@@ -7,6 +7,7 @@ import {Utils} from "./utils.service";
 import {RoutingService} from "./routing.service";
 import {env} from "../../environments/environment";
 import 'rxjs/add/operator/switchMap';
+import {MessagesService} from "./messages.service";
 
 @Injectable()
 export class PhotoService {
@@ -19,7 +20,8 @@ export class PhotoService {
 
   constructor(private rest: RestService,
               private routingSvc: RoutingService,
-              private seiyuuSvc: SeiyuuService) {
+              private seiyuuSvc: SeiyuuService,
+              private msgSvc: MessagesService) {
 
     this.pageDelta
       .subscribe(delta => this.page = Math.max(0, this.page+delta));
@@ -58,9 +60,12 @@ export class PhotoService {
 
     return this.rest.yahooQueryCall(tags, this.page*20)
       .do(Utils.lg('photos requested', 'warn'))
+      .catch(error => {
+        this.msgSvc.error(error.message);
+        return Observable.of('');
+      })
       .map(result => {
-        let html =  result.query.results.result[1]
-          .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+        let html =  result.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
         let newDoc = document.implementation.createHTMLDocument('newDoc');
         newDoc.documentElement.innerHTML = html;
         let spans  = newDoc.querySelectorAll('span.thumb');
