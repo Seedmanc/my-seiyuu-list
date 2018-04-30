@@ -15,6 +15,7 @@ export class PhotoService {
   pending: boolean;
 
   private page: number = 0;
+  private cache = {};
 
   constructor(private rest: RestService,
               private routingSvc: RoutingService,
@@ -32,22 +33,30 @@ export class PhotoService {
         .map(([seiyuus,]) => seiyuus)
       .map(seiyuus => seiyuus.map(seiyuu => seiyuu.name))
       .combineLatest(this.pageDelta)                                                                   .do(Utils.log('photoPage'))
-      .switchMap(([names,]) => {
-        return names.length ?
-          this.getPhotoPage(names, this.page*20) :
-          Observable.of({page:'', next: false, prev: false});
-      })
+      .switchMap(([names,]) => this.wrapper(names))
       .do(() => this.pending = false)
       .subscribe(this.displayPhotos$)
   }
 
-  private getPhotoPage(names: string[], pid: number): Observable<{page: string, next: boolean, prev: boolean}> {
-    this.pending = true;
+  private wrapper(names: string[]) {
+    let hasNames = !!names.length;
     if (names.length == 1) names.push('solo');
 
     let tags = names.join('+').toLowerCase().replace(/\s+/g, '_');
+    let key = tags + '++' + this.page;
 
-    return this.rest.yahooQueryCall(tags, pid)
+    return hasNames ?
+      this.cache[key] ?
+        Observable.of(this.cache[key]) :
+        this.getPhotoPage(tags)
+          .do(data => this.cache[key] = data) :
+      Observable.of({page:'', next: false, prev: false});
+  }
+
+  private getPhotoPage(tags: string): Observable<{page: string, next: boolean, prev: boolean}> {
+    this.pending = true;
+
+    return this.rest.yahooQueryCall(tags, this.page*20)
       .do(Utils.lg('photos requested', 'warn'))
       .map(result => {
         let html =  result.query.results.result[1]
@@ -84,7 +93,7 @@ export class PhotoService {
         return {
           page: newDoc.body.innerHTML,
           next: spans.length == 20,
-          prev: pid > 0
+          prev: this.page > 0
         };
       })
   }
