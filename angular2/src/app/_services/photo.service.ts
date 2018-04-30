@@ -23,25 +23,29 @@ export class PhotoService {
     this.pageDelta
       .subscribe(delta => this.page = Math.max(0, this.page+delta));
 
-    this.seiyuuSvc.loadedSeiyuu$                                                                       .do(Utils.log('loadedInside'))
+    this.seiyuuSvc.loadedSeiyuu$                                                                       .do(Utils.log('loadedToPhotos'))
       .do(() => this.page = 0)
       .filter(list => list)
       .combineLatest(this.routingSvc.tab$)
-        .filter(([,tab]) => tab == 'photos')
+        .filter(([,tab]) => tab == 'photos').do(Utils.log('b4distinct'))                               .do(Utils.log('b4distinct'))
         .distinctUntilChanged(([x,],[y,]) => Utils.compareLists(x,y))
         .map(([seiyuus,]) => seiyuus)
       .map(seiyuus => seiyuus.map(seiyuu => seiyuu.name))
       .combineLatest(this.pageDelta)                                                                   .do(Utils.log('photoPage'))
       .switchMap(([names,]) => {
-        return this.getPhotoPage(names.join('+').toLowerCase().replace(/\s+/g, '_'), this.page*20);
+        return names.length ?
+          this.getPhotoPage(names, this.page*20) :
+          Observable.of({page:'', next: false, prev: false});
       })
       .do(() => this.pending = false)
       .subscribe(this.displayPhotos$)
   }
 
-  private getPhotoPage(tags: string, pid: number): Observable<{page: string, next: boolean, prev: boolean}> {
+  private getPhotoPage(names: string[], pid: number): Observable<{page: string, next: boolean, prev: boolean}> {
     this.pending = true;
-    //if (tags) tags += '+solo';
+    if (names.length == 1) names.push('solo');
+
+    let tags = names.join('+').toLowerCase().replace(/\s+/g, '_');
 
     return this.rest.yahooQueryCall(tags, pid)
       .do(Utils.lg('photos requested', 'warn'))
