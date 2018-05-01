@@ -83,7 +83,7 @@ export class PhotoService {
         if (spans.length < 20 && tags) {
           let moreTags = '~' + tags.replace('+solo', '').replace(/\+/g, '+~');
           let template = [
-            '<div class="more">more at</div>',
+            '<div>more at</div>',
               '<b>',
                   `<a href="${env.koeurl}${moreTags}" target="_blank">`,
                       'koe.booru.org',
@@ -91,7 +91,7 @@ export class PhotoService {
               '</b>'
           ].join('');
           let span = document.createElement('span');
-          span.className = 'thumb img-thumbnail';
+          span.className = 'thumb more img-thumbnail';
           span.innerHTML = template;
           newDoc.body.appendChild(span);
         }
