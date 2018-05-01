@@ -13,7 +13,7 @@ import {SeiyuuService} from "../../_services/seiyuu.service";
 import {SortLinkComponent} from "../../sort-link/sort-link.component";
 import {SorterService} from "../../_services/sorter.service";
 
-describe('AnimeListComponent', () => {
+xdescribe('AnimeListComponent', () => {
   let component: AnimeListComponent;
   let fixture: ComponentFixture<AnimeListComponent>;
 

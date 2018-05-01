@@ -105,7 +105,6 @@ export class PhotoService {
             (Number(pagenums.textContent)-1)*20 + spans.length;
         }
 
-        debugger;
         return {
           html,
           pageNum: this.page,
