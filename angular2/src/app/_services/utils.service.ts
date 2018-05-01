@@ -21,7 +21,7 @@ export class Utils {
   }
 
   static pluralize(number) {
-    return number !== undefined && (number % 10 > 1 || (number % 10) === 0) ? 's' : '';
+    return number !== undefined && (number % 10 > 1 || (number % 10) === 0 || number == 'no') ? 's' : '';
   }
 
   static unique<T>(list: T[], prop?: string): T[] {

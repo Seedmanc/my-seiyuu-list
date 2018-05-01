@@ -6,8 +6,8 @@ import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {Utils} from "./utils.service";
 import {RoutingService} from "./routing.service";
 import {env} from "../../environments/environment";
-import 'rxjs/add/operator/switchMap';
 import {MessagesService} from "./messages.service";
+import 'rxjs/add/operator/switchMap';
 
 @Injectable()
 export class PhotoService {
@@ -30,7 +30,7 @@ export class PhotoService {
       .do(() => this.page = 0)
       .filter(list => list)
       .combineLatest(this.routingSvc.tab$)
-        .filter(([,tab]) => tab == 'photos').do(Utils.log('b4distinct'))                               .do(Utils.log('b4distinct'))
+        .filter(([,tab]) => tab == 'photos')                                                           .do(Utils.log('b4distinct'))
         .distinctUntilChanged(([x,],[y,]) => Utils.compareLists(x,y))
         .map(([seiyuus,]) => seiyuus)
       .map(seiyuus => seiyuus.map(seiyuu => seiyuu.name))
@@ -52,23 +52,24 @@ export class PhotoService {
         Observable.of(this.cache[key]) :
         this.getPhotoPage(tags)
           .do(data => this.cache[key] = data) :
-      Observable.of({page:'', next: false, prev: false});
+      Observable.of({html:'', next: false, prev: false, pageNum: 0, total: 0});
   }
 
-  private getPhotoPage(tags: string): Observable<{page: string, next: boolean, prev: boolean}> {
+  private getPhotoPage(tags: string): Observable<{html: string, next: boolean, prev: boolean, pageNum: number, total: string}> {
     this.pending = true;
 
     return this.rest.yahooQueryCall(tags, this.page*20)
       .do(Utils.lg('photos requested', 'warn'))
       .catch(error => {
-        this.msgSvc.error(error.message);
-        return Observable.of('');
+        setTimeout(()=>this.msgSvc.error(error.message));
+        return Observable.of({data:'',paging:''});
       })
-      .map(result => {
-        let html =  result.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+      .map(({data, paging}) => {
+        let rawhtml =  data.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
         let newDoc = document.implementation.createHTMLDocument('newDoc');
-        newDoc.documentElement.innerHTML = html;
-        let spans  = newDoc.querySelectorAll('span.thumb');
+        newDoc.documentElement.innerHTML = rawhtml;
+        let spans = newDoc.querySelectorAll('span.thumb');
+        let total:any = 'no';
 
         [].slice.call(spans)
           .forEach(span => {
@@ -94,9 +95,21 @@ export class PhotoService {
           span.innerHTML = template;
           newDoc.body.appendChild(span);
         }
+        let html = newDoc.body.innerHTML;
 
+        if (paging) {
+          newDoc.documentElement.innerHTML = paging;
+          let pagenums: any = newDoc.querySelector('a[alt="last page"],b:last-child');
+          total = pagenums.href ?
+            10+Number(pagenums.href.split('pid=')[1]) :
+            (Number(pagenums.textContent)-1)*20 + spans.length;
+        }
+
+        debugger;
         return {
-          page: newDoc.body.innerHTML,
+          html,
+          pageNum: this.page,
+          total,
           next: spans.length == 20,
           prev: this.page > 0
         };

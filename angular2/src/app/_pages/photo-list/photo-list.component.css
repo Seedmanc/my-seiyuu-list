@@ -36,9 +36,15 @@
 }
 
 #nav button {
-  width: 50%;
+  width: 46%;
 }
 
 /deep/ .more {
   margin-top: -71.5%;
+}
+
+.page {
+  display: inline-block;
+  text-align: center;
+  width: 8%;
 }

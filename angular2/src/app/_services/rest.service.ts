@@ -65,16 +65,17 @@ $scope.debug += '\n\r' + JSON.stringify(error) + ' Error accessing database.';
       'https://query.yahooapis.com/v1/public/yql?q=',
         `SELECT * FROM htmlstring WHERE url = '${koeurl}' AND xpath IN (`,
           `'//div[@id="tag_list"]//h5',`,
-          `'//div[@class = "content"]//span[@class = "thumb"]'`,
+          `'//div[@class = "content"]//span[@class = "thumb"]',`,
+          `'//div[@id="paginator"]'`,
         ')',
         '&format=json',
         '&env=store://datatables.org/alltableswithkeys'
       ].join('')
     ).map(response => {
-      if (!response.query || !response.query.count || !response.query.results.result[1])
+      if (!response.query || !response.query.count || !response.query.results.result[0])
         throw({message: 'Couldn\'t load the photos, try the koebooru link'});
       //TODO global error reporting
-      return response.query.results.result[1];
+      return {data: response.query.results.result[1], paging: response.query.results.result[2]};
     })
   }
 
