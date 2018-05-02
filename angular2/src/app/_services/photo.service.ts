@@ -31,13 +31,13 @@ export class PhotoService {
       .filter(list => list)
       .combineLatest(this.routingSvc.tab$)
         .filter(([,tab]) => tab == 'photos')                                                           .do(Utils.log('b4distinct'))
-        .distinctUntilChanged(([x,],[y,]) => Utils.compareLists(x,y))
+        .distinctUntilChanged(([x,],[y,]) => Utils.compareLists(x, y))
         .map(([seiyuus,]) => seiyuus)
       .map(seiyuus => seiyuus.map(seiyuu => seiyuu.name))
       .combineLatest(this.pageDelta)                                                                   .do(Utils.log('photoPage'))
       .switchMap(([names,]) => this.wrapper(names))
       .do(() => this.pending = false)
-      .subscribe(this.displayPhotos$)
+      .subscribe(this.displayPhotos$);
   }
 
   private wrapper(names: string[]) {
@@ -61,15 +61,15 @@ export class PhotoService {
     return this.rest.yahooQueryCall(tags, this.page*20)
       .do(Utils.lg('photos requested', 'warn'))
       .catch(error => {
-        setTimeout(()=>this.msgSvc.error(error.message));
-        return Observable.of({data:'',paging:''});
+        setTimeout(() => this.msgSvc.error(error.message));
+        return Observable.of({data:'', paging:''});
       })
       .map(({data, paging}) => {
         let rawhtml =  data.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
         let newDoc = document.implementation.createHTMLDocument('newDoc');
         newDoc.documentElement.innerHTML = rawhtml;
         let spans = newDoc.querySelectorAll('span.thumb');
-        let total:any = 'no';
+        let total: any = 'no';
 
         [].slice.call(spans)
           .forEach(span => {
@@ -112,7 +112,7 @@ export class PhotoService {
           next: spans.length == 20,
           prev: this.page > 0
         };
-      })
+      });
   }
 
 }

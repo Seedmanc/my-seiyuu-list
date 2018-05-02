@@ -7,7 +7,7 @@ export interface Role {
 }
 
 export interface HashOfRoles {
-  [key: number]: Role[]
+  [key: number]: Role[];
 }
 
 export class Anime {
@@ -27,12 +27,12 @@ export class Anime {
   }
 
   get main(): boolean {
-    return (this.rolesBySeiyuu[Anime.activeSeiyuu]||[]).some(role => role.main);
+    return (this.rolesBySeiyuu[Anime.activeSeiyuu] || []).some(role => role.main);
   }
   get characters(): Role[] {
-    return (this.rolesBySeiyuu[Anime.activeSeiyuu]||[])
+    return (this.rolesBySeiyuu[Anime.activeSeiyuu] || [])
       .sort((role1, role2) => +(role1.main < role2.main))
-      .map(({name, main}) => {return {name: Utils.decodeHtml(name), main}});
+      .map(({name, main}) => ({name: Utils.decodeHtml(name), main}));
   }
   get mainCharacter(): string {
     return this.characters[0] && this.characters[0].name;

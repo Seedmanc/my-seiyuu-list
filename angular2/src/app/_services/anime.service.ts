@@ -7,7 +7,6 @@ import {MessagesService} from "./messages.service";
 import {Anime, HashOfRoles, Role} from "../_models/anime.model";
 import {SeiyuuService} from "./seiyuu.service";
 import {RoutingService} from "./routing.service";
-import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/combineLatest';
@@ -33,7 +32,7 @@ export class AnimeService {
     }).startWith(0)
       .share();
 
-    this.seiyuuSvc.selected$.subscribe(id => {if (id) Anime.activeSeiyuu = id});
+    this.seiyuuSvc.selected$.subscribe(id => {if (id) Anime.activeSeiyuu = id;});
 
     this.seiyuuSvc.loadedSeiyuu$
       .filter(list => list && list.length === 0)
@@ -63,8 +62,8 @@ export class AnimeService {
             }
           });
 
-          return rolesByAnime
-        })
+          return rolesByAnime;
+        });
       })
       .map((rolesByAnimeSets: HashOfRoles[]) => {
         // find shared anime by checking the shortest list for inclusion in all other lists
@@ -77,9 +76,9 @@ export class AnimeService {
             if (!rolesByAnime[id]) {
               delete sharedAnime[id];
             } else {
-              sharedAnime[id].push(...rolesByAnime[id])
+              sharedAnime[id].push(...rolesByAnime[id]);
             }
-          })
+          });
         });
 
         let result = Object.keys(sharedAnime).map(_id => {
@@ -95,7 +94,7 @@ export class AnimeService {
           return new Anime({
             _id,
             rolesBySeiyuu
-          })
+          });
         });
 
         return {anime: result, seiyuuCount: rolesByAnimeSets.length};

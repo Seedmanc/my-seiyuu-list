@@ -15,7 +15,7 @@ export class Utils {
   }
 
   static kanjiCompare(input: string, names: string[]): boolean {
-    const joint = input.replace(/\s+/g,'');
+    const joint = input.replace(/\s+/g, '');
 
     return  names.some(name => name === joint);
   }
@@ -46,7 +46,7 @@ export class Utils {
   }
 
   static compareLists(x: any[], y: any[], field = 'name'): boolean {
-    return x.map(e => e[field]).join() == y.map(y => y[field]).join();
-  }
+    return x.map(e => e[field]).join() == y.map(e => e[field]).join();
+  } //TODO either test or get rid of
 
 }

@@ -9,7 +9,7 @@ interface YQLresponse {
     results: {
       result: string[]
     }
-  }
+  };
 }
 
 @Injectable()
@@ -76,7 +76,7 @@ $scope.debug += '\n\r' + JSON.stringify(error) + ' Error accessing database.';
         throw({message: 'Couldn\'t load the photos, try the koebooru link'});
       //TODO global error reporting
       return {data: response.query.results.result[1], paging: response.query.results.result[2]};
-    })
+    });
   }
 
 }

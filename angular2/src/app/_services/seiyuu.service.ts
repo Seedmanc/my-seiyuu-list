@@ -8,8 +8,6 @@ import 'rxjs/add/operator/bufferToggle';
 import 'rxjs/add/operator/throttleTime';
 import 'rxjs/add/observable/timer';
 import 'rxjs/add/observable/of';
-import 'rxjs/add/operator/combineLatest';
-import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/merge';
 import 'rxjs/add/operator/partition';
@@ -21,7 +19,6 @@ import {RestService} from "./rest.service";
 import {MessagesService} from "./messages.service";
 import {Utils} from "./utils.service";
 import {RoutingService} from "./routing.service";
-import {AnimeService} from "./anime.service";
 
 @Injectable()
 export class SeiyuuService {
@@ -75,7 +72,7 @@ export class SeiyuuService {
           this.totalMap[seiyuu._id].upgrade(seiyuu);
         });
         let ready = ids.map(id => this.totalMap[id]).filter(s => !s.pending);
-        if (seiyuus.length &&~ids.indexOf(seiyuus[0]._id) && ready.length) {
+        if (seiyuus.length && ~ids.indexOf(seiyuus[0]._id) && ready.length) {
           this.loaded$.next(ready);
         }
       }).subscribe();

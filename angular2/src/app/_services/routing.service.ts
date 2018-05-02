@@ -2,10 +2,8 @@ import {Injectable} from '@angular/core';
 import {NavigationEnd, Router} from "@angular/router";
 import {Utils} from "./utils.service";
 import {Subject} from "rxjs/Subject";
-import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/distinctUntilChanged';
 
 @Injectable()
 export class RoutingService {
@@ -23,7 +21,7 @@ export class RoutingService {
      .subscribe(this.tab$);
 
     this.paramMap$                                                                                         .do(Utils.log('paramMap'))
-     .map(params => (params.get('ids')||''))
+     .map(params => (params.get('ids') || ''))
      .distinctUntilChanged()
      .map(ids => ids.split(',')
         .map(el => +el.replace(/\D/g, ''))
