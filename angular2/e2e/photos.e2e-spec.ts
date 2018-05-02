@@ -45,7 +45,6 @@ describe('photo lookups', () => {
     app.searchInput().clear();
     app.searchInput().sendKeys(name2);
     let panel2 = seiyuu.panel(name2);
-    browser.wait(EC.presenceOf(page.spinner()), to);
     browser.wait(EC.presenceOf(panel2.photo()), to);
     expect(page.thumbs().count()).toBeLessThan(20);
     expect(page.next().getAttribute('disabled')).toBeTruthy();
@@ -66,7 +65,6 @@ describe('photo lookups', () => {
     let y = 0;
     app.searchInput().sendKeys(name2);
     let panel2 = seiyuu.panel(name2);
-    browser.wait(EC.presenceOf(page.spinner()), to);
     browser.wait(EC.presenceOf(panel2.photo()), to);
     expect(page.next().getAttribute('disabled')).toBeFalsy();
     expect(page.prev().getAttribute('disabled')).toBeTruthy();

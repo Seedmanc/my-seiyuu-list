@@ -46,7 +46,6 @@ export class AnimeService {
       .filter(list => list)
       .combineLatest(this.routingSvc.tab$)
         .filter(([,tab]) => tab == 'anime')
-        .distinctUntilChanged(([x,],[y,]) => Utils.compareLists(x,y))
         .map(([seiyuus,]) => seiyuus)
       .combineLatest(this.mainOnly$)
       .map(([seiyuus, mainOnly]) => {
@@ -130,7 +129,6 @@ export class AnimeService {
       }).do(Utils.lg('anime requested', 'warn')) :
       Observable.of([])
      )
-
       .do(details => details.forEach(detail => Anime.detailsCache[detail._id] = detail));
   }
 

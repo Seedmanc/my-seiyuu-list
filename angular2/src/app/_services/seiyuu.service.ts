@@ -34,6 +34,7 @@ export class SeiyuuService {
   loadedSeiyuu$: BehaviorSubject<Seiyuu[]> = new BehaviorSubject(null);
   seiyuuCount$: BehaviorSubject<number> = new BehaviorSubject(0);
   selected$: BehaviorSubject<number> = new BehaviorSubject(null);
+  displaySeiyuu$: BehaviorSubject<Seiyuu[]> = new BehaviorSubject(null);
 
   pending: boolean = true;
 
@@ -89,6 +90,7 @@ export class SeiyuuService {
           this.loaded$.next(seiyuus);
         }
       })
+      .do(seiyuus => this.displaySeiyuu$.next(seiyuus))
       .combineLatest(this.namesake$)
       .map(([seiyuus, namesakes]) => [...seiyuus, ...namesakes]);
 

@@ -26,7 +26,7 @@ export class PhotoService {
     this.pageDelta
       .subscribe(delta => this.page = Math.max(0, this.page+delta));
 
-    this.seiyuuSvc.loadedSeiyuu$                                                                       .do(Utils.log('loadedToPhotos'))
+    this.seiyuuSvc.displaySeiyuu$                                                                       .do(Utils.log('loadedToPhotos'))
       .do(() => this.page = 0)
       .filter(list => list)
       .combineLatest(this.routingSvc.tab$)

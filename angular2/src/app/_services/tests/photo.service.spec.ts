@@ -15,7 +15,7 @@ let djresult = { html: `<span class="thumb img-thumbnail">
 <a href="http://img.booru.org/koe/images//8/c24401d03ee551e8a4e08eaafb24ad8fb5cca015.jpg" id="p8380" target="_blank">
 <img alt="post" border="0" src="http://thumbs.booru.org/koe/thumbnails//8/thumbnail_c24401d03ee551e8a4e08eaafb24ad8fb5cca015.jpg" title=" davidyuk_jenya solo tagme  score:0 rating:Safe">
 </a>
-</span><span class="thumb img-thumbnail"><div class="more">more at</div><b><a href="http://koe.booru.org/index.php?page=post&amp;s=list&amp;tags=~davidyuk_jenya" target="_blank">koe.booru.org</a></b></span>`, pageNum: 0, total: 1, next: false, prev: false };
+</span><span class="thumb more img-thumbnail"><div>more at</div><b><a href="http://koe.booru.org/index.php?page=post&amp;s=list&amp;tags=~davidyuk_jenya" target="_blank">koe.booru.org</a></b></span>`, pageNum: 0, total: 1, next: false, prev: false };
 
 let djresult2 = {"data":"<span class=\"thumb\">\n  <a href=\"index.php?page=post&amp;s=view&amp;id=8380\" id=\"p8380\">\n    <img alt=\"post\" border=\"0\" src=\"http://thumbs.booru.org/koe/thumbnails//8/thumbnail_c24401d03ee551e8a4e08eaafb24ad8fb5cca015.jpg\" title=\" davidyuk_jenya solo tagme  score:0 rating:Safe\"/>\n  </a>\n  &#13;\n    \n  <script type=\"text/javascript\">\n    <![CDATA[\n    //]]>\n    <![CDATA[<![CDATA[\n    posts[8380] = {'tags':'davidyuk_jenya solo tagme'.split(/ /g), 'rating':'Safe', 'score':0, 'user':'Seedmanc'}\n    //]]]]><![CDATA[>\n    ]]>\n  </script>\n</span>","paging":"<div id=\"paginator\">\n  <script type=\"text/javascript\">\n    <![CDATA[\n   //]]>\n    <![CDATA[<![CDATA[\n   filterPosts(posts)\n   //]]]]><![CDATA[>\n   ]]>\n  </script>\n   \n  <b>1</b>\n   \n</div>"};
 
@@ -39,7 +39,7 @@ describe('PhotoService', () => {
       let spy = spyOn(rest, 'yahooQueryCall').and.returnValue(Observable.of(djresult2));
 
       routingSvc.tab$.next('photos');
-      seiyuuSvc.loadedSeiyuu$.next([new Seiyuu({name: 'Davidyuk Jenya'})]);
+      seiyuuSvc.displaySeiyuu$.next([new Seiyuu({name: 'Davidyuk Jenya'})]);
 
       expect(spy).toHaveBeenCalledWith('davidyuk_jenya+solo', 0);
 
@@ -58,7 +58,7 @@ describe('PhotoService', () => {
 
       let spy = spyOn(rest, 'yahooQueryCall').and.returnValue(Observable.of(djresult2));
 
-      seiyuuSvc.loadedSeiyuu$.next([new Seiyuu({name: 'Davidyuk Jenya'}), new Seiyuu({name: 'Chihara Minori'})]);
+      seiyuuSvc.displaySeiyuu$.next([new Seiyuu({name: 'Davidyuk Jenya'}), new Seiyuu({name: 'Chihara Minori'})]);
       routingSvc.tab$.next('photos');
 
       expect(spy).toHaveBeenCalledWith('davidyuk_jenya+chihara_minori', 0);
@@ -77,7 +77,7 @@ describe('PhotoService', () => {
 
       let spy = spyOn(rest, 'yahooQueryCall').and.returnValue(Observable.of(djresult2));
 
-      seiyuuSvc.loadedSeiyuu$.next([new Seiyuu({name: 'Davidyuk Jenya'}), new Seiyuu({name: 'Chihara Minori'})]);
+      seiyuuSvc.displaySeiyuu$.next([new Seiyuu({name: 'Davidyuk Jenya'}), new Seiyuu({name: 'Chihara Minori'})]);
 
       expect(spy).not.toHaveBeenCalled();
       routingSvc.tab$.next('photos');
@@ -86,7 +86,7 @@ describe('PhotoService', () => {
       routingSvc.tab$.next('photos');
       expect(spy).toHaveBeenCalledTimes(1);
 
-      seiyuuSvc.loadedSeiyuu$.next([new Seiyuu({name: 'Chihara Minori'})]);
+      seiyuuSvc.displaySeiyuu$.next([new Seiyuu({name: 'Chihara Minori'})]);
       expect(spy).toHaveBeenCalledWith('chihara_minori+solo', 0);
 
       expect(x.html).toBeTruthy();
@@ -105,10 +105,10 @@ describe('PhotoService', () => {
 
       routingSvc.tab$.next('photos');
       expect(spy).not.toHaveBeenCalled();
-      seiyuuSvc.loadedSeiyuu$.next([new Seiyuu({name: 'Davidyuk Jenya'})]);
+      seiyuuSvc.displaySeiyuu$.next([new Seiyuu({name: 'Davidyuk Jenya'})]);
 
       expect(spy).toHaveBeenCalled();
-      seiyuuSvc.loadedSeiyuu$.next([]);
+      seiyuuSvc.displaySeiyuu$.next([]);
       expect(spy).toHaveBeenCalledTimes(1);
 
       expect(x.html).toBeFalsy();
@@ -125,7 +125,7 @@ describe('PhotoService', () => {
       let spy = spyOn(rest, 'yahooQueryCall').and.returnValue(Observable.of(djresult20));
 
       routingSvc.tab$.next('photos');
-      seiyuuSvc.loadedSeiyuu$.next([new Seiyuu({name: 'Davidyuk Jenya'})]);
+      seiyuuSvc.displaySeiyuu$.next([new Seiyuu({name: 'Davidyuk Jenya'})]);
       expect(spy).toHaveBeenCalledWith('davidyuk_jenya+solo', 0);
 
       service.pageDelta.next(1);
@@ -148,7 +148,7 @@ describe('PhotoService', () => {
       let spy = spyOn(rest, 'yahooQueryCall').and.returnValue(Observable.of(djresult10));
 
       routingSvc.tab$.next('photos');
-      seiyuuSvc.loadedSeiyuu$.next([new Seiyuu({name: 'Davidyuk Jenya'})]);
+      seiyuuSvc.displaySeiyuu$.next([new Seiyuu({name: 'Davidyuk Jenya'})]);
       expect(spy).toHaveBeenCalledWith('davidyuk_jenya+solo', 0);
 
       expect(JSON.stringify(x)).toBe(JSON.stringify({"pageNum":0,"total":10,"next":false,"prev":false}));
@@ -163,10 +163,10 @@ describe('PhotoService', () => {
       let spy = spyOn(rest, 'yahooQueryCall').and.returnValue(Observable.throw({message:'errmsg'}));
 
        routingSvc.tab$.next('photos');
-       seiyuuSvc.loadedSeiyuu$.next([new Seiyuu({name: 'Davidyuk Jenya'})]);
+       seiyuuSvc.displaySeiyuu$.next([new Seiyuu({name: 'Davidyuk Jenya'})]);
 
        let spy2 = spyOn(msgSvc, 'error');
-       expect(JSON.stringify(x)).toBe(JSON.stringify({"html":"<span class=\"thumb img-thumbnail\"><div class=\"more\">more at</div><b><a href=\"http://koe.booru.org/index.php?page=post&amp;s=list&amp;tags=~davidyuk_jenya\" target=\"_blank\">koe.booru.org</a></b></span>","pageNum":0,"total":'no',"next":false,"prev":false}));
+       expect(JSON.stringify(x)).toBe(JSON.stringify({"html":"<span class=\"thumb more img-thumbnail\"><div>more at</div><b><a href=\"http://koe.booru.org/index.php?page=post&amp;s=list&amp;tags=~davidyuk_jenya\" target=\"_blank\">koe.booru.org</a></b></span>","pageNum":0,"total":'no',"next":false,"prev":false}));
 
        tick();
        expect(spy2).toHaveBeenCalledWith('errmsg');})
