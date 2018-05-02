@@ -2,8 +2,6 @@ import {Injectable} from '@angular/core';
 import {NavigationEnd, Router} from "@angular/router";
 import {Utils} from "./utils.service";
 import {Subject} from "rxjs/Subject";
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/map';
 
 @Injectable()
 export class RoutingService {

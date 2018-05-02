@@ -7,7 +7,6 @@ import {Utils} from "./utils.service";
 import {RoutingService} from "./routing.service";
 import {env} from "../../environments/environment";
 import {MessagesService} from "./messages.service";
-import 'rxjs/add/operator/switchMap';
 
 @Injectable()
 export class PhotoService {

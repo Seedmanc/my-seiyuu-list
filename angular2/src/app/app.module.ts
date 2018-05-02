@@ -2,6 +2,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import {Router} from "@angular/router";
+import {HttpClientModule} from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
@@ -14,9 +16,6 @@ import { MagazineListComponent } from './_pages/magazine-list/magazine-list.comp
 import { PhotoListComponent } from './_pages/photo-list/photo-list.component';
 import { SeiyuuPanelComponent } from './seiyuu-panel/seiyuu-panel.component';
 import {OrderByPipe} from "./_misc/orderBy.pipe";
-import {Router} from "@angular/router";
-
-import {HttpClientModule} from '@angular/common/http';
 import {RestService} from "./_services/rest.service";
 import {MessagesService} from "./_services/messages.service";
 import { SpinnerComponent } from './spinner/spinner.component';
@@ -24,6 +23,28 @@ import { BaseComponent } from './base/base.component';
 import {UniqPipe} from "./_misc/uniq.pipe";
 import {env} from "../environments/environment";
 import { SortLinkComponent } from './sort-link/sort-link.component';
+
+import 'rxjs/add/observable/fromEvent';
+import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/withLatestFrom';
+import 'rxjs/add/operator/combineLatest';
+import 'rxjs/add/operator/distinctUntilChanged';
+import 'rxjs/add/operator/startWith';
+import 'rxjs/add/operator/publishLast';
+import 'rxjs/add/operator/delayWhen';
+import 'rxjs/add/operator/bufferToggle';
+import 'rxjs/add/operator/throttleTime';
+import 'rxjs/add/observable/timer';
+import 'rxjs/add/observable/of';
+import 'rxjs/add/operator/mergeMap';
+import 'rxjs/add/operator/merge';
+import 'rxjs/add/operator/partition';
+import 'rxjs/add/operator/share';
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/switchMap';
 
 @NgModule({
   declarations: [

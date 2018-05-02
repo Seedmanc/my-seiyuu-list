@@ -7,11 +7,6 @@ import {MessagesService} from "./messages.service";
 import {Anime, HashOfRoles, Role} from "../_models/anime.model";
 import {SeiyuuService} from "./seiyuu.service";
 import {RoutingService} from "./routing.service";
-import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/withLatestFrom';
-import 'rxjs/add/operator/combineLatest';
-import 'rxjs/add/operator/distinctUntilChanged';
-import 'rxjs/add/operator/startWith';
 
 @Injectable()
 export class AnimeService {

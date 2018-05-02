@@ -4,8 +4,6 @@ import {MessagesService} from "../_services/messages.service";
 import {Observable} from "rxjs/Observable";
 import {Subject} from "rxjs/Subject";
 import {Utils} from "../_services/utils.service";
-import 'rxjs/add/observable/fromEvent';
-import 'rxjs/add/operator/debounceTime';
 
 @Component({
   selector: 'msl-header',
