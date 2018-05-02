@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, inject, TestBed} from '@angular/core/testing';
 import { AnimeListComponent } from './anime-list.component';
 import {OrderByPipe} from "../../_misc/orderBy.pipe";
 import {RoutingService} from "../../_services/routing.service";
@@ -13,7 +13,7 @@ import {SeiyuuService} from "../../_services/seiyuu.service";
 import {SortLinkComponent} from "../../sort-link/sort-link.component";
 import {SorterService} from "../../_services/sorter.service";
 
-xdescribe('AnimeListComponent', () => {
+describe('AnimeListComponent', () => {
   let component: AnimeListComponent;
   let fixture: ComponentFixture<AnimeListComponent>;
 
@@ -32,7 +32,28 @@ xdescribe('AnimeListComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+  it('should store mainOnly switch to localStorage', inject([AnimeService],
+    (service: AnimeService) => {
+      let y;
+      service.mainOnly$.subscribe(data => y = data);
+      let x = localStorage.mainOnly == 'true';
+      expect(component.mainOnly).toBe(x);
+      expect(y).toBe(x);
+      component.onMainOnlyChange(true);
+      expect(component.mainOnly).toBe(true);
+      expect(y).toBe(true);
+
+      component.onMainOnlyChange(false);
+    })
+  );
+
+  it('should keep mainOnly switch between sessions', inject([AnimeService],
+    (service: AnimeService) => {
+      let y;
+      service.mainOnly$.subscribe(data => y = data);
+      let x = localStorage.mainOnly == 'true';
+      expect(component.mainOnly).toBe(false);
+      expect(y).toBe(false);
+    })
+  );
 });

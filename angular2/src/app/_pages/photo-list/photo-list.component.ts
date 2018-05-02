@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute } from "@angular/router";
-import {ChildParamsComponent} from "../../_misc/child-params.component";
+import {PageComponent} from "../../_misc/page.component";
 import {RoutingService} from "../../_services/routing.service";
 import {PhotoService} from "../../_services/photo.service";
 import {Utils} from "../../_services/utils.service";
@@ -11,7 +11,7 @@ import {MessagesService} from "../../_services/messages.service";
   templateUrl: './photo-list.component.html',
   styleUrls: ['./photo-list.component.css']
 })
-export class PhotoListComponent extends ChildParamsComponent implements OnInit {
+export class PhotoListComponent extends PageComponent implements OnInit {
   html: string;
   next: false;
   prev: false;

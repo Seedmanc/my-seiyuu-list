@@ -24,7 +24,7 @@
         <th class="text-right char">
           <msl-sort-link field="mainCharacter">character</msl-sort-link>
         </th>
-        <th class="text-center tier">
+        <th class="text-center tier" [class.locked]="mainOnly">
           <a href="javascript:void(0)" (click)="tierOrder=!tierOrder">role tier</a>
         </th>
       </tr>

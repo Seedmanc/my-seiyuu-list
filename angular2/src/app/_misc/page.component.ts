@@ -2,7 +2,7 @@ import {RoutingService} from "../_services/routing.service";
 import {ActivatedRoute } from "@angular/router";
 import {OnInit} from '@angular/core';
 
-export class ChildParamsComponent implements OnInit {
+export class PageComponent implements OnInit {
 
   constructor(protected route: ActivatedRoute, protected routingSvc: RoutingService) {}
 

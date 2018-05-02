@@ -85,3 +85,8 @@ label {
 .more-chars:hover + .char-list {
   display: block;
 }
+
+.locked {
+  opacity: 0.65;
+  pointer-events: none;
+}

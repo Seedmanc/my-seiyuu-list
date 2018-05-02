@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute } from "@angular/router";
 import {RoutingService} from "../../_services/routing.service";
-import {ChildParamsComponent} from "../../_misc/child-params.component";
+import {PageComponent} from "../../_misc/page.component";
 import {AnimeService} from "../../_services/anime.service";
 import {SorterService} from "../../_services/sorter.service";
 
@@ -11,7 +11,7 @@ import {SorterService} from "../../_services/sorter.service";
   styleUrls: ['./anime-list.component.css'],
   providers: [SorterService]
 })
-export class AnimeListComponent extends ChildParamsComponent implements OnInit {
+export class AnimeListComponent extends PageComponent implements OnInit {
   output = [
     {
       type: 'main',
@@ -42,9 +42,15 @@ export class AnimeListComponent extends ChildParamsComponent implements OnInit {
         this.output[0].list = animes.filter(a => a.main);
         this.output[1].list = animes.filter(a => !a.main);
       });
+
+    if (localStorage.mainOnly) {
+      this.mainOnly = localStorage.mainOnly == 'true';
+      this.onMainOnlyChange(this.mainOnly);
+    }
   }
 
   onMainOnlyChange(value) {
+    localStorage.mainOnly = value;
     this.animeSvc.mainOnly$.next(value);
   }
 
