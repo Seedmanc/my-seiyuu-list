@@ -63,14 +63,16 @@ describe('SeiyuuPanelComponent', () => {
   it('should emit on seiyuu/namesake removal',
     inject([SeiyuuService], (svc: SeiyuuService)=> {
       fixture.detectChanges();
-      let x; svc.removed$.subscribe(r=>x=r);
+      let rbi = spyOn(svc, 'removeById');
+      let rbn = spyOn(svc, 'removeByName');
+
       fixture.nativeElement.querySelector('.remove.close').click();
-      expect(x).toBe(basicModel._id);
+      expect(rbi).toHaveBeenCalledWith(basicModel._id);
 
       component.seiyuu = new BasicSeiyuu({namesakes: [new BasicSeiyuu(basicModel), new BasicSeiyuu(basicModel)]});
       fixture.detectChanges();
       fixture.nativeElement.querySelector('.remove.close').click();
-      expect(x).toBe('Maeda Konomi');
+      expect(rbn).toHaveBeenCalledWith('Maeda Konomi');
     })
   );
 

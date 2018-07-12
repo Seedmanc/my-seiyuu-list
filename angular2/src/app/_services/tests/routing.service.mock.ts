@@ -19,9 +19,9 @@ export class RoutingServiceMock {
     return list.length == newList.length ? id : null;
   }
 
-  remove(id, list) {
-    let newList = list.filter(el => el !== id);
-    if (list.length !== newList.length ) this.routeId$.next(newList);
+  remove(id) {
+    let newList = this.routeId$.getValue().filter(el => el !== id);
+    if (this.routeId$.getValue().length !== newList.length ) this.routeId$.next(newList);
     console.log(arguments);
   }
 

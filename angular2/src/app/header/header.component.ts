@@ -35,6 +35,8 @@ export class HeaderComponent implements OnInit {
       .merge(input)                                                                                        .do(Utils.lg('input'))
       .map((event: Event) => event.target['value'] && event.target['value'].trim().toLowerCase())
       .filter(value => !!(value && value.length > 2))
+      .merge(this.messageSvc.resetSearch$
+        .do(() => this.searchInput.nativeElement.value = ''))
       .distinctUntilChanged()
       .do(() => this.selectAll())
       .subscribe(this.search$);

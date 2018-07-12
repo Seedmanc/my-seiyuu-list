@@ -4,6 +4,7 @@ import {BehaviorSubject} from "rxjs/BehaviorSubject";
 export class MessagesService {
 
   message$: Subject<{isError?:boolean, data?: string}> = new BehaviorSubject({});
+  resetSearch$ = new Subject();
 
   constructor() { }
 

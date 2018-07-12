@@ -166,7 +166,7 @@ describe('SeiyuuService', () => {
       expect(Stringify(x)).toBe(Stringify([new Seiyuu(model) ]));
       expect(loaded[0].pending).toBeFalsy();
 
-      service.removed$.next(578);
+      service.removeById(578);
       expect(loaded.length).toBeFalsy();
       routingSvc.add(0,[578]);
       expect(display.length).toBeTruthy();
@@ -209,9 +209,9 @@ describe('SeiyuuService', () => {
       mockList(backend, [basicList]);
 
       service.addSearch(Observable.of('Maeda Konomi'));
-      service.removed$.next(578);
+      service.removeById(578);
 
-      expect(spy).toHaveBeenCalledWith(578,[578]);
+      expect(spy).toHaveBeenCalledWith(578);
       expect(JSON.stringify(x)).toBe(JSON.stringify([]));
     })
   );
@@ -224,7 +224,7 @@ describe('SeiyuuService', () => {
       mockList(backend, [[basicModel,basicModel]]);
 
       service.addSearch(Observable.of('Maeda Konomi'));
-      service.removed$.next('Maeda Konomi');
+      service.removeByName('Maeda Konomi');
 
       expect(JSON.stringify(x)).toBe(JSON.stringify([]));
     })

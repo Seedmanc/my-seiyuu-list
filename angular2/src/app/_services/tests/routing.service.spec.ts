@@ -64,7 +64,8 @@ describe('RoutingService', () => {
   it('remove an existing ID from route', async(inject([RoutingService], (service: RoutingService) => {
       router.navigate(['/photos/53,24']).then(()=>{
         let navigateSpy = spyOn(router, 'navigate');
-        service.remove(53, [53, 24]);
+        service.routeId$.next([53,24]);
+        service.remove(53);
         expect(navigateSpy).toHaveBeenCalledWith(['photos', '24']);
       });
     })

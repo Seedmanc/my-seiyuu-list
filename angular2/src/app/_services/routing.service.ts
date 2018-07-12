@@ -2,10 +2,11 @@ import {Injectable} from '@angular/core';
 import {NavigationEnd, Router} from "@angular/router";
 import {Utils} from "./utils.service";
 import {Subject} from "rxjs/Subject";
+import {BehaviorSubject} from "rxjs/BehaviorSubject";
 
 @Injectable()
 export class RoutingService {
-  routeId$: Subject<number[]> = new Subject();
+  routeId$: BehaviorSubject<number[]> = new BehaviorSubject([]);
   paramMap$ = new Subject<any>();
   tab$ = new Subject<string>();
 
@@ -34,8 +35,8 @@ export class RoutingService {
     return list.length === newList.length ? id : null;
   }
 
-  remove(id, list) {
-    const newList = list.filter(el => el !== id);
+  remove(id) {
+    const newList = this.routeId$.getValue().filter(el => el !== id);
 
     return this.router.navigate([this.tab, newList.join(',')]);
   }

@@ -16,7 +16,6 @@ export class SeiyuuService {
 
   updateRequest$: Subject<number> = new Subject();
   picked$: Subject<number> = new Subject();
-  removed$: Subject<number|string> = new Subject();
   loadedSeiyuu$: BehaviorSubject<Seiyuu[]> = new BehaviorSubject(null);
   seiyuuCount$: BehaviorSubject<number> = new BehaviorSubject(0);
   selected$: BehaviorSubject<number> = new BehaviorSubject(null);
@@ -25,7 +24,7 @@ export class SeiyuuService {
   pending: boolean = true;
 
   private routeId$: Observable<number[]>;
-  private namesake$: Subject<BasicSeiyuu[]> = new BehaviorSubject([]);
+  private namesake$: BehaviorSubject<BasicSeiyuu[]> = new BehaviorSubject([]);
   private totalMap: {[key: number]: BasicSeiyuu} = {};
 /*private*/ loaded$: Subject<Seiyuu[]> = new Subject();
 
@@ -79,17 +78,20 @@ export class SeiyuuService {
       .do(seiyuus => this.displaySeiyuu$.next(seiyuus))
       .combineLatest(this.namesake$)
       .map(([seiyuus, namesakes]) => [...seiyuus, ...namesakes]);
+  }
 
-    this.removed$.withLatestFrom(this.routeId$)                                                            .do(Utils.lg('removed'))
-      .do(([removed, current]) => this.routingSvc.remove(removed, current))
-      .map(([removed]) => removed)
-      .withLatestFrom(this.namesake$)
-      .map(([removed, current]) => current.filter(nmsk => nmsk.displayName !== removed))
-      .subscribe(this.namesake$);
+  removeById(id: number) {
+    this.routingSvc.remove(id);
+    this.messageSvc.resetSearch$.next();
+  }
+
+  removeByName(name: string) {
+    this.namesake$.next(this.namesake$.getValue().filter(nmsk => nmsk.displayName !== name));
   }
 
   addSearch(search$: Observable<string>) {
     const [found$, notFound$] = search$                                                                    .do(Utils.lg('search'))
+      .filter(value => !!value)
       .withLatestFrom(this.totalList$)
       .map(([name, list]) => list
         .filter(seiyuu =>
@@ -114,7 +116,7 @@ export class SeiyuuService {
     single$                                                                                                .do(Utils.lg('single'))
       .map(ids => ids[0])
       .merge(this.picked$
-        .do(id => this.removed$.next(this.totalMap[id].name)))
+        .do(id => this.removeByName(this.totalMap[id].name)))
       .withLatestFrom(this.routeId$)
       .map(([id, ids]) => this.routingSvc.add(id, ids))
       .filter(id => !!id)
@@ -141,7 +143,7 @@ export class SeiyuuService {
         this.messageSvc.error('Error loading seiyuu details: '+err.status);
 
         console.warn(err.message, err.error && err.error.message);
-        ids.forEach(id => this.removed$.next(id));
+        ids.forEach(id => this.removeById(id));
 
         return Observable.of([]);
       });
