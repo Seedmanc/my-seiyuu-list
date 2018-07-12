@@ -1,5 +1,6 @@
 import {Subject} from "rxjs/Subject";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
+import {BasicSeiyuu} from "../_models/seiyuu.model";
 
 export class MessagesService {
 
@@ -25,6 +26,12 @@ export class MessagesService {
 
   blank() {
     this.message$.next({});
+  }
+
+  title(seiyuus: BasicSeiyuu[]) {
+    document.title = `My Seiyuu List ${seiyuus.length ? 
+      ' - ' + seiyuus.map(seiyuu => seiyuu.name).join(', ') :
+      ''}`;
   }
 
 }

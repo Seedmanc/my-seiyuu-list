@@ -119,7 +119,8 @@ describe('SeiyuuService', () => {
       service.loadedSeiyuu$.subscribe(data => loaded=data );
       let spy = spyOn(restSvc, 'mongoCall').and.returnValue(Observable.of([model,model2]));
 
-      routingSvc.add(0,[578]);
+      routingSvc.routeId$.next([578]);
+      routingSvc.add(0);
 
       mockList(backend, [basicList]);
 
@@ -155,7 +156,8 @@ describe('SeiyuuService', () => {
       service.displayList$.subscribe(data => display=data );
       let spy = spyOn(restSvc, 'mongoCall').and.returnValue(Observable.of([model]));
 
-      routingSvc.add(0,[578]);
+      routingSvc.routeId$.next([578]);
+      routingSvc.add(0);
 
       mockList(backend, [[basicModel]]);
 
@@ -168,7 +170,9 @@ describe('SeiyuuService', () => {
 
       service.removeById(578);
       expect(loaded.length).toBeFalsy();
-      routingSvc.add(0,[578]);
+
+      routingSvc.routeId$.next([578]);
+      routingSvc.add(0);
       expect(display.length).toBeTruthy();
       expect(loaded[0].pending).toBeFalsy();
 

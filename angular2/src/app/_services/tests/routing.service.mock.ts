@@ -11,7 +11,8 @@ export class RoutingServiceMock {
   constructor() {
   }
 
-  add(id, list): number {
+  add(id): number {
+    let list = this.routeId$.getValue();
     let newList = Utils.unique([...list, id]);
     // was it a duplicate?
     if (list.length !== newList.length ) this.routeId$.next(newList);

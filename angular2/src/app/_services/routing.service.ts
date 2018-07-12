@@ -28,11 +28,11 @@ export class RoutingService {
      ).subscribe(this.routeId$);
   }
 
-  add(id, list): number {
-    const newList = Utils.unique([...list, id]);
+  add(id): number {
+    const newList = Utils.unique([...this.routeId$.getValue(), id]);
     this.router.navigate([this.tab, newList.join(',')]);
     // was it a duplicate?
-    return list.length === newList.length ? id : null;
+    return this.routeId$.getValue().length === newList.length ? id : null;
   }
 
   remove(id) {

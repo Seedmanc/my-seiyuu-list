@@ -10,10 +10,10 @@ import {RoutingService} from "./routing.service";
 
 @Injectable()
 export class AnimeService {
-  animeCount$: Observable<number>;
-
   displayAnime$: BehaviorSubject<any[]> = new BehaviorSubject([]);
   mainOnly$: BehaviorSubject<boolean> = new BehaviorSubject(false);
+
+  private animeCount$: Observable<number>;
 
   constructor(private rest: RestService,
               private msgSvc: MessagesService,
@@ -27,14 +27,15 @@ export class AnimeService {
     }).startWith(0)
       .share();
 
-    this.seiyuuSvc.selected$.subscribe(id => {if (id) Anime.activeSeiyuu = id;});
-
     this.seiyuuSvc.loadedSeiyuu$
       .filter(list => list && list.length === 0)
-      .combineLatest(this.seiyuuSvc.seiyuuCount$, this.animeCount$)
-      .subscribe(([, scount, acount]) => {
-          msgSvc.totals(scount, acount);   //to reset status when all seiyuu removed
+      .combineLatest(this.seiyuuSvc.totalList$, this.animeCount$)
+      .subscribe(([, seiyuus, acount]) => {
+          msgSvc.totals(seiyuus.length, acount);   //to reset status when all seiyuu removed
       });
+
+
+    this.seiyuuSvc.selected$.subscribe(id => {if (id) Anime.activeSeiyuu = id;});
 
     this.seiyuuSvc.loadedSeiyuu$                                                                           .do(Utils.log('loadedSeiyuuA'))
       .filter(list => list)

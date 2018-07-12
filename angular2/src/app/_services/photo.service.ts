@@ -25,14 +25,14 @@ export class PhotoService {
     this.pageDelta
       .subscribe(delta => this.page = Math.max(0, this.page+delta));
 
-    this.seiyuuSvc.displaySeiyuu$                                                                       .do(Utils.log('loadedToPhotos'))
+    this.seiyuuSvc.displayList$                                                                        .do(Utils.log('loadedToPhotos'))
       .do(() => this.page = 0)
       .filter(list => list)
       .combineLatest(this.routingSvc.tab$)
         .filter(([,tab]) => tab == 'photos')                                                           .do(Utils.log('b4distinct'))
         .distinctUntilChanged(([x,],[y,]) => Utils.compareLists(x, y))
         .map(([seiyuus,]) => seiyuus)
-      .map(seiyuus => seiyuus.map(seiyuu => seiyuu.name))
+      .map(seiyuus => seiyuus.map(seiyuu => seiyuu.displayName))
       .combineLatest(this.pageDelta)                                                                   .do(Utils.log('photoPage'))
       .switchMap(([names,]) => this.wrapper(names))
       .do(() => this.pending = false)

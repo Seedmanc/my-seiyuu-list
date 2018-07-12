@@ -17,9 +17,7 @@ export class SeiyuuService {
   updateRequest$: Subject<number> = new Subject();
   picked$: Subject<number> = new Subject();
   loadedSeiyuu$: BehaviorSubject<Seiyuu[]> = new BehaviorSubject(null);
-  seiyuuCount$: BehaviorSubject<number> = new BehaviorSubject(0);
   selected$: BehaviorSubject<number> = new BehaviorSubject(null);
-  displaySeiyuu$: BehaviorSubject<Seiyuu[]> = new BehaviorSubject(null);
 
   pending: boolean = true;
 
@@ -41,10 +39,7 @@ export class SeiyuuService {
       .subscribe(this.loadedSeiyuu$);
 
     this.totalList$ = this.getTotalList()                                                                  .do(Utils.lg('totalList'))
-      .do(list => {
-        this.seiyuuCount$.next(list.length);
-        this.pending = false;
-      })
+      .do(() => this.pending = false)
       .publishLast().refCount();
 
     this.routeId$ = this.routingSvc.routeId$
@@ -67,15 +62,13 @@ export class SeiyuuService {
 
     this.displayList$ = this.routeId$                                                                      .do(Utils.lg('displayList'))
       .map(ids => ids.map(id => this.totalMap[id]))
-      .do(seiyuus => document.title = 'My Seiyuu List' +
-        (seiyuus.length ? ' - ' + seiyuus.map(seiyuu => seiyuu.name).join(', ') : '')
-       )
       .do(seiyuus => {
+        this.messageSvc.title(seiyuus);
+
         if (seiyuus.every(seiyuu => !seiyuu.pending)) {
           this.loaded$.next(seiyuus);
         }
       })
-      .do(seiyuus => this.displaySeiyuu$.next(seiyuus))
       .combineLatest(this.namesake$)
       .map(([seiyuus, namesakes]) => [...seiyuus, ...namesakes]);
   }
@@ -110,15 +103,14 @@ export class SeiyuuService {
 
     multiple$                                                                                              .do(Utils.lg('multiple'))
       .map(ids => new BasicSeiyuu({namesakes: ids.map(id => this.totalMap[id])}))
-      .withLatestFrom(this.namesake$, (New, old) => Utils.unique([...old, New], 'displayName'))
+      .map(nmsks => Utils.unique([...this.namesake$.getValue(), nmsks], 'displayName'))
       .subscribe(namesakes => this.namesake$.next(namesakes));
 
     single$                                                                                                .do(Utils.lg('single'))
       .map(ids => ids[0])
       .merge(this.picked$
         .do(id => this.removeByName(this.totalMap[id].name)))
-      .withLatestFrom(this.routeId$)
-      .map(([id, ids]) => this.routingSvc.add(id, ids))
+      .map(id => this.routingSvc.add(id))
       .filter(id => !!id)
       .do(id => this.messageSvc.status(`"${this.totalMap[id].name}" is already selected`))
       .subscribe();

@@ -53,7 +53,9 @@ describe('RoutingService', () => {
   it('add an existing ID to route', async(inject([RoutingService], (service: RoutingService) => {
       router.navigate(['']).then(()=>{
         let navigateSpy = spyOn(router, 'navigate');
-        let existing = service.add(53, [53, 24]);
+
+        service.routeId$.next([53, 24]);
+        let existing = service.add(53);
 
         expect(navigateSpy).toHaveBeenCalledWith(['anime', '53,24']);
         expect(existing).toBeTruthy();
