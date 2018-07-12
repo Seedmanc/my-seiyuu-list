@@ -8,7 +8,7 @@ import {RouterTestingModule} from "@angular/router/testing";
 import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
 import {env} from "../../../environments/environment";
 import {basicModel, basicModel2, model, model2} from "../../_models/tests/seiyuu.model.spec";
-import {Namesake, BasicSeiyuu, Seiyuu} from "../../_models/seiyuu.model";
+import {BasicSeiyuu, Seiyuu} from "../../_models/seiyuu.model";
 import {RoutingServiceMock} from "./routing.service.mock";
 import {RoutingService} from "../routing.service";
 import {Observable} from "rxjs/Observable";
@@ -25,6 +25,7 @@ export const basicList = [
 
 describe('SeiyuuService', () => {
   let x;
+  let Stringify = require('json-stable-stringify');
 
   beforeEach(() => {
     x = undefined;
@@ -137,8 +138,8 @@ describe('SeiyuuService', () => {
         }
       });
 
-      expect(JSON.stringify(x)).toBe(JSON.stringify([new Seiyuu(model), new BasicSeiyuu(model2)]));
-      expect(JSON.stringify(loaded)).toBe(JSON.stringify([new Seiyuu(model), new BasicSeiyuu(model2)]));
+      expect(Stringify(x)).toBe(Stringify([new Seiyuu(model), new BasicSeiyuu(model2)]));
+      expect(Stringify(loaded)).toBe(Stringify([new Seiyuu(model), new BasicSeiyuu(model2)]));
       expect(loaded[0].pending).toBeFalsy();
 
       discardPeriodicTasks();
@@ -162,7 +163,7 @@ describe('SeiyuuService', () => {
       service.updateRequest$.next(578);
       tick(200);
 
-      expect(JSON.stringify(x)).toBe(JSON.stringify([new Seiyuu(model) ]));
+      expect(Stringify(x)).toBe(Stringify([new Seiyuu(model) ]));
       expect(loaded[0].pending).toBeFalsy();
 
       service.removed$.next(578);
@@ -252,7 +253,7 @@ describe('SeiyuuService', () => {
       mockList(backend, [[basicModel,basicModel]]);
 
       service.addSearch(Observable.of('Maeda Konomi'));
-      expect(JSON.stringify(x)).toBe(JSON.stringify([new Namesake([new BasicSeiyuu(basicModel), new BasicSeiyuu(basicModel)])]
+      expect(JSON.stringify(x)).toBe(JSON.stringify([new BasicSeiyuu({namesakes: [new BasicSeiyuu(basicModel), new BasicSeiyuu(basicModel)]})]
       ));
     })
   );
@@ -269,7 +270,7 @@ describe('SeiyuuService', () => {
 
         service.addSearch(Observable.of('Maeda Konomi'));
 
-        expect(JSON.stringify(x)).toBe(JSON.stringify([new Namesake([new BasicSeiyuu(basicModel), new BasicSeiyuu(bm2)])]));
+        expect(JSON.stringify(x)).toBe(JSON.stringify([new BasicSeiyuu({namesakes: [new BasicSeiyuu(basicModel), new BasicSeiyuu(bm2)]})]));
         service.picked$.next(bm2._id);
 
         expect(JSON.stringify(x)).toBe(JSON.stringify([new BasicSeiyuu(bm2)]));

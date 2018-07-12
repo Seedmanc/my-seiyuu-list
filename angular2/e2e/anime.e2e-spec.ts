@@ -34,6 +34,7 @@ describe('anime lookups', () => {
 
     anime.mainOnly().click();
     expect(anime.tbody('supporting').$$('tr').count()).toBe(0);
+    anime.mainOnly().click();
   });
 
   it('should show anime for multiple seiyuu, switching roles on hover', () => {

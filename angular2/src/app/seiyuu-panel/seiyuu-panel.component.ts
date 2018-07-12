@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import {SeiyuuService} from "../_services/seiyuu.service";
-import {Namesake, Seiyuu} from "../_models/seiyuu.model";
+import {Seiyuu} from "../_models/seiyuu.model";
 
 @Component({
   selector: 'msl-seiyuu-panel',
@@ -8,22 +8,17 @@ import {Namesake, Seiyuu} from "../_models/seiyuu.model";
   styleUrls: ['./seiyuu-panel.component.css']
 })
 export class SeiyuuPanelComponent implements OnInit {
-  @Input() seiyuu: Seiyuu & Namesake;
+  @Input() seiyuu: Seiyuu;
 
   selected: number;
 
   constructor(private seiyuuSvc: SeiyuuService) { }
 
   ngOnInit() {
-    if (this.seiyuu.pending) {
-      this.seiyuuSvc.updateRequest$.next(this.seiyuu._id);
-    } else
-      if (this.seiyuu.namesakes) {
-
-      this.seiyuu.namesakes
-        .filter(namesake => namesake.pending)
-        .forEach(namesake => this.seiyuuSvc.updateRequest$.next(namesake._id));
-    }
+    [this.seiyuu]
+      .concat(this.seiyuu.namesakes)
+      .filter(seiyuu => seiyuu.pending)
+      .forEach(seiyuu => this.seiyuuSvc.updateRequest$.next(seiyuu._id));
 
     this.seiyuuSvc.selected$.subscribe(id => this.selected = id);
   }
@@ -33,11 +28,11 @@ export class SeiyuuPanelComponent implements OnInit {
   }
 
   remove() {
-      this.seiyuuSvc.removed$.next(this.seiyuu._id || this.seiyuu.name);
+      this.seiyuuSvc.removed$.next(this.seiyuu._id || this.seiyuu.displayName);
   }
 
   select() {
-    if (!this.seiyuu.pending && !this.seiyuu.namesakes)
+    if (!this.seiyuu.pending && !this.seiyuu.hasNamesakes)
       this.seiyuuSvc.selected$.next(this.seiyuu._id);
   }
 

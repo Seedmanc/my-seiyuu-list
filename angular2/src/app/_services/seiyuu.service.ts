@@ -3,7 +3,7 @@ import {Observable} from "rxjs/Observable";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {Subject} from "rxjs/Subject";
 
-import {BasicSeiyuu, Namesake, Seiyuu} from "../_models/seiyuu.model";
+import {BasicSeiyuu,  Seiyuu} from "../_models/seiyuu.model";
 import {RestService} from "./rest.service";
 import {MessagesService} from "./messages.service";
 import {Utils} from "./utils.service";
@@ -12,7 +12,7 @@ import {RoutingService} from "./routing.service";
 @Injectable()
 export class SeiyuuService {
   totalList$: Observable<BasicSeiyuu[]>;
-  displayList$: Observable<(BasicSeiyuu|Namesake)[]>;
+  displayList$: Observable<BasicSeiyuu[]>;
 
   updateRequest$: Subject<number> = new Subject();
   picked$: Subject<number> = new Subject();
@@ -25,7 +25,7 @@ export class SeiyuuService {
   pending: boolean = true;
 
   private routeId$: Observable<number[]>;
-  private namesake$: Subject<Namesake[]> = new BehaviorSubject([]);
+  private namesake$: Subject<BasicSeiyuu[]> = new BehaviorSubject([]);
   private totalMap: {[key: number]: BasicSeiyuu} = {};
 /*private*/ loaded$: Subject<Seiyuu[]> = new Subject();
 
@@ -84,7 +84,7 @@ export class SeiyuuService {
       .do(([removed, current]) => this.routingSvc.remove(removed, current))
       .map(([removed]) => removed)
       .withLatestFrom(this.namesake$)
-      .map(([removed, current]) => current.filter(nmsk => nmsk.name !== removed))
+      .map(([removed, current]) => current.filter(nmsk => nmsk.displayName !== removed))
       .subscribe(this.namesake$);
   }
 
@@ -107,8 +107,8 @@ export class SeiyuuService {
       .partition(list => list.length === 1);
 
     multiple$                                                                                              .do(Utils.lg('multiple'))
-      .map(ids => new Namesake(ids.map(id => this.totalMap[id])))
-      .withLatestFrom(this.namesake$, (New, old) => Utils.unique([...old, New], 'name'))
+      .map(ids => new BasicSeiyuu({namesakes: ids.map(id => this.totalMap[id])}))
+      .withLatestFrom(this.namesake$, (New, old) => Utils.unique([...old, New], 'displayName'))
       .subscribe(namesakes => this.namesake$.next(namesakes));
 
     single$                                                                                                .do(Utils.lg('single'))

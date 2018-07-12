@@ -1,43 +1,59 @@
 import {Utils} from "../_services/utils.service";
 import {Role} from "./anime.model";
 
-abstract class NamedEntity {
-  protected name: string;
-}
+export class BasicSeiyuu {
+  _id?: number;
 
-export class BasicSeiyuu extends NamedEntity {
-  public _id?: number;
-  public name: string;
-  public alternate_name: string[];
-  public hits?: number;
-  public count?: number;
-  public updated?: Date;
-  public accessed?: Date;
+  name: string;
+  alternate_name: string[];
+
+  hits?: number;
+  count?: number;
+
+  updated?: Date;
+  accessed?: Date;
+
+  namesakes: BasicSeiyuu[];
 
   constructor(obj) {
-    super();
-    const temp = {...obj,
+
+    const temp = obj.namesakes ?
+      obj :
+      {...obj,
         updated: new Date(obj.updated),
         accessed: obj.accessed && new Date(obj.accessed) || new Date(obj.updated)
       };
-     this.upgrade(temp);
-    this.alternate_name = this.alternate_name || [];
-    }
 
-  public get pending(): boolean {
+    this.upgrade(temp);
+    this.alternate_name = this.alternate_name || [];
+    this.namesakes = this.namesakes || [];
+  }
+
+  get pending(): boolean {
     return !this['roles'] && !!this.name;
   }
 
-  public get link(): string {
+  get link(): string {
     return `//${Utils.theSite}/people/${this._id}`;
   }
 
-  public upgrade(obj) {
+  get displayName() {
+    return this.hasNamesakes ?
+      this.namesakes[0].name :
+      this.name;
+  }
+
+  get hasNamesakes() {
+    return this.namesakes && !!this.namesakes.length;
+  }
+
+  upgrade(obj) {
     Object.keys(obj).forEach(key => {
       if (this[key] === undefined) this[key] = obj[key];
     });
     return this;
   }
+
   protected get photo(): string {
     return this['pic'] && `//${Utils.theSite}${this['pic']}`;
   }
@@ -48,27 +64,14 @@ export class BasicSeiyuu extends NamedEntity {
 
 export class Seiyuu extends BasicSeiyuu {
 
+  roles?: Role[];
+  l?: boolean;
+  c?: boolean;
+
   private pic?: string;
-  public roles?: Role[];
-  public l?: boolean;
-  public c?: boolean;
 
   constructor(obj) {
     super(obj);
-  }
-
-}
-
-export class Namesake extends NamedEntity {
-
-  get name() {
-    return this.namesakes && this.namesakes[0] && this.namesakes[0].name;
-  }
-  namesakes: BasicSeiyuu[];
-
-  constructor(nmsks: BasicSeiyuu[]) {
-    super();  //since when do we call constructors on abstract classes, Idea?
-    this.namesakes = nmsks;
   }
 
 }

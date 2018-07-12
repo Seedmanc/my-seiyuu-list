@@ -9,7 +9,7 @@ import {RoutingService} from "../_services/routing.service";
 import {HttpClientModule} from "@angular/common/http";
 import {RouterTestingModule} from "@angular/router/testing";
 import {MessagesService} from "../_services/messages.service";
-import {BasicSeiyuu, Namesake, Seiyuu} from "../_models/seiyuu.model";
+import {BasicSeiyuu, Seiyuu} from "../_models/seiyuu.model";
 import {RestServiceMock} from "../_services/tests/rest.service.mock";
 import {basicModel, model} from "../_models/tests/seiyuu.model.spec";
 import {RoutingServiceMock} from "../_services/tests/routing.service.mock";
@@ -31,14 +31,14 @@ describe('SeiyuuPanelComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(SeiyuuPanelComponent);
     component = fixture.componentInstance;
-    component.seiyuu = <Seiyuu&Namesake>(new Seiyuu(basicModel));
+    component.seiyuu = new Seiyuu(basicModel);
   });
 
   it('should display name and spinner for basicSeiyuu or namesakes',  () => {
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('h4').textContent).toContain('Maeda Konomi');
     expect(fixture.nativeElement.querySelector('msl-spinner')).toBeTruthy();
-    component.seiyuu = <Seiyuu&Namesake>(new Namesake([new BasicSeiyuu(basicModel), new BasicSeiyuu(basicModel)]));
+    component.seiyuu = new BasicSeiyuu({namesakes: [new BasicSeiyuu(basicModel), new BasicSeiyuu(basicModel)]});
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('h4').textContent).toContain('Maeda Konomi');
   });
@@ -54,7 +54,7 @@ describe('SeiyuuPanelComponent', () => {
 
   it('should display photo for seiyuu',
     () => {
-      component.seiyuu = <Seiyuu&Namesake>(new Seiyuu(model));
+      component.seiyuu = new Seiyuu(model);
       fixture.detectChanges();
       expect(fixture.nativeElement.querySelector('.vapic')).toBeTruthy();
     }
@@ -67,7 +67,7 @@ describe('SeiyuuPanelComponent', () => {
       fixture.nativeElement.querySelector('.remove.close').click();
       expect(x).toBe(basicModel._id);
 
-      component.seiyuu = <Seiyuu&Namesake>(new Namesake([new BasicSeiyuu(basicModel), new BasicSeiyuu(basicModel)]));
+      component.seiyuu = new BasicSeiyuu({namesakes: [new BasicSeiyuu(basicModel), new BasicSeiyuu(basicModel)]});
       fixture.detectChanges();
       fixture.nativeElement.querySelector('.remove.close').click();
       expect(x).toBe('Maeda Konomi');
@@ -77,7 +77,7 @@ describe('SeiyuuPanelComponent', () => {
   it('should emit on namesake pick',
     inject([SeiyuuService], (svc: SeiyuuService)=> {
       let x; svc.picked$.subscribe(r=>x=r);
-      component.seiyuu = <Seiyuu&Namesake>(new Namesake([new BasicSeiyuu(basicModel), new BasicSeiyuu(basicModel)]));
+      component.seiyuu = new BasicSeiyuu({namesakes: [new BasicSeiyuu(basicModel), new BasicSeiyuu(basicModel)]});
       fixture.detectChanges();
       fixture.nativeElement.querySelector('.pick').click();
       expect(x).toBe(578);

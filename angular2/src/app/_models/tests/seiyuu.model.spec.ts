@@ -61,10 +61,11 @@ describe('Seiyuu model', () => {
     expect((new Seiyuu(model)).pending).toBeFalsy();
   });
   it('should upgrade from basic to full', ()=>{
+    let Stringify = require('json-stable-stringify');
     let upgraded = (new BasicSeiyuu(basicModel)).upgrade(model);
     let full:Seiyuu = new Seiyuu(model);
 
-    expect(JSON.stringify(upgraded)).toBe(JSON.stringify(new Seiyuu(model)));
+    expect(Stringify(upgraded)).toBe(Stringify(new Seiyuu(model)));
     expect(upgraded.link).toBe('//myanimelist.net/people/578');
     expect(full['photo']).toBe('//myanimelist.net/images/voiceactors/3/33867.jpg');
     expect(full['thumb']).toBe('//myanimelist.net/images/voiceactors/3/33867v.jpg');

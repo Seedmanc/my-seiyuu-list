@@ -1,16 +1,16 @@
 <div class="seiyuu col-sm-12 col-xs-6 well well-sm"
-     [ngClass]="{l: seiyuu.l, c: seiyuu.c, namesake: seiyuu.namesakes, hover: selected === seiyuu._id}"
+     [ngClass]="{l: seiyuu.l, c: seiyuu.c, namesake: seiyuu.hasNamesakes, hover: selected === seiyuu._id}"
      (touchstart)="select()" (mouseenter)="select()" (click)="select()">
 
   <a class="remove close" (click)="remove()">&times;</a>
 
-  <table *ngIf="!seiyuu.namesakes" class="text-center">
+  <table *ngIf="!seiyuu.hasNamesakes" class="text-center">
     <tbody>
       <tr>
         <td colspan=2>
           <h4>
             <a [href]="seiyuu.link" target="_blank">
-              <b>{{seiyuu.name}}</b>
+              <b>{{seiyuu.displayName}}</b>
             </a>
           </h4>
         </td>
@@ -28,8 +28,8 @@
     </tbody>
   </table>
 
-  <div class="row" *ngIf="seiyuu.namesakes">
-    <div><h4><b>{{seiyuu.name}}</b></h4></div>
+  <div class="row" *ngIf="seiyuu.hasNamesakes">
+    <div><h4><b>{{seiyuu.displayName}}</b></h4></div>
     <div>{{seiyuu.namesakes.length}} matches found</div>
     <div>choose one: </div>
     <div class="col-xs-12 btn-group btn-group-vertical">
