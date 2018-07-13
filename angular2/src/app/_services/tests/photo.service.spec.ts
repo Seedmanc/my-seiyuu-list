@@ -130,12 +130,12 @@ describe('PhotoService', () => {
       seiyuuSvc.displayList$['next']([new Seiyuu({name: 'Davidyuk Jenya'})]);
       expect(spy).toHaveBeenCalledWith('davidyuk_jenya+solo', 0);
 
-      service.pageDelta.next(1);
+      service.nextPage();
       expect(spy).toHaveBeenCalledWith('davidyuk_jenya+solo', 20);
       expect(JSON.stringify(x)).toBe(JSON.stringify({"pageNum":1,"total":20,"next":true,"prev":true}));
       expect(spy).toHaveBeenCalledTimes(2);
 
-      service.pageDelta.next(-1);
+      service.prevPage();
       expect(spy).toHaveBeenCalledTimes(2);
       expect(JSON.stringify(x)).toBe(JSON.stringify({"pageNum":0,"total":20,"next":true,"prev":false}));
     })

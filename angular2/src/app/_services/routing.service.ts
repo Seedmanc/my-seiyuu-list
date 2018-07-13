@@ -1,8 +1,9 @@
 import {Injectable} from '@angular/core';
 import {NavigationEnd, Router} from "@angular/router";
-import {Utils} from "./utils.service";
 import {Subject} from "rxjs/Subject";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
+
+import {Utils} from "./utils.service";
 
 @Injectable()
 export class RoutingService {

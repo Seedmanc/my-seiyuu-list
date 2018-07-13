@@ -37,8 +37,4 @@ export class PhotoListComponent extends PageComponent implements OnInit {
       });
   }
 
-  switchPage(delta: number) {
-    this.photoSvc.pageDelta.next(delta);
-  }
-
 }

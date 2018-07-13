@@ -31,7 +31,7 @@ export class AnimeService {
       .filter(list => list && list.length === 0)
       .combineLatest(this.seiyuuSvc.totalList$, this.animeCount$)
       .subscribe(([, seiyuus, acount]) => {
-          msgSvc.totals(seiyuus.length, acount);   //to reset status when all seiyuu removed
+         msgSvc.totals(seiyuus.length, acount);   //to reset status when all seiyuu removed
       });
 
 

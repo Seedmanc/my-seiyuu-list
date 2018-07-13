@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import {Observable} from "rxjs/Observable";
+import {BehaviorSubject} from "rxjs/BehaviorSubject";
+import {env} from "../../environments/environment";
+
 import {RestService} from "./rest.service";
 import {SeiyuuService} from "./seiyuu.service";
-import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {Utils} from "./utils.service";
 import {RoutingService} from "./routing.service";
-import {env} from "../../environments/environment";
 import {MessagesService} from "./messages.service";
 
 interface PhotoPage {
@@ -19,9 +20,9 @@ interface PhotoPage {
 @Injectable()
 export class PhotoService {
   displayPhotos$: BehaviorSubject<PhotoPage> = new BehaviorSubject({});
-  pageDelta: BehaviorSubject<number> = new BehaviorSubject(0);
   pending: boolean;
 
+  private pageDelta: BehaviorSubject<number> = new BehaviorSubject(0);
   private page: number = 0;
   private cache = {};
 
@@ -35,7 +36,7 @@ export class PhotoService {
 
     this.seiyuuSvc.displayList$                                                                        .do(Utils.log('loadedToPhotos'))
       .do(() => this.page = 0)
-      .filter(list => list)
+     // .filter(list => list)
       .combineLatest(this.routingSvc.tab$)
         .filter(([,tab]) => tab == 'photos')                                                           .do(Utils.log('b4distinct'))
         .distinctUntilChanged(([x,],[y,]) => Utils.compareLists(x, y))
@@ -45,6 +46,13 @@ export class PhotoService {
       .switchMap(([names,]) => this.wrapper(names))
       .do(() => this.pending = false)
       .subscribe(this.displayPhotos$);
+  }
+
+  nextPage() {
+    this.pageDelta.next(1);
+  }
+  prevPage() {
+    this.pageDelta.next(-1);
   }
 
   private wrapper(names: string[]): Observable<PhotoPage> {

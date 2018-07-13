@@ -11,10 +11,10 @@
     <div id="nav" class="row">
       <div class="btn-group btn-group-justified">
         <button id="prev" class="btn btn-default btn-block glyphicon glyphicon-arrow-left"
-           [disabled]="photoSvc.pending || !prev" (click)="switchPage(-1)"> </button>
+           [disabled]="photoSvc.pending || !prev" (click)="photoSvc.prevPage()"> </button>
         <span class="page">{{pageNum}}</span>
         <button id="next" class="btn btn-default btn-block glyphicon glyphicon-arrow-right"
-           [disabled]="photoSvc.pending || !next" (click)="switchPage(1)"> </button>
+           [disabled]="photoSvc.pending || !next" (click)="photoSvc.nextPage()"> </button>
       </div>
     </div>
   </div>

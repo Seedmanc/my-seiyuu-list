@@ -34,11 +34,7 @@ describe('PhotoListComponent', () => {
 
   it('should display messages and switch pages', inject([MessagesService, PhotoService],
     (msgSvc: MessagesService, photoSvc: PhotoService) => {
-    let x;
-    photoSvc.pageDelta.subscribe(data => x = data);
-    expect(x).toBeFalsy();
-    component.switchPage(1);
-    expect(x).toBe(1);
+
     let spy = spyOn(msgSvc, 'status');
     let spy2 = spyOn(msgSvc, 'blank');
 

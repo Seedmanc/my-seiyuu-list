@@ -30,7 +30,7 @@ export class SeiyuuService {
               private routingSvc: RoutingService) {
 
     // load the brief list of all seiyuu in DB, minus the roles and photos
-    this.totalList$ = this.getTotalList()                                                                  .do(Utils.lg('totalList'))
+    this.totalList$ = this.getTotalList()                                                                  .do(Utils.lg('seiyuu list requested', 'warn'))
       .do(() => this.pending = false)
       .publishLast().refCount();
 
@@ -42,7 +42,7 @@ export class SeiyuuService {
     // load full details for selected seiyuu(s), batching requests together
     this.updateRequest$                                                                                    .do(Utils.lg('updateRequest'))
       .bufferToggle(this.updateRequest$.throttleTime(200), () => Observable.timer(200))
-      .flatMap(ids => this.loadByIds(ids))
+      .flatMap(ids => this.loadByIds(ids))                                                                 .do(Utils.lg('seiyuu details requested', 'warn'))
       .withLatestFrom(this.routeId$)
       .do(([seiyuus, ids]) => {
         seiyuus.forEach(seiyuu => {
