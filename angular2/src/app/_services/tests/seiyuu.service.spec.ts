@@ -98,7 +98,7 @@ describe('SeiyuuService', () => {
 
         mockList(backend, [basicList]);
 
-        service.updateRequest$.next(53);
+        service.requestUpdate(53);
         tick(200);
 
         backend.expectOne({
@@ -125,8 +125,8 @@ describe('SeiyuuService', () => {
       mockList(backend, [basicList]);
 
       expect(x[0].pending).toBeTruthy();
-      service.updateRequest$.next(53);
-      service.updateRequest$.next(0);
+      service.requestUpdate(53);
+      service.requestUpdate(0);
       tick(200);
 
       expect(spy).toHaveBeenCalledWith({
@@ -162,7 +162,7 @@ describe('SeiyuuService', () => {
       mockList(backend, [[basicModel]]);
 
       expect(x[0].pending).toBeTruthy();
-      service.updateRequest$.next(578);
+      service.requestUpdate(578);
       tick(200);
 
       expect(Stringify(x)).toBe(Stringify([new Seiyuu(model) ]));
@@ -275,7 +275,7 @@ describe('SeiyuuService', () => {
         service.addSearch(Observable.of('Maeda Konomi'));
 
         expect(JSON.stringify(x)).toBe(JSON.stringify([new BasicSeiyuu({namesakes: [new BasicSeiyuu(basicModel), new BasicSeiyuu(bm2)]})]));
-        service.picked$.next(bm2._id);
+        service.pickNamesake(bm2._id);
 
         expect(JSON.stringify(x)).toBe(JSON.stringify([new BasicSeiyuu(bm2)]));
       })

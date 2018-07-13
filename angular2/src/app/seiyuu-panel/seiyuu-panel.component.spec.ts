@@ -43,15 +43,6 @@ describe('SeiyuuPanelComponent', () => {
     expect(fixture.nativeElement.querySelector('h4').textContent).toContain('Maeda Konomi');
   });
 
-  it('should send update request for basicSeiyuu',
-    inject([SeiyuuService], (svc: SeiyuuService)=> {
-      let x;
-      svc.updateRequest$.subscribe(r=>x=r);
-      fixture.detectChanges();
-      expect(x).toBe(basicModel._id);
-    })
-  );
-
   it('should display photo for seiyuu',
     () => {
       component.seiyuu = new Seiyuu(model);
@@ -73,16 +64,6 @@ describe('SeiyuuPanelComponent', () => {
       fixture.detectChanges();
       fixture.nativeElement.querySelector('.remove.close').click();
       expect(rbn).toHaveBeenCalledWith('Maeda Konomi');
-    })
-  );
-
-  it('should emit on namesake pick',
-    inject([SeiyuuService], (svc: SeiyuuService)=> {
-      let x; svc.picked$.subscribe(r=>x=r);
-      component.seiyuu = new BasicSeiyuu({namesakes: [new BasicSeiyuu(basicModel), new BasicSeiyuu(basicModel)]});
-      fixture.detectChanges();
-      fixture.nativeElement.querySelector('.pick').click();
-      expect(x).toBe(578);
     })
   );
 

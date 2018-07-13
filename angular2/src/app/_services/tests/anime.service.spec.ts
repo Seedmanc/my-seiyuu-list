@@ -62,7 +62,7 @@ describe('AnimeService', () => {
 
       let loaded = Object.assign({}, model);
       loaded.roles.push(...roles);
-      seiyuuSvc.loaded$.next([new Seiyuu(loaded)]);
+      seiyuuSvc.loadedSeiyuu$.next([new Seiyuu(loaded)]);
 
       expect(y).toBe(model._id);
       expect(spy).toHaveBeenCalledWith('4 anime found');
@@ -114,7 +114,7 @@ describe('AnimeService', () => {
         "main": false,
         "_id": 4
       });
-      seiyuuSvc.loaded$.next([new Seiyuu(loaded),new Seiyuu(loaded2)]);
+      seiyuuSvc.loadedSeiyuu$.next([new Seiyuu(loaded),new Seiyuu(loaded2)]);
 
       expect(y).toBe(model2._id);
       expect(spy).toHaveBeenCalledWith('3 shared anime found');
@@ -163,7 +163,7 @@ describe('AnimeService', () => {
 
         let loaded2 = Object.assign({}, model2);
         loaded2.roles = [];
-        seiyuuSvc.loaded$.next([new Seiyuu(loaded),new Seiyuu(loaded2)]);
+        seiyuuSvc.loadedSeiyuu$.next([new Seiyuu(loaded),new Seiyuu(loaded2)]);
 
         expect(y).toBe(model2._id);
         expect(spy).toHaveBeenCalledWith('no shared anime found');

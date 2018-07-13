@@ -20,7 +20,7 @@ export class Utils {
     return  names.some(name => name === joint);
   }
 
-  static pluralize(number) {
+  static pluralize(number): string {
     return number !== undefined && (number % 10 > 1 || (number % 10) === 0 || number == 'no') ? 's' : '';
   }
 

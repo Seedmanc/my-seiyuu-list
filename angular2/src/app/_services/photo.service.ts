@@ -8,9 +8,17 @@ import {RoutingService} from "./routing.service";
 import {env} from "../../environments/environment";
 import {MessagesService} from "./messages.service";
 
+interface PhotoPage {
+  html?: string;
+  next?: boolean;
+  prev?: boolean;
+  pageNum?: number;
+  total?: string|number;
+}
+
 @Injectable()
 export class PhotoService {
-  displayPhotos$: BehaviorSubject<any> = new BehaviorSubject({});
+  displayPhotos$: BehaviorSubject<PhotoPage> = new BehaviorSubject({});
   pageDelta: BehaviorSubject<number> = new BehaviorSubject(0);
   pending: boolean;
 
@@ -39,7 +47,7 @@ export class PhotoService {
       .subscribe(this.displayPhotos$);
   }
 
-  private wrapper(names: string[]) {
+  private wrapper(names: string[]): Observable<PhotoPage> {
     let hasNames = !!names.length;
     if (names.length == 1) names.push('solo');
 
@@ -54,7 +62,7 @@ export class PhotoService {
       Observable.of({html:'', next: false, prev: false, pageNum: 0, total: 0});
   }
 
-  private getPhotoPage(tags: string): Observable<{html: string, next: boolean, prev: boolean, pageNum: number, total: string}> {
+  private getPhotoPage(tags: string): Observable<PhotoPage> {
     this.pending = true;
 
     return this.rest.yahooQueryCall(tags, this.page*20)
@@ -90,6 +98,7 @@ export class PhotoService {
               '</b>'
           ].join('');
           let span = document.createElement('span');
+
           span.className = 'thumb more img-thumbnail';
           span.innerHTML = template;
           newDoc.body.appendChild(span);
@@ -99,6 +108,7 @@ export class PhotoService {
         if (paging) {
           newDoc.documentElement.innerHTML = paging;
           let pagenums: any = newDoc.querySelector('a[alt="last page"],b:last-child');
+
           total = pagenums.href ?
             10+Number(pagenums.href.split('pid=')[1]) :
             (Number(pagenums.textContent)-1)*20 + spans.length;

@@ -18,13 +18,13 @@ export class SeiyuuPanelComponent implements OnInit {
     [this.seiyuu]
       .concat(this.seiyuu.namesakes)
       .filter(seiyuu => seiyuu.pending)
-      .forEach(seiyuu => this.seiyuuSvc.updateRequest$.next(seiyuu._id));
+      .forEach(seiyuu => this.seiyuuSvc.requestUpdate(seiyuu._id));
 
     this.seiyuuSvc.selected$.subscribe(id => this.selected = id);
   }
 
   pick(id: number) {
-    this.seiyuuSvc.picked$.next(id);
+    this.seiyuuSvc.pickNamesake(id);
   }
 
   remove() {
