@@ -1,4 +1,5 @@
 import {env} from "../../environments/environment";
+import {Observable} from "rxjs/Observable";
 
 export class Utils {
   private static readonly parser = document.createElement("textarea");
@@ -45,8 +46,14 @@ export class Utils {
     return Utils.parser.value;
   }
 
-  static compareLists(x: any[], y: any[], field = 'name'): boolean {
-    return x.map(e => e[field]).join() == y.map(e => e[field]).join();
-  } //TODO either test or get rid of
+  static runOnTab<T>(tabStream:Observable<string>, tabName: string): (source: Observable<T>) => Observable<T> {
+    return (source: Observable<T>): Observable<T> => {
+      return source
+        .combineLatest(tabStream)
+        .filter(([,tab]) => tab == tabName)
+        .map(([seiyuus,]) => seiyuus)
+        .distinctUntilChanged((x,y) => x['map'](e => e['name']).sort().join() == y['map'](e => e['name']).sort().join())
+    }
+  }
 
 }

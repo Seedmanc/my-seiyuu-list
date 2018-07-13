@@ -45,7 +45,7 @@ describe('my-seiyuu-list App', () => {
       browser.manage().logs().get('browser')
         .then(browserLog => {expect(browserLog.filter(event => !!~event.message.indexOf('anime requested')).length).toBeFalsy();});
       console.log('no extra anime requests');
-      expect(page.statusBar().getText()).toContain('anime found');
+      //expect(page.statusBar().getText()).toContain('anime found');
 
       page.tabs().get(1).click();
       browser.wait(EC.presenceOf(element(by.css('#magazines'))), 5000);

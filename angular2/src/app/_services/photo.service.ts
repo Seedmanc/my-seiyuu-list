@@ -8,6 +8,7 @@ import {SeiyuuService} from "./seiyuu.service";
 import {Utils} from "./utils.service";
 import {RoutingService} from "./routing.service";
 import {MessagesService} from "./messages.service";
+import {Seiyuu} from "../_models/seiyuu.model";
 
 interface PhotoPage {
   html?: string;
@@ -36,15 +37,12 @@ export class PhotoService {
 
     this.seiyuuSvc.displayList$                                                                        .do(Utils.log('loadedToPhotos'))
       .do(() => this.page = 0)
-     // .filter(list => list)
-      .combineLatest(this.routingSvc.tab$)
-        .filter(([,tab]) => tab == 'photos')                                                           .do(Utils.log('b4distinct'))
-        .distinctUntilChanged(([x,],[y,]) => Utils.compareLists(x, y))
-        .map(([seiyuus,]) => seiyuus)
+      .let(Utils.runOnTab<Seiyuu[]>(this.routingSvc.tab$, 'photos'))
       .map(seiyuus => seiyuus.map(seiyuu => seiyuu.displayName))
       .combineLatest(this.pageDelta)                                                                   .do(Utils.log('photoPage'))
       .switchMap(([names,]) => this.wrapper(names))
       .do(() => this.pending = false)
+      .distinctUntilChanged()
       .subscribe(this.displayPhotos$);
   }
 

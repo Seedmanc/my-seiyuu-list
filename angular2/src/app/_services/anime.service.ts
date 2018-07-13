@@ -1,12 +1,14 @@
 import {Injectable} from '@angular/core';
 import {Observable} from "rxjs/Observable";
-import {RestService} from "./rest.service";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
+
+import {RestService} from "./rest.service";
 import {Utils} from "./utils.service";
 import {MessagesService} from "./messages.service";
 import {Anime, HashOfRoles, Role} from "../_models/anime.model";
 import {SeiyuuService} from "./seiyuu.service";
 import {RoutingService} from "./routing.service";
+import {Seiyuu} from "../_models/seiyuu.model";
 
 @Injectable()
 export class AnimeService {
@@ -38,10 +40,7 @@ export class AnimeService {
     this.seiyuuSvc.selected$.subscribe(id => {if (id) Anime.activeSeiyuu = id;});
 
     this.seiyuuSvc.loadedSeiyuu$                                                                           .do(Utils.log('loadedSeiyuuA'))
-      .filter(list => list)
-      .combineLatest(this.routingSvc.tab$)
-        .filter(([,tab]) => tab == 'anime')
-        .map(([seiyuus,]) => seiyuus)
+      .let(Utils.runOnTab<Seiyuu[]>(this.routingSvc.tab$, 'anime'))
       .combineLatest(this.mainOnly$)
       .map(([seiyuus, mainOnly]) => {
         // turn objects with arrays of roles with animeIds into hashmaps of roles with seiyuuIds per anime
@@ -60,7 +59,7 @@ export class AnimeService {
 
           return rolesByAnime;
         });
-      })
+      })                                                                                                   .do(Utils.log('intermed map'))
       .map((rolesByAnimeSets: HashOfRoles[]) => {
         // find shared anime by checking the shortest list for inclusion in all other lists
         let leastAnime = rolesByAnimeSets
@@ -102,10 +101,10 @@ export class AnimeService {
           );
         }
 
-        this.loadDetails(anime.map(a => a._id).filter(id => !Anime.detailsCache[id]))                       .do(Utils.log('details'))
+        this.loadDetails(anime.map(a => a._id).filter(id => !Anime.detailsCache[id]))
           .subscribe();
-      })                                                                                                   .do(Utils.log('anime results'))
-      .combineLatest(this.seiyuuSvc.selected$.distinctUntilChanged())
+      })
+      .combineLatest(this.seiyuuSvc.selected$.distinctUntilChanged())                                       .do(Utils.log('anime results'))
       .map(([data]) => data.anime)
       .subscribe(this.displayAnime$);
   }
