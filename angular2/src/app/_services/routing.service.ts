@@ -20,7 +20,7 @@ export class RoutingService {
      .do(t => this.tab = t)
      .subscribe(this.tab$);
 
-    this.paramMap$                                                                                         .do(Utils.log('paramMap'))
+    this.paramMap$                                                                                        .do(Utils.asrt('paramMap'))
      .map(params => (params.get('ids') || ''))
      .distinctUntilChanged()
      .map(ids => ids.split(',')

@@ -30,8 +30,15 @@ export class Utils {
       elem[prop] && elem[prop] === el[prop]) === i);
   }
 
-  static log(title?: string, mode: string = 'info') {
-    return env.loglevel ? (...messages) => console[mode](title, ':', ...messages) : ()=>{};
+  static asrt(title: string, assertion = (...values) => true) {
+    return env.loglevel ?
+      (...data) => {
+        let result = assertion(...data);
+        result && env.loglevel > 1 ?
+          console.info(`(${title}) `, ...data):
+          console.assert(result, `(${title})  ${assertion.toString()}`, ...data)
+      }:
+      ()=>{};
   }
   static lg(msg: any, mode: string = 'info') {
     return env.loglevel ? () => console[mode](msg) : ()=>{};
@@ -51,7 +58,7 @@ export class Utils {
       return source
         .combineLatest(tabStream)
         .filter(([,tab]) => tab == tabName)
-        .map(([seiyuus,]) => seiyuus)
+        .map(([seiyuus,]) => seiyuus)                                                 .do(Utils.asrt(`runOnTab[${tabName}]`, x => !x[0] || x[0].name))
         .distinctUntilChanged((x,y) => x['map'](e => e['name']).sort().join() == y['map'](e => e['name']).sort().join())
     }
   }

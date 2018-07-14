@@ -36,7 +36,7 @@ export class SeiyuuService {
 
     // ensure ids received from routing correspond to real values when they're ready
     this.routeId$ = this.routingSvc.routeId$
-      .delayWhen(() => this.totalList$)                                                                    .do(Utils.log('routeId'))
+      .delayWhen(() => this.totalList$)                                                                    .do(Utils.asrt('routeId', x => Array.isArray(x)))
       .map(ids => ids.filter(id => !!this.cachedSeiyuu[id]));
 
     // load full details for selected seiyuu(s), batching requests together
@@ -56,7 +56,7 @@ export class SeiyuuService {
       }).subscribe();
 
     // make the list of seiyuu to display out of both selected seiyuu and namesakes
-    this.displayList$ = this.routeId$                                                                      .do(Utils.lg('displayList'))
+    this.displayList$ = this.routeId$                                                                      .do(Utils.asrt('routeId to displayList'))
       .map(ids => ids.map(id => this.cachedSeiyuu[id]))
       .do(seiyuus => {
         this.messageSvc.title(seiyuus);

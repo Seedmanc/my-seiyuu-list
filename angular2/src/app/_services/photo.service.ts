@@ -35,11 +35,11 @@ export class PhotoService {
     this.pageDelta
       .subscribe(delta => this.page = Math.max(0, this.page+delta));
 
-    this.seiyuuSvc.displayList$                                                                        .do(Utils.log('loadedToPhotos'))
+    this.seiyuuSvc.displayList$
       .do(() => this.page = 0)
       .let(Utils.runOnTab<Seiyuu[]>(this.routingSvc.tab$, 'photos'))
       .map(seiyuus => seiyuus.map(seiyuu => seiyuu.displayName))
-      .combineLatest(this.pageDelta)                                                                   .do(Utils.log('photoPage'))
+      .combineLatest(this.pageDelta)                                                                   .do(Utils.lg('photoPage'))
       .switchMap(([names,]) => this.wrapper(names))
       .do(() => this.pending = false)
       .distinctUntilChanged()
@@ -71,8 +71,7 @@ export class PhotoService {
   private getPhotoPage(tags: string): Observable<PhotoPage> {
     this.pending = true;
 
-    return this.rest.yahooQueryCall(tags, this.page*20)
-      .do(Utils.lg('photos requested', 'warn'))
+    return this.rest.yahooQueryCall(tags, this.page*20)                                            .do(Utils.lg('photos requested', 'warn'))
       .catch(error => {
         setTimeout(() => this.msgSvc.error(error.message));
         return Observable.of({data:'', paging:''});

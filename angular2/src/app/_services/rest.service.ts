@@ -72,7 +72,7 @@ $scope.debug += '\n\r' + JSON.stringify(error) + ' Error accessing database.';
         '&env=store://datatables.org/alltableswithkeys'
       ].join('')
     ).map(response => {
-      if (!response.query || !response.query.count || !response.query.results.result[0])
+      if (!response.query || !response.query.count || !response.query.results.result[0] || !response.query.results)
         throw({message: 'Couldn\'t load the photos, try the koebooru link'});
       //TODO global error reporting
       return {data: response.query.results.result[1], paging: response.query.results.result[2]};

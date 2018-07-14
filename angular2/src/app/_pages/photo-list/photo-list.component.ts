@@ -27,7 +27,7 @@ export class PhotoListComponent extends PageComponent implements OnInit {
   ngOnInit() {
     super.ngOnInit();
 
-    this.photoSvc.displayPhotos$                                                                  .do(Utils.log('photo'))
+    this.photoSvc.displayPhotos$                                                                  .do(Utils.asrt('photo'))
       .subscribe(result => {
         Object.assign(this, result);
         if (result.total)
