@@ -125,7 +125,7 @@ describe('SeiyuuService', () => {
       mockList(backend, [basicList]);
 
       expect(x[0].pending).toBeTruthy();
-      service.requestUpdate(53);
+      service.requestUpdate(578);
       service.requestUpdate(0);
       tick(200);
 
@@ -134,7 +134,7 @@ describe('SeiyuuService', () => {
         mode: 'GET',
         query: {
           q: {
-            _id: {'$in': [53,0]}
+            _id: {'$in': [578,0]}
           }
         }
       });

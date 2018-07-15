@@ -26,7 +26,7 @@ export class AnimeService {
       coll: 'anime',
       mode: 'GET',
       query: {c: true}
-    })                                                                                             .do(Utils.lg('animeCount requested', 'warn'))
+    })                                                                                             .do(Utils.lg('AnimeCount requested', 'warn'))
       .startWith(0)
       .share();
 
@@ -40,11 +40,11 @@ export class AnimeService {
 
     this.seiyuuSvc.selected$.subscribe(id => {if (id) Anime.activeSeiyuu = id;});
 
-    this.seiyuuSvc.loadedSeiyuu$                                                                   .do(Utils.asrt('loadedSeiyuuToAnime', x => Array.isArray(x)))
+    this.seiyuuSvc.loadedSeiyuu$                                                                   .do(Utils.asrt('A loadedSeiyuu', x => Array.isArray(x)))
       .let(Utils.runOnTab<Seiyuu[]>(this.routingSvc.tab$, 'anime'))
-      .combineLatest(this.mainOnly$)
-      .map(([seiyuus, mainOnly]) => this.animePerSeiyuu(seiyuus, mainOnly))                        .do(Utils.asrt('roles by anime sets'))
-      .map(rolesByAnimeSets => this.sharedAnime(rolesByAnimeSets))                                 .do(Utils.asrt('shared anime'),
+      .combineLatest(this.mainOnly$.distinctUntilChanged())
+      .map(([seiyuus, mainOnly]) => this.animePerSeiyuu(seiyuus, mainOnly))                        .do(Utils.asrt('A roles by anime sets'))
+      .map(rolesByAnimeSets => this.sharedAnime(rolesByAnimeSets))                                 .do(Utils.asrt('A shared anime'),
                                                                                                      x => Array.isArray(x) && x[0] && Array.isArray(x[0].rolesBySeiyuu))
       .do(({anime, seiyuuCount}) => {
 
@@ -57,7 +57,7 @@ export class AnimeService {
         this.loadDetails(anime.map(a => a._id).filter(id => !Anime.detailsCache[id]))
           .subscribe();
       })
-      .combineLatest(this.seiyuuSvc.selected$.distinctUntilChanged())                               .do(Utils.asrt('anime results'))
+      .combineLatest(this.seiyuuSvc.selected$.distinctUntilChanged())                               .do(Utils.asrt('Anime results'))
       .map(([data]) => data.anime)
       .subscribe(this.displayAnime$);
   }
@@ -128,7 +128,7 @@ export class AnimeService {
           f: {title: 1, pic: 1},
           q: {'_id': {'$in': ids}}
         }
-      }).do(Utils.lg('anime requested', 'warn')) :
+      })                                                                                       .do(Utils.lg('Anime requested', 'warn')) :
       Observable.of([])
      )
       .do(details => details.forEach(detail => Anime.detailsCache[detail._id] = detail));

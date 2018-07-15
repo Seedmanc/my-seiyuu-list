@@ -30,7 +30,7 @@ export class Utils {
       elem[prop] && elem[prop] === el[prop]) === i);
   }
 
-  static asrt(title: string, assertion = (...values) => true) {
+  static asrt(title: string, assertion = (..._) => true) {
     return env.loglevel ?
       (...data) => {
         let result = assertion(...data);

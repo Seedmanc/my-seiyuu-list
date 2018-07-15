@@ -71,7 +71,7 @@ export class PhotoService {
   private getPhotoPage(tags: string): Observable<PhotoPage> {
     this.pending = true;
 
-    return this.rest.yahooQueryCall(tags, this.page*20)                                            .do(Utils.lg('photos requested', 'warn'))
+    return this.rest.yahooQueryCall(tags, this.page*20)                                            .do(Utils.lg('Photos requested', 'warn'))
       .catch(error => {
         setTimeout(() => this.msgSvc.error(error.message));
         return Observable.of({data:'', paging:''});

@@ -45,7 +45,7 @@ export class HeaderComponent implements OnInit {
   }
 
   selectAll() {
-    this.searchInput.nativeElement.select();
+    setTimeout(() => this.searchInput.nativeElement.select());
   }
 
 }
