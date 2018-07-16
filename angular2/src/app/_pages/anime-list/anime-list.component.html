@@ -1,5 +1,11 @@
 <div class="col-md-12 no-gutter table-responsive">
-  <table class="table table-condensed table-striped" id="rolesTable">
+  <table class="table table-fixed table-condensed table-striped" id="rolesHeader">
+    <colgroup>
+      <col width="1%">
+      <col width="70%">
+      <col width="25%">
+      <col width="90">
+    </colgroup>
     <thead>
     <tr>
       <td></td>
@@ -29,27 +35,36 @@
         </th>
       </tr>
     </thead>
-
-    <tbody *ngFor="let tier of output | orderBy:['type']:tierOrder" [id]="tier.type">
-      <tr *ngFor="let anime of tier.list | orderBy:[sorter.orderByField]:sorter.ascending; let idx=index">
-        <td class="text-center">{{idx + 1}}</td>
-        <td class="anime-title">
-          <a [href]="anime.link" target="_blank">
-            <img class="anime-thumb" *ngIf="anime.thumb" [src]="anime.thumb" /> <!--TODO fallback-->
-          </a>
-          &nbsp;
-          <a [href]="anime.link" target="_blank">{{anime.title}}</a>
-        </td>
-        <td class="text-right characters">
-          <div [class.more-chars]="anime.characters.length > 1">{{anime.mainCharacter}}</div>
-          <div class="char-list">
-            <div *ngFor="let char of anime.characters" [class.main]="char.main">{{char.name}}</div>
-          </div>
-        </td>
-        <td class="text-center" [class.main]="anime.main">
-          {{anime.main ? 'main':'supporting'}}
-        </td>
-      </tr>
-    </tbody>
   </table>
+  <div class="wrapper">
+    <table class="table table-fixed table-condensed table-striped" id="rolesTable">
+      <colgroup>
+        <col width="1%">
+        <col width="70%">
+        <col width="25%">
+        <col width="90">
+      </colgroup>
+      <tbody *ngFor="let tier of output | orderBy:['type']:tierOrder" [id]="tier.type">
+        <tr *ngFor="let anime of tier.list | orderBy:[sorter.orderByField]:sorter.ascending; let idx=index">
+          <td class="text-center">{{idx + 1}}</td>
+          <td class="anime-title">
+            <a [href]="anime.link" target="_blank">
+              <img class="anime-thumb" *ngIf="anime.thumb" [src]="anime.thumb" /> <!--TODO fallback-->
+            </a>
+            &nbsp;
+            <a [href]="anime.link" target="_blank">{{anime.title}}</a>
+          </td>
+          <td class="text-right characters">
+            <div [class.more-chars]="anime.characters.length > 1">{{anime.mainCharacter}}</div>
+            <div class="char-list">
+              <div *ngFor="let char of anime.characters" [class.main]="char.main">{{char.name}}</div>
+            </div>
+          </td>
+          <td class="text-center tier" [class.main]="anime.main">
+            {{anime.main ? 'main':'supporting'}}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
