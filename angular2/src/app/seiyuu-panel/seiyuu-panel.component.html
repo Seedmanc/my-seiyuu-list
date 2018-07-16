@@ -23,7 +23,7 @@
       </tr>
       <tr>
         <td><b>titles</b>: {{seiyuu.count}}</td>
-        <td>&nbsp;<b>views</b>: {{seiyuu.hits}}</td>
+        <td *ngIf="seiyuu.hits">&nbsp;<b>views</b>: {{seiyuu.hits}}</td>
       </tr>
     </tbody>
   </table>

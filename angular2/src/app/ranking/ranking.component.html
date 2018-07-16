@@ -18,10 +18,12 @@
           <msl-sort-link field="count">anime</msl-sort-link>
         </th>
         <th>
-          <msl-sort-link field="hits">views</msl-sort-link>
+          <msl-spinner size="1.75rem" *ngIf="pending.is"></msl-spinner>
+          <msl-sort-link field="hits" *ngIf="!pending.is">views</msl-sort-link>
         </th>
         <th>
-          <msl-sort-link>accessed</msl-sort-link>
+          <span *ngIf="pending.is">accessed</span>
+          <msl-sort-link *ngIf="!pending.is">accessed</msl-sort-link>
         </th>
       </tr>
       </thead>
@@ -35,11 +37,13 @@
           <col width="35%">
         </colgroup>
         <tbody>
-        <tr *ngFor="let seiyuu of seiyuuSvc.totalList$ | async | orderBy:[sorter.orderByField]:sorter.ascending">
+        <tr *ngFor="let seiyuu of rankingList | orderBy:[sorter.orderByField]:sorter.ascending">
           <td><a [href]="seiyuu.link" target="_blank">{{seiyuu.name}}</a></td>
           <td>{{seiyuu.count}}</td>
           <td>{{seiyuu.hits}}</td>
-          <td [attr.data-date]="seiyuu.accessed.valueOf()">{{seiyuu.accessed | date:'dd.MM.yyyy'}}</td>
+          <td [attr.data-date]="seiyuu.accessed && seiyuu.accessed.valueOf()">
+            <span *ngIf="seiyuu.accessed">{{seiyuu.accessed | date:'dd.MM.yyyy'}}</span>
+          </td>
         </tr>
         </tbody>
       </table>

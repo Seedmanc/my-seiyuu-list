@@ -46,6 +46,7 @@ import 'rxjs/add/operator/share';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/switchMap';
 import "rxjs/add/operator/let";
+import "rxjs/add/operator/finally";
 
 @NgModule({
   declarations: [

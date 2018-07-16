@@ -20,8 +20,7 @@ export class BasicSeiyuu {
     const temp = obj.namesakes ?
       obj :
       {...obj,
-        updated: new Date(obj.updated),
-        accessed: obj.accessed && new Date(obj.accessed) || new Date(obj.updated)
+        updated: obj.updated && new Date(obj.updated)
       };
 
     this.upgrade(temp);
@@ -51,6 +50,8 @@ export class BasicSeiyuu {
     Object.keys(obj).forEach(key => {
       if (this[key] === undefined) this[key] = obj[key];
     });
+    let date = obj.accessed || obj.updated;
+    this.accessed = date && new Date(date) || this.accessed;
     return this;
   }
 

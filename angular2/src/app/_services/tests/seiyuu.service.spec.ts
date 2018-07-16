@@ -15,7 +15,7 @@ import {Observable} from "rxjs/Observable";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
 export const mockList = (backend, returned) => backend.expectOne({
   url:
-    `${env.mongoUrl}/collections/seiyuu-test?apiKey=${env.apiKey}&f={"name":1,"hits":1,"updated":1,"count":1,"accessed":1,"alternate_name":1}&s={"name":1}`,
+    `${env.mongoUrl}/collections/seiyuu-test?apiKey=${env.apiKey}&f={"name":1,"count":1,"updated":1,"alternate_name":1}&s={"name":1}`,
   method:'GET'
 }, 'GET to count the # of records in the seiyuu DB').flush(...returned);
 export const basicList = [
@@ -37,7 +37,7 @@ describe('SeiyuuService', () => {
 
   it('should on init fetch the brief list from seiyuu, toggling pending state',
     inject([SeiyuuService, HttpTestingController, MessagesService],
-      (service:SeiyuuService, backend:HttpTestingController, msgSvc:MessagesService) => {
+      (service:SeiyuuService, backend:HttpTestingController ) => {
 
       expect(service.pending).toBeTruthy();
       service.totalList$.subscribe(data => x=data);
@@ -46,6 +46,34 @@ describe('SeiyuuService', () => {
 
       expect(x).toBeTruthy();
       expect(service.pending).toBeFalsy();
+    })
+   );
+
+  it('should on ranking fetch the additional details list from seiyuu (if not yet), toggling local pending state',
+    inject([SeiyuuService, HttpTestingController, MessagesService],
+      (service:SeiyuuService, backend:HttpTestingController ) => {
+      let pending = {is: true};
+
+      service.getRanking(pending).subscribe(data => x=data);
+
+      mockList(backend, [basicList]);
+
+      backend.expectOne({
+        url: `${env.mongoUrl}/collections/seiyuu-test?apiKey=${env.apiKey}&f={"hits":1,"accessed":1}`,
+        method:'GET'
+      }, 'GET to load additional seiyuu details').flush([basicList]);
+
+      expect(x).toBeTruthy();
+      expect(pending.is).toBeFalsy();
+
+      pending = {is: true};
+
+      service.getRanking(pending).subscribe( );
+
+      backend.expectNone({
+        url: `${env.mongoUrl}/collections/seiyuu-test?apiKey=${env.apiKey}&f={"hits":1,"accessed":1}`,
+        method:'GET'
+      }, 'GET to load additional seiyuu details');
     })
    );
 
@@ -80,7 +108,7 @@ describe('SeiyuuService', () => {
           .subscribe(r => x=r);
 
         let request = backend.expectOne(
-          `${env.mongoUrl}/collections/seiyuu-test?apiKey=${env.apiKey}&f={"name":1,"hits":1,"updated":1,"count":1,"accessed":1,"alternate_name":1}&s={"name":1}`
+          `${env.mongoUrl}/collections/seiyuu-test?apiKey=${env.apiKey}&f={"name":1,"count":1,"updated":1,"alternate_name":1}&s={"name":1}`
         );
         request.error(new ErrorEvent(''));
       }).toThrow();

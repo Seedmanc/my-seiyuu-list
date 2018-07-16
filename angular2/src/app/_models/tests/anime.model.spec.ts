@@ -22,7 +22,7 @@ const sampleData = {
   }
 };
 
-fdescribe('Anime model', () => {
+describe('Anime model', () => {
   it('should have working getters without activeSeiyuu or cache', () => {
     let anime = new Anime(sampleData);
 

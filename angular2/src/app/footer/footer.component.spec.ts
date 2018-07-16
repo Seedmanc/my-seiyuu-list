@@ -13,6 +13,7 @@ import {RestServiceMock} from "../_services/tests/rest.service.mock";
 import {RoutingServiceMock} from "../_services/tests/routing.service.mock";
 import {SorterService} from "../_services/sorter.service";
 import {SortLinkComponent} from "../sort-link/sort-link.component";
+import {SpinnerComponent} from "../spinner/spinner.component";
 
 describe('FooterComponent', () => {
   let component: FooterComponent;
@@ -20,7 +21,7 @@ describe('FooterComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FooterComponent, RankingComponent, OrderByPipe, SortLinkComponent],
+      declarations: [ FooterComponent, RankingComponent, OrderByPipe, SortLinkComponent, SpinnerComponent],
       providers: [SorterService,
         SeiyuuService, {provide: RestService, useClass: RestServiceMock}, MessagesService,
         {provide: RoutingService, useClass: RoutingServiceMock}

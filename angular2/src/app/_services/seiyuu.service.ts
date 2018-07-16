@@ -18,6 +18,7 @@ export class SeiyuuService {
 
   pending: boolean = true;
 
+  private rankingLoaded = false;
   private routeId$: Observable<number[]>;
   private picked$: Subject<number> = new Subject();
   private updateRequest$: Subject<number> = new Subject();
@@ -157,7 +158,7 @@ export class SeiyuuService {
       coll: 'seiyuu-test',
       mode: 'GET',
       query: {
-        f: {name: 1, hits: 1, updated: 1, count: 1, accessed: 1, alternate_name: 1},
+        f: {name: 1, count: 1, updated: 1, alternate_name: 1},
         s: {name: 1}
       }
     }).map(list => list.map(el => new BasicSeiyuu(el)))
@@ -169,6 +170,34 @@ export class SeiyuuService {
         this.pending = false;
 
         throw err;
+      });
+  }
+
+  getRanking(pending): Observable<BasicSeiyuu[]> {
+    pending.is = true;
+
+     return this.totalList$
+      .do(list => {
+        if (!this.rankingLoaded)
+          this.rest.mongoCall({
+            coll: 'seiyuu-test',
+            mode: 'GET',
+            query: {
+              f: {hits: 1, accessed: 1}
+            }
+          })
+            .do(newList => {
+              newList.forEach(newSeiyuu => {
+                let oldSeiyuu = list.find(seiyuu => seiyuu._id == newSeiyuu._id);
+                oldSeiyuu && oldSeiyuu.upgrade(newSeiyuu);
+              });
+
+              this.rankingLoaded = true;
+            })
+            .finally(() =>pending.is = false)
+            .subscribe()
+        else
+          pending.is = false;
       });
   }
 
