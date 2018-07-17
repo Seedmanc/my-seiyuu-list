@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {env} from "../../environments/environment";
 import {Observable} from "rxjs/Observable";
+import {Subject} from "rxjs/Subject";
 
 interface YQLresponse {
   query: {
@@ -10,6 +11,16 @@ interface YQLresponse {
       result: string[]
     }
   };
+}
+
+interface googleQresponse {
+  status: string,
+  table?: {cols: any[],
+    rows: {
+      c: {v: string}[]
+    }[]
+  },
+  error?: any
 }
 
 @Injectable()
@@ -61,6 +72,7 @@ $scope.debug += '\n\r' + JSON.stringify(error) + ' Error accessing database.';
   yahooQueryCall(tags: string, pid: number): Observable<any> {
     let koeurl = encodeURIComponent(`${env.koeurl}${tags}&pid=${pid}`);
 
+
     return this.http.get<YQLresponse>([
       'https://query.yahooapis.com/v1/public/yql?q=',
         `SELECT * FROM htmlstring WHERE url = '${koeurl}' AND xpath IN (`,
@@ -77,6 +89,27 @@ $scope.debug += '\n\r' + JSON.stringify(error) + ' Error accessing database.';
       //TODO global error reporting
       return {data: response.query.results.result[1], paging: response.query.results.result[2]};
     });
+  }
+
+  googleQueryCall(names: string[]): Observable<googleQresponse> {
+    let subject: Subject<googleQresponse> = new Subject();
+    let contains = names.map(name => `C contains '${name}'`).join(' AND ');
+
+    const document = '1C4mrBWJxPLrFQ4bp82UA2ICOr1e6ER47wF7YuElyoZg';
+    const sheet = '1655460507';
+
+    // muh callback in not defined, muh CORS
+    window['handleJsonp'] = x => subject.next(x);
+    // because fuck you, that's why
+
+    return this.http.jsonp<googleQresponse>([
+      `https://docs.google.com/spreadsheets/d/${document}/gviz/tq?gid=${sheet}&tq=`,
+        'SELECT A,B,C WHERE ',
+        contains,
+      '&tqx=responseHandler:handleJsonp'
+      ].join(''),
+      ''
+    ).merge(subject);
   }
 
 }

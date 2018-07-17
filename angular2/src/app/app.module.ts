@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import {Router} from "@angular/router";
-import {HttpClientModule} from '@angular/common/http';
+import {HttpClientJsonpModule, HttpClientModule} from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
@@ -25,6 +25,7 @@ import {env} from "../environments/environment";
 import { SortLinkComponent } from './sort-link/sort-link.component';
 
 import 'rxjs/add/observable/fromEvent';
+import 'rxjs/add/observable/empty';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/map';
@@ -69,6 +70,7 @@ import "rxjs/add/operator/finally";
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    HttpClientJsonpModule,
     FormsModule,
     RouterModule
   ],
