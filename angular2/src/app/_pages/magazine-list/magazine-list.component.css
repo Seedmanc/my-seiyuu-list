@@ -1,0 +1,61 @@
+.magazine {
+  display: flex;
+  align-items: center;
+  text-align: center;
+
+  border: 1px solid #AAA;
+  border-radius: 0.5rem;
+
+  margin-top: 1rem;
+  padding: 1rem 0;
+}
+
+.type {
+  font-weight: bold;
+  min-width: 12rem;
+  padding: 0 1rem 1rem;
+}
+
+
+.issue-row {
+  display: flex;
+}
+.issue-row + .issue-row {
+  border-top: 1px solid lightgray;
+}
+
+.issue-row:not(:last-of-type) {
+  padding-bottom: 1rem;
+}
+.issue-row:not(:first-of-type) {
+  padding-top: 1rem;
+}
+
+.issue {
+  min-width: 8rem;
+  align-self: center;
+}
+
+
+.seiyuus {
+  text-align: justify;
+  line-height: 90%;
+  align-self: center;
+  padding-right: 1rem;
+}
+
+.seiyuu {
+  font-size: 80%;
+}
+
+.seiyuu + .seiyuu::before {
+  content: ', ';
+}
+
+.seiyuu:last-of-type::after {
+  content: '.';
+}
+
+.selected {
+  font-weight: bold;
+}

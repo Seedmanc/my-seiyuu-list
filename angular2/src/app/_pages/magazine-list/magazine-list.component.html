@@ -1,3 +1,15 @@
-<p id="magazines">
-  magazine-list works!
-</p>
+<div id="magazines">
+
+  <div class="magazine" *ngFor="let m of magazineSvc.display$ | async">
+    <div class="type">{{m.magazine}}</div>
+    <div class="contents">
+      <div class="issue-row" *ngFor="let i of m.issues">
+        <div class="issue">{{i.issue}}</div>
+        <div class="seiyuus">
+          <span class="seiyuu" *ngFor="let s of i.seiyuus" [class.selected]="isSelected(s)">{{s}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
