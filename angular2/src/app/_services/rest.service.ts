@@ -13,7 +13,7 @@ interface YQLresponse {
   };
 }
 
-interface googleQresponse {
+interface GoogleQresponse {
   status: string,
   table?: {cols: any[],
     rows: {
@@ -91,8 +91,8 @@ $scope.debug += '\n\r' + JSON.stringify(error) + ' Error accessing database.';
     });
   }
 
-  googleQueryCall(names: string[]): Observable<googleQresponse> {
-    let subject: Subject<googleQresponse> = new Subject();
+  googleQueryCall(names: string[]): Observable<GoogleQresponse> {
+    let subject: Subject<GoogleQresponse> = new Subject();
     let contains = names.map(name => `C contains '${name}'`).join(' AND ');
 
     const document = '1C4mrBWJxPLrFQ4bp82UA2ICOr1e6ER47wF7YuElyoZg';
@@ -102,7 +102,7 @@ $scope.debug += '\n\r' + JSON.stringify(error) + ' Error accessing database.';
     window['handleJsonp'] = x => subject.next(x);
     // because fuck you, that's why
 
-    return this.http.jsonp<googleQresponse>([
+    return this.http.jsonp<GoogleQresponse>([
       `https://docs.google.com/spreadsheets/d/${document}/gviz/tq?gid=${sheet}&tq=`,
         'SELECT A,B,C WHERE ',
         contains,

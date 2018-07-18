@@ -1,11 +1,12 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
+import {Observable} from "rxjs/Observable";
 
 import {RestService} from "./rest.service";
 import {MessagesService} from "./messages.service";
 import {SeiyuuService} from "./seiyuu.service";
 import {RoutingService} from "./routing.service";
-import {Observable} from "rxjs/Observable";
+import {Magazine} from "../_models/magazine.model";
 
 @Injectable()
 export class MagazineService {
@@ -21,13 +22,23 @@ export class MagazineService {
 
       .subscribe(this.display$);*/
 
-    this.rest.googleQueryCall(['Horie Yui', 'myco'])
+    this.rest.googleQueryCall(['Horie Yui'])
       .catch(err => {
         let result = Observable.of(err);
 
         if (err.error && err.error.message.includes('callback'))
-          result = null;
-        return Observable.empty();
+          result = Observable.empty();
+        return result;
+      })
+      .map(({table: {rows}}) => {
+        let hashOfMagazines = {};
+
+        rows.forEach(({c: [{v: issue}, {v: magazine}, {v: seiyuus}] }) =>
+          hashOfMagazines[magazine] = [...(hashOfMagazines[magazine] || []), {issue, seiyuus}]
+        );
+
+        return Object.keys(hashOfMagazines)
+          .map(name => new Magazine(name, hashOfMagazines[name]));
       })
       .subscribe(this.display$);
   }
