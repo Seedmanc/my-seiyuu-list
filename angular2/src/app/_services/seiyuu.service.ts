@@ -72,9 +72,12 @@ export class SeiyuuService {
 
     // set the last fully loaded seiyuu as currently active
     this.loadedSeiyuu$
+      .delayWhen(() => this.totalList$)
       .subscribe(seiyuus => {
         if (seiyuus.length)
-          this.selected$.next(seiyuus.slice(-1)[0]._id);
+          this.selected$.next(seiyuus.slice(-1)[0]._id)
+        else
+          this.messageSvc.totals();
       });
   }
 
@@ -163,6 +166,7 @@ export class SeiyuuService {
       }
     }).map(list => list.map(el => new BasicSeiyuu(el)))
       .do(list => list.forEach(seiyuu => this.cachedSeiyuu[seiyuu._id] = seiyuu))
+      .do(list => this.messageSvc.setTotals({seiyuu: list.length}))
       .catch(err => {
         this.messageSvc.error('Error getting cached list: '+err.status);
 

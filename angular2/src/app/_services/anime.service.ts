@@ -15,28 +15,18 @@ export class AnimeService {
   displayAnime$: BehaviorSubject<any[]> = new BehaviorSubject([]);
   mainOnly$: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
-  private animeCount$: Observable<number>;
-
   constructor(private rest: RestService,
-              private msgSvc: MessagesService,
+              private messageSvc: MessagesService,
               private routingSvc: RoutingService,
               private seiyuuSvc: SeiyuuService) {
 
-    this.animeCount$ = this.rest.mongoCall({
+    this.rest.mongoCall({
       coll: 'anime',
       mode: 'GET',
       query: {c: true}
     })                                                                                             .do(Utils.lg('AnimeCount requested', 'warn'))
-      .startWith(0)
-      .share();
-
-    this.seiyuuSvc.loadedSeiyuu$
-      .filter(list => list && list.length === 0)
-      .combineLatest(this.seiyuuSvc.totalList$, this.animeCount$)
-      .subscribe(([, seiyuus, acount]) => {
-         msgSvc.totals(seiyuus.length, acount);   //to reset status when all seiyuu removed
-      });
-
+      .do(anime => this.messageSvc.setTotals({anime}))
+      .subscribe(() => this.messageSvc.totals());
 
     this.seiyuuSvc.selected$.subscribe(id => {if (id) Anime.activeSeiyuu = id;});
 
@@ -49,7 +39,7 @@ export class AnimeService {
       .do(({anime, seiyuuCount}) => {
 
         if (seiyuuCount) {
-          this.msgSvc.status(
+          this.messageSvc.status(
             `${anime.length || 'no'} ${seiyuuCount > 1 ? 'shared ' : ''}anime found`
           );
         }

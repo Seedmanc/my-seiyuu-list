@@ -7,6 +7,11 @@ export class MessagesService {
   message$: Subject<{isError?:boolean, data?: string}> = new BehaviorSubject({});
   resetSearch$ = new Subject();
 
+  private counts = {
+    seiyuu: 0,
+    anime: 0
+  };
+
   constructor() { }
 
   error(text) {
@@ -17,9 +22,9 @@ export class MessagesService {
     this.message$.next({isError: false, data: text});
   }
 
-  totals(s?: number, a?: number) {
-    if (s)
-      this.status(s + ` seiyuu ${a ? '& ' +a+' anime ' : ''}records cached`)
+  totals() {
+    if (this.counts.seiyuu)
+      this.status(this.counts.seiyuu + ` seiyuu ${this.counts.anime ? '& ' +this.counts.anime+' anime ' : ''}records cached`)
     else
       this.error('no cached records found');
   }
@@ -34,4 +39,7 @@ export class MessagesService {
       ''}`;
   }
 
+  setTotals(counts: any) {
+    Object.assign(this.counts, counts);
+  }
 }
