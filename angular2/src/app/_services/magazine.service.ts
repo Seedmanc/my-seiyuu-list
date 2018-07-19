@@ -15,6 +15,8 @@ export class MagazineService {
   display$: BehaviorSubject<any> = new BehaviorSubject([]);
   pending = false;
 
+  private cache: {[key: string]: Magazine[]} = {};
+
   constructor(private rest: RestService,
               private msgSvc: MessagesService,
               private routingSvc: RoutingService,
@@ -22,7 +24,7 @@ export class MagazineService {
 
     this.seiyuuSvc.loadedSeiyuu$                                                                   .do(Utils.asrt('M loadedSeiyuu', x => Array.isArray(x)))
       .let(Utils.runOnTab<Seiyuu[]>(this.routingSvc.tab$, 'magazines'))
-      .map(seiyuus => seiyuus.map(seiyuu => seiyuu.displayName))
+      .map(seiyuus => seiyuus.map(seiyuu => seiyuu.displayName).sort())
       .switchMap(names => this.getMagazines(names))
       .do(magazines => {
         let iss = magazines.reduce((p, c) => p + c.issues.length, 0);
@@ -43,25 +45,31 @@ export class MagazineService {
     this.pending = true;
 
     return names.length ?
-      this.rest.googleQueryCall(names)
-        .catch(err => {
-          let result = Observable.of(err);
 
-          if (err.error && err.error.message.includes('callback'))
-            result = Observable.empty();
-          return result;
-        })
-        .map(({table: {rows}}) => {
-          let hashOfMagazines = {};
+      this.cache[names.join()] ?
 
-          rows.forEach(({c: [{v: issue}, {v: magazine}, {v: seiyuus}] }) =>
-            hashOfMagazines[magazine] = [...(hashOfMagazines[magazine] || []), {issue, seiyuus}]
-          );
+        Observable.of(this.cache[names.join()])
+        : this.rest.googleQueryCall(names)
+          .catch(err => {
+            let result = Observable.of(err);
 
-          return Object.keys(hashOfMagazines)
-            .map(name => new Magazine(name, hashOfMagazines[name]));
-        }) :
-      Observable.of([]);
+            if (err.error && err.error.message.includes('callback'))
+              result = Observable.empty();
+            return result;
+          })
+          .map(({table: {rows}}) => {
+            let hashOfMagazines = {};
+
+            rows.forEach(({c: [{v: issue}, {v: magazine}, {v: seiyuus}] }) =>
+              hashOfMagazines[magazine] = [...(hashOfMagazines[magazine] || []), {issue, seiyuus}]
+            );
+
+            return Object.keys(hashOfMagazines)
+              .map(name => new Magazine(name, hashOfMagazines[name]));
+          })
+          .do(list => this.cache[names.join()] = list)
+
+      : Observable.of([]);
   }
 
 }

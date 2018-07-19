@@ -11,7 +11,7 @@
 }
 @media (max-width: 768px) {
   #magazines {
-    max-height: calc(100vh - 46rem);
+    max-height: calc(100vh - 48rem);
   }
 }
 
@@ -27,6 +27,11 @@
   margin-top: 1rem;
   padding: 1rem 0;
   background: #fafafa;
+}
+@media (max-width: 768px) {
+  .magazine {
+    flex-direction: column;
+  }
 }
 
 .type {
@@ -48,6 +53,14 @@
 }
 .issue-row:not(:first-of-type) {
   padding-top: 1rem;
+}
+@media (max-width: 540px) {
+  .issue-row {
+    flex-direction: column;
+  }
+  .seiyuus {
+    padding-left: 1rem;
+  }
 }
 
 .issue {
