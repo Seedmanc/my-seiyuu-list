@@ -1,7 +1,9 @@
 <div id="magazines">
 
   <div class="magazine" *ngFor="let m of magazineSvc.display$ | async">
-    <div class="type">{{m.magazine}}</div>
+    <div class="type">
+      <img src="assets/{{m.logo}}.png" [title]="m.magazine" [alt]="m.magazine"/>
+    </div>
     <div class="contents">
       <div class="issue-row" *ngFor="let i of m.issues">
         <div class="issue">{{i.issue}}</div>

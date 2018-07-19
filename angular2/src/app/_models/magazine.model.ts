@@ -7,6 +7,10 @@ export class Magazine {
   magazine: string;
   issues: Issue[];
 
+  get logo(): string {
+    return this.magazine.toLowerCase().replace(/\s+/g, '_');
+  }
+
   constructor(magazine: string, issues: any[]) {
     this.magazine = magazine.replace(':', '');
 
