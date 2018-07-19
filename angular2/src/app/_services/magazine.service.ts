@@ -13,6 +13,7 @@ import {Seiyuu} from "../_models/seiyuu.model";
 @Injectable()
 export class MagazineService {
   display$: BehaviorSubject<any> = new BehaviorSubject([]);
+  pending = false;
 
   constructor(private rest: RestService,
               private msgSvc: MessagesService,
@@ -31,12 +32,15 @@ export class MagazineService {
             magazines.length ?
               `found ${iss} issue${Utils.pluralize(iss)} in ${magazines.length} magazine${Utils.pluralize(magazines.length)}`:
               'no magazines found'
-          )
+          );
+        this.pending = false;
       })
+      .finally(() => this.pending = false)
       .subscribe(this.display$);
   }
 
   private getMagazines(names: string[]): Observable<Magazine[]> {
+    this.pending = true;
 
     return names.length ?
       this.rest.googleQueryCall(names)

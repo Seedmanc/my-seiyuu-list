@@ -1,3 +1,21 @@
+#magazines-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 30vh;
+}
+
+#magazines {
+  max-height: calc(100vh - 15rem);
+  overflow: auto;
+}
+@media (max-width: 768px) {
+  #magazines {
+    max-height: calc(100vh - 46rem);
+  }
+}
+
+
 .magazine {
   display: flex;
   align-items: center;
@@ -8,12 +26,13 @@
 
   margin-top: 1rem;
   padding: 1rem 0;
+  background: #fafafa;
 }
 
 .type {
   font-weight: bold;
   min-width: 14rem;
-  padding: 0 1rem 1rem;
+  padding: 1rem;
 }
 
 

@@ -69,6 +69,7 @@ h4 {
 @media (max-width: 768px) {
   .seiyuu {
     width: 49%!important;
+    min-width: 145px;
   }
 
   :host:nth-child(even) .seiyuu {

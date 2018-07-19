@@ -1,5 +1,8 @@
-<div id="magazines">
+<div id="magazines-spinner" *ngIf="magazineSvc.pending">
+  <msl-spinner size="calc(15vmin)"></msl-spinner>
+</div>
 
+<div id="magazines" *ngIf="!magazineSvc.pending">
   <div class="magazine" *ngFor="let m of magazineSvc.display$ | async">
     <div class="type">
       <img src="assets/{{m.logo}}.png" [title]="m.magazine" [alt]="m.magazine"/>
