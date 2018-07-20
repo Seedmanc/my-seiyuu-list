@@ -18,24 +18,27 @@ export class MagazineService {
   private cache: {[key: string]: Magazine[]} = {};
 
   constructor(private rest: RestService,
-              private msgSvc: MessagesService,
+              private messageSvc: MessagesService,
               private routingSvc: RoutingService,
               private seiyuuSvc: SeiyuuService) {
 
-    this.seiyuuSvc.loadedSeiyuu$                                                                   .do(Utils.asrt('M loadedSeiyuu', x => Array.isArray(x)))
+    this.seiyuuSvc.displayList$                                                                   .do(Utils.asrt('M displayList', x => Array.isArray(x)))
       .let(Utils.runOnTab<Seiyuu[]>(this.routingSvc.tab$, 'magazines'))
       .map(seiyuus => seiyuus.map(seiyuu => seiyuu.displayName).sort())
-      .switchMap(names => this.getMagazines(names))
-      .do(magazines => {
+      .switchMap(names => this.getMagazines(names))                                               .do(Utils.asrt('Magazine list'))
+      .withLatestFrom(this.seiyuuSvc.displayList$)
+      .map(([magazines,seiyuus]) => {
         let iss = magazines.reduce((p, c) => p + c.issues.length, 0);
 
-        if (this.seiyuuSvc.loadedSeiyuu$.getValue().length)
-          this.msgSvc.status(
+        if (seiyuus.length)
+          this.messageSvc.status(
             magazines.length ?
               `found ${iss} issue${Utils.pluralize(iss)} in ${magazines.length} magazine${Utils.pluralize(magazines.length)}`:
               'no magazines found'
           );
         this.pending = false;
+
+        return magazines;
       })
       .finally(() => this.pending = false)
       .subscribe(this.display$);
@@ -49,7 +52,7 @@ export class MagazineService {
       this.cache[names.join()] ?
 
         Observable.of(this.cache[names.join()])
-        : this.rest.googleQueryCall(names)
+        : this.rest.googleQueryCall(names)                                                      .do(Utils.lg('Magazines requested', 'warn'))
           .catch(err => {
             let result = Observable.of(err);
 

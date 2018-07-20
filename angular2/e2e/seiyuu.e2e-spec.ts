@@ -1,6 +1,6 @@
 import { protractor, browser, by, element} from "protractor";
-import {SeiyuuPage} from "./seiyuu.po";
-import {AppPage} from "./app.po";
+import {SeiyuuPage} from "./po/seiyuu.po";
+import {AppPage} from "./po/app.po";
 
 describe('seiyuu lookups', () => {
   let seiyuu: SeiyuuPage;

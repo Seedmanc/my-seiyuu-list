@@ -40,4 +40,22 @@ describe('MessagesService', () => {
     })
   );
 
+  it('should store seiyuu and anime record counts and display status based on them',
+    inject([MessagesService], (service:MessagesService) => {
+      let x;
+
+      service.message$.subscribe(data => x=data);
+      service.totals();
+      expect(JSON.stringify(x)).toEqual(JSON.stringify({isError: true, data: 'no cached records found'}));
+
+      service.setTotals({seiyuu: 2});
+      service.totals();
+      expect(JSON.stringify(x)).toEqual(JSON.stringify({isError: false, data: '2 seiyuu records cached'}));
+
+      service.setTotals({anime: 3});
+      service.totals();
+      expect(JSON.stringify(x)).toEqual(JSON.stringify({isError: false, data: '2 seiyuu & 3 anime records cached'}));
+    })
+  )
+
 });

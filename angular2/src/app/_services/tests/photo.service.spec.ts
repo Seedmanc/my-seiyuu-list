@@ -142,18 +142,20 @@ describe('PhotoService', () => {
   );
 
   it('should count images properly',
-    inject([SeiyuuService, PhotoService,  RestService , RoutingService],
-       (seiyuuSvc: SeiyuuService, service:PhotoService, rest: RestService,   routingSvc: RoutingService) => {
+    inject([SeiyuuService, PhotoService,  RestService , RoutingService, MessagesService],
+       (seiyuuSvc: SeiyuuService, service:PhotoService, rest: RestService,   routingSvc: RoutingService, msgSvc: MessagesService) => {
       service.displayPhotos$.subscribe(({html, ...data}) => x = data);
       let djresult10 = {...djresult2};
       djresult10.data = (new Array(10)).fill(djresult10.data).join('');
       let spy = spyOn(rest, 'yahooQueryCall').and.returnValue(Observable.of(djresult10));
+      let spy3 = spyOn(msgSvc, 'status');
 
       routingSvc.tab$.next('photos');
       seiyuuSvc.displayList$['next']([new Seiyuu({name: 'Davidyuk Jenya'})]);
       expect(spy).toHaveBeenCalledWith('davidyuk_jenya+solo', 0);
 
       expect(JSON.stringify(x)).toBe(JSON.stringify({"pageNum":0,"total":10,"next":false,"prev":false}));
+      expect(spy3).toHaveBeenCalledWith('10 images found');
     })
   );
 

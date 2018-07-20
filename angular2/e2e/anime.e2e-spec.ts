@@ -1,7 +1,7 @@
 import { protractor, browser, by, element } from "protractor";
-import {SeiyuuPage} from "./seiyuu.po";
-import {AppPage} from "./app.po";
-import {AnimePage} from "./anime.po";
+import {SeiyuuPage} from "./po/seiyuu.po";
+import {AppPage} from "./po/app.po";
+import {AnimePage} from "./po/anime.po";
 
 describe('anime lookups', () => {
   let seiyuu: SeiyuuPage;
@@ -118,7 +118,7 @@ describe('anime lookups', () => {
     expect(anime.tbody('supporting').$$('tr').count()).toBeGreaterThanOrEqual(6);
 
     page.tabs().get(1).click();
-    expect(element(by.css('msl-magazine-list p')).isPresent()).toBeTruthy();
+    expect(element(by.css('msl-magazine-list div')).isPresent()).toBeTruthy();
     page.tabs().get(0).click();
     expect(anime.tbody('main').$$('tr').count()).toBeGreaterThanOrEqual(6);
 

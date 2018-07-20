@@ -1,7 +1,7 @@
 import {browser, by, element, protractor} from "protractor";
-import {PhotoPage} from "./photos.po";
-import {AppPage} from "./app.po";
-import {SeiyuuPage} from "./seiyuu.po";
+import {PhotoPage} from "./po/photos.po";
+import {AppPage} from "./po/app.po";
+import {SeiyuuPage} from "./po/seiyuu.po";
 
 describe('photo lookups', () => {
   let page: PhotoPage;

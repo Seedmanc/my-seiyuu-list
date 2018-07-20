@@ -1,5 +1,5 @@
-import { AppPage } from './app.po';
-import {RankingPage} from "./ranking.po";
+import { AppPage } from './po/app.po';
+import {RankingPage} from "./po/ranking.po";
 
 describe('ranking', () => {
   let page: RankingPage, tbody;

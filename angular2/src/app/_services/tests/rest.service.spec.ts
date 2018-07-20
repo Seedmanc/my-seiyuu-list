@@ -5,7 +5,8 @@ import {RestService} from "../rest.service";
 import {env} from "../../../environments/environment";
 import {Observable} from "rxjs/Observable";
 
-let djresponse = {"query":{"count":3,"created":"2018-05-01T12:46:06Z","lang":"ru-RU","results":{"result":["<h5>Tags</h5>","<span class=\"thumb\">\n  <a href=\"index.php?page=post&amp;s=view&amp;id=8380\" id=\"p8380\">\n    <img alt=\"post\" border=\"0\" src=\"http://thumbs.booru.org/koe/thumbnails//8/thumbnail_c24401d03ee551e8a4e08eaafb24ad8fb5cca015.jpg\" title=\" davidyuk_jenya solo tagme  score:0 rating:Safe\"/>\n  </a>\n  &#13;\n    \n  <script type=\"text/javascript\">\n    <![CDATA[\n    //]]>\n    <![CDATA[<![CDATA[\n    posts[8380] = {'tags':'davidyuk_jenya solo tagme'.split(/ /g), 'rating':'Safe', 'score':0, 'user':'Seedmanc'}\n    //]]]]><![CDATA[>\n    ]]>\n  </script>\n</span>","<div id=\"paginator\">\n  <script type=\"text/javascript\">\n    <![CDATA[\n   //]]>\n    <![CDATA[<![CDATA[\n   filterPosts(posts)\n   //]]]]><![CDATA[>\n   ]]>\n  </script>\n   \n  <b>1</b>\n   \n</div>"]}}};
+const djresponse = {"query":{"count":3,"created":"2018-05-01T12:46:06Z","lang":"ru-RU","results":{"result":["<h5>Tags</h5>","<span class=\"thumb\">\n  <a href=\"index.php?page=post&amp;s=view&amp;id=8380\" id=\"p8380\">\n    <img alt=\"post\" border=\"0\" src=\"http://thumbs.booru.org/koe/thumbnails//8/thumbnail_c24401d03ee551e8a4e08eaafb24ad8fb5cca015.jpg\" title=\" davidyuk_jenya solo tagme  score:0 rating:Safe\"/>\n  </a>\n  &#13;\n    \n  <script type=\"text/javascript\">\n    <![CDATA[\n    //]]>\n    <![CDATA[<![CDATA[\n    posts[8380] = {'tags':'davidyuk_jenya solo tagme'.split(/ /g), 'rating':'Safe', 'score':0, 'user':'Seedmanc'}\n    //]]]]><![CDATA[>\n    ]]>\n  </script>\n</span>","<div id=\"paginator\">\n  <script type=\"text/javascript\">\n    <![CDATA[\n   //]]>\n    <![CDATA[<![CDATA[\n   filterPosts(posts)\n   //]]]]><![CDATA[>\n   ]]>\n  </script>\n   \n  <b>1</b>\n   \n</div>"]}}};
+const mkresponse = /*'handleJsonp(*/{"version":"0.6","reqId":"0","status":"ok","sig":"229708994","table":{"cols":[{"id":"A","label":"","type":"string"},{"id":"B","label":"","type":"string"},{"id":"C","label":"","type":"string"}],"rows":[]}}/*)';*/
 
 describe('RestService', () => {
   beforeEach(() => {
@@ -108,5 +109,19 @@ describe('RestService', () => {
 
      expect(spy).toHaveBeenCalledWith(`https://query.yahooapis.com/v1/public/yql?q=SELECT * FROM htmlstring WHERE url = 'http%3A%2F%2Fkoe.booru.org%2Findex.php%3Fpage%3Dpost%26s%3Dlist%26tags%3Dwhatever%26pid%3D0' AND xpath IN ('//div[@id="tag_list"]//h5','//div[@class = "content"]//span[@class = "thumb"]','//div[@id="paginator"]')&format=json&env=store://datatables.org/alltableswithkeys`);
    })
-  )
+  );
+
+  it('googleQueryCall should request magazine data',
+    inject([RestService, HttpClient], (service:RestService, http: HttpClient) => {
+
+      let spy = spyOn(http, 'jsonp').and.returnValue(Observable.of(mkresponse));
+
+      service.googleQueryCall(['Maeda Konomi','Davidyuk Jenya'])
+        .subscribe(data =>
+          expect(JSON.stringify(data)).toBe('{"version":"0.6","reqId":"0","status":"ok","sig":"229708994","table":{"cols":[{"id":"A","label":"","type":"string"},{"id":"B","label":"","type":"string"},{"id":"C","label":"","type":"string"}],"rows":[]}}')
+        );
+
+      expect(spy).toHaveBeenCalled();
+    })
+  );
 });

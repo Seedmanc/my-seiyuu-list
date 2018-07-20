@@ -1,12 +1,13 @@
-import { AppPage } from './app.po';
+import { AppPage } from './po/app.po';
 import {browser, by, element, protractor} from "protractor";
-import {SeiyuuPage} from "./seiyuu.po";
-import {AnimePage} from "./anime.po";
-import {PhotoPage} from "./photos.po";
+import {SeiyuuPage} from "./po/seiyuu.po";
+import {AnimePage} from "./po/anime.po";
+import {PhotoPage} from "./po/photos.po";
 
 describe('my-seiyuu-list App', () => {
   let page: AppPage;
   let EC = protractor.ExpectedConditions;
+  const to = 5000;
 
   beforeEach(() => {
     page = new AppPage();
@@ -20,50 +21,55 @@ describe('my-seiyuu-list App', () => {
       let panel = seiyuu.panel('Maeda Konomi');
       let anime = new AnimePage();
 
-      browser.wait(EC.presenceOf(panel.photo()), 5000);
+      browser.wait(EC.presenceOf(panel.photo()), to);
       browser.sleep(500);
       browser.manage().logs().get('browser')
-        .then(browserLog => {expect(browserLog.find(event => !!~event.message.indexOf('Anime requested'))).toBeFalsy();});
-      console.log('no request yet');
+        .then(browserLog => {
+          expect(browserLog.find(event => !!~event.message.indexOf('Anime requested'))).toBeFalsy();
+          expect(browserLog.find(event => !!~event.message.indexOf('Magazines requested'))).toBeTruthy();
+        });
+      expect(page.statusBar().getText()).toContain('magazines');
+      console.log('1 magazine request');
 
       page.tabs().get(0).click();
-      browser.wait(EC.presenceOf(anime.mainOnly()), 5000);
+      browser.wait(EC.presenceOf(anime.mainOnly()), to);
       browser.manage().logs().get('browser')
         .then(browserLog => {expect(browserLog.find(event => !!~event.message.indexOf('Anime requested'))).toBeTruthy();});
       console.log('1 anime request');
       expect(page.statusBar().getText()).toContain('anime found');
 
       page.tabs().get(2).click();
-      browser.wait(EC.presenceOf(photo.thumbContainer()), 5000);
-      browser.manage().logs().get('browser')
-        .then(browserLog => {expect(browserLog.find(event => !!~event.message.indexOf('Photos requested'))).toBeTruthy();});
-      console.log('1 photo request');
-      expect(page.statusBar().getText()).toContain('image');
+        browser.wait(EC.presenceOf(photo.thumbContainer()), to);
+        browser.manage().logs().get('browser')
+          .then(browserLog => {expect(browserLog.find(event => !!~event.message.indexOf('Photos requested'))).toBeTruthy();});
+        console.log('1 photo request');
+        expect(page.statusBar().getText()).toContain('image');
 
-      page.tabs().get(0).click();
-      browser.wait(EC.presenceOf(anime.mainOnly()), 5000);
-      browser.manage().logs().get('browser')
-        .then(browserLog => {expect(browserLog.filter(event => !!~event.message.indexOf('Anime requested')).length).toBeFalsy();});
-      console.log('no extra anime requests');
-      //expect(page.statusBar().getText()).toContain('anime found');
+        page.tabs().get(0).click();
+        browser.wait(EC.presenceOf(anime.mainOnly()), to);
+        browser.manage().logs().get('browser')
+          .then(browserLog => {expect(browserLog.filter(event => !!~event.message.indexOf('Anime requested')).length).toBeFalsy();});
+        console.log('no extra anime requests');
+        //expect(page.statusBar().getText()).toContain('anime found'); //TODO implement
 
-      page.tabs().get(1).click();
-      browser.wait(EC.presenceOf(element(by.css('#magazines'))), 5000);
-      let name = 'Chihara Minori';
-      page.searchInput().sendKeys(name);
-      let panel2 = seiyuu.panel(name);
-      panel.close().click();
-      browser.wait(EC.presenceOf(panel2.photo()), 5000);
-      browser.sleep(500);
+        page.tabs().get(1).click();
+        browser.wait(EC.presenceOf(element(by.css('#magazines'))), to);
+        let name = 'Chihara Minori';
+        page.searchInput().sendKeys(name);
+        let panel2 = seiyuu.panel(name);
+        panel.close().click();
+        browser.wait(EC.presenceOf(panel2.photo()), to);
+        browser.sleep(500);
+      //expect(page.statusBar().getText()).toContain('magazines'); //TODO implement
 
-      browser.manage().logs().get('browser')
-        .then(browserLog => {expect(browserLog.filter(event =>
-          !!~event.message.indexOf('Anime requested') || !!~event.message.indexOf('Photos requested')).length).toBeFalsy();});
-      console.log('no extra photo or anime requests');
+        browser.manage().logs().get('browser')
+          .then(browserLog => {expect(browserLog.filter(event =>
+            !!~event.message.indexOf('Anime requested') || !!~event.message.indexOf('Photos requested')).length).toBeFalsy();});
+        console.log('no extra photo or anime requests');
 
-      page.tabs().get(2).click();
-      browser.wait(EC.presenceOf(photo.thumbContainer()), 5000);
-      expect(page.statusBar().getText()).toContain('image');
+        page.tabs().get(2).click();
+        browser.wait(EC.presenceOf(photo.thumbContainer()), to);
+        expect(page.statusBar().getText()).toContain('image');
     });
   });
 
@@ -82,7 +88,7 @@ describe('my-seiyuu-list App', () => {
   it('should toggle disqus when clicked', () => {
     expect(page.disqusContainer().isDisplayed()).toBeFalsy();
     page.toggleDisqus().click();
-    browser.wait(EC.visibilityOf(page.disqusContainer()), 5000);
+    browser.wait(EC.visibilityOf(page.disqusContainer()), to);
     expect(page.disqusContainer().$('iframe').isPresent()).toBeTruthy();
     page.toggleDisqus().click();
     expect(page.disqusContainer().isDisplayed()).toBeFalsy();

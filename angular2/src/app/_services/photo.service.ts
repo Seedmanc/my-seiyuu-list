@@ -30,7 +30,7 @@ export class PhotoService {
   constructor(private rest: RestService,
               private routingSvc: RoutingService,
               private seiyuuSvc: SeiyuuService,
-              private msgSvc: MessagesService) {
+              private messageSvc: MessagesService) {
 
     this.pageDelta
       .subscribe(delta => this.page = Math.max(0, this.page+delta));
@@ -43,6 +43,12 @@ export class PhotoService {
       .switchMap(([names,]) => this.wrapper(names))
       .do(() => this.pending = false)
       .distinctUntilChanged()
+      .do(page => {
+        if (page.total)
+          this.messageSvc.status(`${page.total} image${Utils.pluralize(page.total)} found`)
+        else
+          this.messageSvc.blank();
+      })
       .subscribe(this.displayPhotos$);
   }
 
@@ -73,7 +79,7 @@ export class PhotoService {
 
     return this.rest.yahooQueryCall(tags, this.page*20)                                            .do(Utils.lg('Photos requested', 'warn'))
       .catch(error => {
-        setTimeout(() => this.msgSvc.error(error.message));
+        setTimeout(() => this.messageSvc.error(error.message));
         return Observable.of({data:'', paging:''});
       })
       .map(({data, paging}) => {
