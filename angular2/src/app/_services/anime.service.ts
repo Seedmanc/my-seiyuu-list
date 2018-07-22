@@ -38,16 +38,17 @@ export class AnimeService {
       .map(([seiyuus, mainOnly]) => this.animePerSeiyuu(seiyuus, mainOnly))                        .do(Utils.asrt('A roles by anime sets'))
       .map(rolesByAnimeSets => this.sharedAnime(rolesByAnimeSets))                                 .do(Utils.asrt('A shared anime'),
                                                                                                      x => Array.isArray(x) && x[0] && Array.isArray(x[0].rolesBySeiyuu))
+      .let(Utils.replayOnTab(this.routingSvc.tab$, 'anime'))
       .do(({anime, seiyuuCount}) => {
 
         if (seiyuuCount) {
           this.messageSvc.status(
             `${anime.length || 'no'} ${seiyuuCount > 1 ? 'shared ' : ''}anime found`
           );
+          this.loadDetails(anime.map(a => a._id).filter(id => !Anime.detailsCache[id]))
+            .subscribe();
         }
 
-        this.loadDetails(anime.map(a => a._id).filter(id => !Anime.detailsCache[id]))
-          .subscribe();
       })
       .combineLatest(this.seiyuuSvc.selected$.distinctUntilChanged())                               .do(Utils.asrt('Anime results'))
       .map(([data]) => data.anime)

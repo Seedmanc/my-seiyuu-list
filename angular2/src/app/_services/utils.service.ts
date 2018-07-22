@@ -63,4 +63,12 @@ export class Utils {
     }
   }
 
+  static replayOnTab<T>(tabStream:Observable<string>, tabName: string): (source: Observable<T>) => Observable<T> {
+    return (source: Observable<T>): Observable<T> => {
+      return source
+        .combineLatest(tabStream.filter(tab => tab == tabName))
+        .map(([data,]) => data)                                                        .do(Utils.asrt(`replayOnTab[${tabName}]`))
+    }
+  }
+
 }

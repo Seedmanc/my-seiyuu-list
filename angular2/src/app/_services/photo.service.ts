@@ -42,13 +42,12 @@ export class PhotoService {
       .combineLatest(this.pageDelta)                                                                   .do(Utils.lg('photoPage'))
       .switchMap(([names,]) => this.wrapper(names))
       .do(() => this.pending = false)
-      .distinctUntilChanged()
+      .let(Utils.replayOnTab<PhotoPage>(this.routingSvc.tab$, 'photos'))
       .do(page => {
         if (page.total)
-          this.messageSvc.status(`${page.total} image${Utils.pluralize(page.total)} found`)
-        else
-          this.messageSvc.blank();
+          this.messageSvc.status(`${page.total} image${Utils.pluralize(page.total)} found`);
       })
+      .distinctUntilChanged((x,y) => JSON.stringify(x) == JSON.stringify(y))
       .subscribe(this.displayPhotos$);
   }
 
@@ -65,6 +64,8 @@ export class PhotoService {
 
     let tags = names.join('+').toLowerCase().replace(/\s+/g, '_');
     let key = tags + '++' + this.page;
+
+    this.messageSvc.blank();
 
     return hasNames ?
       this.cache[key] ?

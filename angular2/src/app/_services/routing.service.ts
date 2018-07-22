@@ -15,9 +15,10 @@ export class RoutingService {
 
   constructor(private router: Router) {
    this.router.events
-     .filter(e => e instanceof NavigationEnd)                                                             .do(Utils.lg('tab'))
+     .filter(e => e instanceof NavigationEnd)
      .map((e: any) => e.urlAfterRedirects.split('/')[1])
      .do(t => this.tab = t)
+     .distinctUntilChanged()                                                                              .do(Utils.lg('tab'))
      .subscribe(this.tab$);
 
     this.paramMap$                                                                                        .do(Utils.asrt('paramMap'))

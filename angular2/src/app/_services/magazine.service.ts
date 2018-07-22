@@ -26,6 +26,8 @@ export class MagazineService {
       .let(Utils.runOnTab<Seiyuu[]>(this.routingSvc.tab$, 'magazines'))
       .map(seiyuus => seiyuus.map(seiyuu => seiyuu.displayName).sort())
       .switchMap(names => this.getMagazines(names))                                               .do(Utils.asrt('Magazine list'))
+      .do(() => this.pending = false)
+      .let(Utils.replayOnTab<Magazine[]>(this.routingSvc.tab$, 'magazines'))
       .withLatestFrom(this.seiyuuSvc.displayList$)
       .map(([magazines,seiyuus]) => {
         let iss = magazines.reduce((p, c) => p + c.issues.length, 0);
@@ -36,16 +38,14 @@ export class MagazineService {
               `found ${iss} issue${Utils.pluralize(iss)} in ${magazines.length} magazine${Utils.pluralize(magazines.length)}`:
               'no magazines found'
           );
-        this.pending = false;
-
         return magazines;
       })
-      .finally(() => this.pending = false)
       .subscribe(this.display$);
   }
 
   private getMagazines(names: string[]): Observable<Magazine[]> {
     this.pending = true;
+    this.messageSvc.blank();
 
     return names.length ?
 
@@ -57,7 +57,10 @@ export class MagazineService {
             let result = Observable.of(err);
 
             if (err.error && err.error.message.includes('callback'))
-              result = Observable.empty();
+              result = Observable.empty()
+            else
+              this.pending = false;
+
             return result;
           })
           .map(({table: {rows}}) => {
