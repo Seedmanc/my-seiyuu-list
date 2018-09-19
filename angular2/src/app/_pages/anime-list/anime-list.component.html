@@ -28,7 +28,7 @@
           <msl-sort-link field="title" id="anime-title">anime</msl-sort-link>
         </th>
         <th class="text-right char">
-          <msl-sort-link field="mainCharacter">character</msl-sort-link>
+          <msl-sort-link field="firstCharacter">character</msl-sort-link>
         </th>
         <th class="text-center tier" [class.locked]="mainOnly">
           <a href="javascript:void(0)" (click)="tierOrder=!tierOrder">role tier</a>
@@ -48,14 +48,14 @@
         <tr *ngFor="let anime of tier.list | orderBy:[sorter.orderByField]:sorter.ascending; let idx=index">
           <td class="text-center">{{idx + 1}}</td>
           <td class="anime-title">
-            <a [href]="anime.link" target="_blank">
+            <a [href]="anime.link">
               <img class="anime-thumb" *ngIf="anime.thumb" [src]="anime.thumb" /> <!--TODO fallback-->
             </a>
             &nbsp;
-            <a [href]="anime.link" target="_blank">{{anime.title}}</a>
+            <a [href]="anime.link">{{anime.title}}</a>
           </td>
           <td class="text-right characters">
-            <div [class.more-chars]="anime.characters.length > 1">{{anime.mainCharacter}}</div>
+            <div [class.more-chars]="anime.characters.length > 1">{{anime.firstCharacter}}</div>
             <div class="char-list">
               <div *ngFor="let char of anime.characters" [class.main]="char.main">{{char.name}}</div>
             </div>

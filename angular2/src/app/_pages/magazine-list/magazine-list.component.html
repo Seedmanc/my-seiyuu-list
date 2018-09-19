@@ -5,7 +5,7 @@
 <div id="magazines" *ngIf="!magazineSvc.pending">
   <div class="magazine" *ngFor="let m of magazineSvc.display$ | async" [id]="m.magazine.replace(' ', '_').toLowerCase()">
     <div class="type">
-      <img src="assets/{{m.logo}}.png" [title]="m.magazine" [alt]="m.magazine"/>
+      <img [src]="m.logo" [title]="m.magazine" [alt]="m.magazine"/>
     </div>
     <div class="contents">
       <div class="issue-row" *ngFor="let i of m.issues">

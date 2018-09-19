@@ -30,7 +30,7 @@ export class SeiyuuService {
               private messageSvc: MessagesService,
               private routingSvc: RoutingService) {
 
-    // load the brief list of all seiyuu in DB, minus the roles and photos
+    // load the brief list of all seiyuu in DB, minus the roles, photos, hits & last accessed
     this.totalList$ = this.getTotalList()                                                                  .do(Utils.lg('Seiyuu list requested', 'warn'))
       .do(() => this.pending = false)
       .publishLast().refCount();

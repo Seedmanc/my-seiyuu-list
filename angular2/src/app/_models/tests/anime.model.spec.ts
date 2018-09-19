@@ -61,7 +61,7 @@ describe('Anime model', () => {
         "main": false
       }
     ]));
-    expect(anime.mainCharacter).toBe('Iwasaki☆Minami');
+    expect(anime.firstCharacter).toBe('Iwasaki☆Minami');
 
     Anime.activeSeiyuu = 578;
 

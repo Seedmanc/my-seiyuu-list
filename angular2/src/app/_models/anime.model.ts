@@ -34,7 +34,7 @@ export class Anime {
       .sort((role1, role2) => +(role1.main < role2.main))
       .map(({name, main}) => ({name: Utils.decodeHtml(name), main}));
   }
-  get mainCharacter(): string {
+  get firstCharacter(): string {
     return this.characters[0] && this.characters[0].name;
   }
 
@@ -56,7 +56,7 @@ export class Anime {
   toJSON() {
 //->stackoverflow whatever
     // start with an empty object (see other alternatives below)
-    const jsonObj = Object.assign({}, this);
+    const jsonObj:any = Object.assign({}, this);
 
     // add all properties
     const proto = Object.getPrototypeOf(this);
@@ -68,12 +68,12 @@ export class Anime {
       }
     }
     // do I look like I know what I'm doing, motherfucker?
-    jsonObj['main'+''] = this.main;
-    jsonObj['link'+''] = this.link;
-    jsonObj['thumb'+''] = this.thumb;
-    jsonObj['mainCharacter'+''] = this.mainCharacter;
-    jsonObj['characters'+''] = this.characters;
-    jsonObj['title'+''] = this.title;
+    jsonObj.main = this.main;
+    jsonObj.link = this.link;
+    jsonObj.thumb = this.thumb;
+    jsonObj.firstCharacter = this.firstCharacter;
+    jsonObj.characters = this.characters;
+    jsonObj.title = this.title;
 
     return jsonObj;
   }

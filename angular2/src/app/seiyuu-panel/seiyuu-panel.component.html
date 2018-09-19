@@ -1,5 +1,5 @@
 <div class="seiyuu col-sm-12 col-xs-6 well well-sm"
-     [ngClass]="{l: seiyuu.l, c: seiyuu.c, namesake: seiyuu.hasNamesakes, hover: selected === seiyuu._id}"
+     [ngClass]="{namesake: seiyuu.hasNamesakes, hover: selected === seiyuu._id}"
      (touchstart)="select()" (mouseenter)="select()" (click)="select()">
 
   <a class="remove close" (click)="remove()">&times;</a>
@@ -9,7 +9,7 @@
       <tr>
         <td colspan=2>
           <h4>
-            <a [href]="seiyuu.link" target="_blank">
+            <a [href]="seiyuu.link">
               <b>{{seiyuu.displayName}}</b>
             </a>
           </h4>
@@ -35,7 +35,7 @@
     <div class="col-xs-12 btn-group btn-group-vertical">
       <div class="col-sm-12 btn btn-default pick" *ngFor="let namesake of seiyuu.namesakes" (click)="pick(namesake._id)">
         <msl-spinner size="28px" float="left" *ngIf="namesake.pending"></msl-spinner>
-        <a [href]="namesake.link" target="_blank">
+        <a [href]="namesake.link">
           <img class="small-thumb" *ngIf="namesake.photo" [src]="namesake.thumb"/>
         </a>
         <div class="text-right"><b>titles:</b> {{namesake.count}}</div>

@@ -38,7 +38,7 @@
         </colgroup>
         <tbody>
         <tr *ngFor="let seiyuu of rankingList | orderBy:[sorter.orderByField]:sorter.ascending">
-          <td><a [href]="seiyuu.link" target="_blank">{{seiyuu.name}}</a></td>
+          <td><a [href]="seiyuu.link">{{seiyuu.name}}</a></td>
           <td>{{seiyuu.count}}</td>
           <td>{{seiyuu.hits}}</td>
           <td [attr.data-date]="seiyuu.accessed && seiyuu.accessed.valueOf()">

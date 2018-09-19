@@ -7,13 +7,13 @@ export class BasicSeiyuu {
   name: string;
   alternate_name: string[];
 
-  hits?: number;
   count?: number;
 
   updated?: Date;
   accessed?: Date;
 
   namesakes: BasicSeiyuu[];
+
 
   constructor(obj) {
 
@@ -66,8 +66,7 @@ export class BasicSeiyuu {
 export class Seiyuu extends BasicSeiyuu {
 
   roles?: Role[];
-  l?: boolean;
-  c?: boolean;
+  hits?: number;
 
   private pic?: string;
 

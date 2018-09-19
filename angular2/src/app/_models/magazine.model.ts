@@ -8,7 +8,7 @@ export class Magazine {
   issues: Issue[];
 
   get logo(): string {
-    return this.magazine.toLowerCase().replace(/\s+/g, '_');
+    return `assets/${this.magazine.toLowerCase().replace(/\s+/g, '_')}.png`;
   }
 
   constructor(magazine: string, issues: any[]) {
@@ -20,7 +20,7 @@ export class Magazine {
           .split(', ')
           .filter(seiyuu => seiyuu && !seiyuu.includes('"'))
           .map(s => s.trim())
-          .sort()
+          .sort((s1,s2) => s1.localeCompare(s2))
       })
     );
   }

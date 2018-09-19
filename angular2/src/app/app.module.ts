@@ -23,6 +23,7 @@ import { BaseComponent } from './base/base.component';
 import {UniqPipe} from "./_misc/uniq.pipe";
 import {env} from "../environments/environment";
 import { SortLinkComponent } from './sort-link/sort-link.component';
+import {ExternalLinkDirective} from "./_misc/externalLink.directive";
 
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/observable/empty';
@@ -64,7 +65,8 @@ import "rxjs/add/operator/finally";
     UniqPipe,
     SpinnerComponent,
     BaseComponent,
-    SortLinkComponent
+    SortLinkComponent,
+    ExternalLinkDirective
   ],
   imports: [
     BrowserModule,
