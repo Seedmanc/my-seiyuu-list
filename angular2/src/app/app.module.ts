@@ -49,6 +49,8 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/switchMap';
 import "rxjs/add/operator/let";
 import "rxjs/add/operator/finally";
+import "rxjs/add/operator/skip";
+import "rxjs/add/operator/takeUntil";
 
 @NgModule({
   declarations: [
@@ -81,6 +83,6 @@ import "rxjs/add/operator/finally";
 })
 export class AppModule {
   constructor(router: Router) {
-    env.loglevel > 1 && console.log('Routes: ', JSON.stringify(router.config, undefined, 2));
+    env.loglevel > 2 && console.log('Routes: ', JSON.stringify(router.config, undefined, 2));
   }
 }

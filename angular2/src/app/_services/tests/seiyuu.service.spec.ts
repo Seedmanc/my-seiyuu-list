@@ -278,9 +278,10 @@ describe('SeiyuuService', () => {
   );
 
   it('should find namesakes',
-    inject([SeiyuuService, HttpTestingController],
-      (service:SeiyuuService, backend:HttpTestingController) => {
-      service.displayList$.subscribe(data => x=data);
+    inject([SeiyuuService, HttpTestingController, RoutingService],
+      (service:SeiyuuService, backend:HttpTestingController, routingSvc:RoutingService) => {
+        routingSvc.routeId$.next([]);
+      service.displayList$ .subscribe(data => x=data);
 
       mockList(backend, [[basicModel,basicModel]]);
 
@@ -291,8 +292,9 @@ describe('SeiyuuService', () => {
   );
 
   it('should pick one seiyuu from a list of namesakes',
-    inject([SeiyuuService, HttpTestingController],
-      (service:SeiyuuService, backend:HttpTestingController) => {
+    inject([SeiyuuService, HttpTestingController, RoutingService],
+      (service:SeiyuuService, backend:HttpTestingController, routingSvc:RoutingService) => {
+        routingSvc.routeId$.next([]);
         service.displayList$.subscribe(data => x=data);
 
         let bm2= Object.assign({}, basicModel);

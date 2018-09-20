@@ -65,6 +65,7 @@
 
 .issue {
   min-width: 8rem;
+  max-width: 8rem;
   align-self: center;
 }
 

@@ -38,6 +38,7 @@ export class AnimeListComponent extends PageComponent implements OnInit {
     this.animeSvc.mainOnly$.subscribe(value => this.mainOnly = value);
 
     this.animeSvc.displayAnime$
+      .takeUntil(this.unsubscribe$)
       .subscribe(animes => {
         this.output[0].list = animes.filter(a => a.main);
         this.output[1].list = animes.filter(a => !a.main);

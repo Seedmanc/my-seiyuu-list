@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import {Subject} from "rxjs/Subject";
 
 import {BasicSeiyuu } from "../../_models/seiyuu.model";
+import {BehaviorSubject} from "rxjs/BehaviorSubject";
 
 @Injectable()
 export class SeiyuuServiceMock {
-  displayList$: Subject<BasicSeiyuu[]> = new Subject();
+  displayList$: BehaviorSubject<BasicSeiyuu[]> = new BehaviorSubject([]);
 
   constructor() {  }
 

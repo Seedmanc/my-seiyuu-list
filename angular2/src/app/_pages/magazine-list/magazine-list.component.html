@@ -3,7 +3,7 @@
 </div>
 
 <div id="magazines" *ngIf="!magazineSvc.pending">
-  <div class="magazine" *ngFor="let m of magazineSvc.display$ | async" [id]="m.magazine.replace(' ', '_').toLowerCase()">
+  <div class="magazine" *ngFor="let m of list" [id]="m.magazine.replace(' ', '_').toLowerCase()">
     <div class="type">
       <img [src]="m.logo" [title]="m.magazine" [alt]="m.magazine"/>
     </div>

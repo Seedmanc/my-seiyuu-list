@@ -12,6 +12,7 @@ import {SeiyuuService} from "../../_services/seiyuu.service";
 })
 export class MagazineListComponent extends PageComponent implements OnInit {
   selected: string[] = [];
+  list: any[];
 
   constructor(public magazineSvc: MagazineService,
               private seiyuuSvc: SeiyuuService,
@@ -23,7 +24,12 @@ export class MagazineListComponent extends PageComponent implements OnInit {
   ngOnInit() {
     super.ngOnInit();
 
-    this.seiyuuSvc.loadedSeiyuu$
+    this.magazineSvc.display$
+      .takeUntil(this.unsubscribe$)
+      .subscribe(x => this.list = x);
+
+    this.seiyuuSvc.displayList$
+      .takeUntil(this.unsubscribe$)
       .map(seiyuus => seiyuus.map(s => s.displayName))
       .subscribe(names => this.selected = names);
   }

@@ -12,7 +12,7 @@ import {RoutingService} from "./routing.service";
 @Injectable()
 export class SeiyuuService {
   totalList$: Observable<BasicSeiyuu[]>;
-  displayList$: Observable<BasicSeiyuu[]>;
+  displayList$: BehaviorSubject<BasicSeiyuu[]> = new BehaviorSubject([]);
   loadedSeiyuu$: BehaviorSubject<Seiyuu[]> = new BehaviorSubject([]);
   selected$: BehaviorSubject<number> = new BehaviorSubject(null);
 
@@ -36,10 +36,11 @@ export class SeiyuuService {
       .publishLast().refCount();
 
     // ensure ids received from routing correspond to real values when they're ready
-    this.routeId$ = this.routingSvc.routeId$
+    this.routeId$ = this.routingSvc.routeId$.skip(1)
       .delayWhen(() => this.totalList$)
       .map(ids => ids.filter(id => !!this.cachedSeiyuu[id]))
-      .distinctUntilChanged((x,y) => x.slice().sort().join() == y.slice().sort().join())                   .do(Utils.asrt('S routeId', x => Array.isArray(x)));
+      .distinctUntilChanged((x,y) => x.slice().sort().join() == y.slice().sort().join())                   .do(Utils.asrt('S routeId', x => Array.isArray(x)))
+      .share();
 
     // load full details for selected seiyuu(s), batching requests together
     this.updateRequest$                                                                                    .do(Utils.lg('S updateRequest'))
@@ -58,7 +59,7 @@ export class SeiyuuService {
       }).subscribe();
 
     // make the list of seiyuu to display out of both selected seiyuu and namesakes
-    this.displayList$ = this.routeId$                                                                      .do(Utils.asrt('S routeId to displayList'))
+    this.routeId$                                                                      .do(Utils.asrt('S routeId to displayList'))
       .map(ids => ids.map(id => this.cachedSeiyuu[id]))
       .do(seiyuus => {
         this.messageSvc.title(seiyuus);
@@ -68,15 +69,16 @@ export class SeiyuuService {
         }
       })
       .combineLatest(this.namesake$)
-      .map(([seiyuus, namesakes]) => [...seiyuus, ...namesakes]);
+      .map(([seiyuus, namesakes]) => [...seiyuus, ...namesakes])
+      .subscribe(this.displayList$);
 
     // set the last fully loaded seiyuu as currently active
     this.loadedSeiyuu$
       .delayWhen(() => this.totalList$)
       .subscribe(seiyuus => {
-        if (seiyuus.length)
-          this.selected$.next(seiyuus.slice(-1)[0]._id)
-        else
+        if (seiyuus.length) {
+          this.selected$.next(seiyuus.slice(-1)[0]._id);
+        } else
           this.messageSvc.totals();
       });
   }
