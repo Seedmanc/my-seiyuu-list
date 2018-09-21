@@ -26,7 +26,7 @@ export class AnimeService {
       query: {c: true}
     })                                                                                             .do(Utils.lg('AnimeCount requested', 'warn'))
       .do(anime => this.messageSvc.setTotals({anime}))
-      .withLatestFrom(this.seiyuuSvc.loadedSeiyuu$)
+      .withLatestFrom(this.seiyuuSvc.loadedSeiyuu$.skip(1))
       .filter(([,list]) => !list.length)
       .subscribe(() => this.messageSvc.totals());
 

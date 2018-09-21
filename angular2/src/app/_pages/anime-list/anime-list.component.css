@@ -6,9 +6,12 @@ input:checked + label {
   font-weight: bold;
 }
 
-.table {
-  margin-top: -0.9rem;
+table {
   margin-bottom: 0;
+}
+
+table.header {
+  margin-top: -0.9rem;
 }
 
 .table > tbody > tr > td {
