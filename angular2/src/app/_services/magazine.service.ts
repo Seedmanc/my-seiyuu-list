@@ -23,11 +23,11 @@ export class MagazineService {
               private seiyuuSvc: SeiyuuService) {
 
     this.seiyuuSvc.displayList$                                                                   .do(Utils.asrt('M displayList', x => Array.isArray(x)))
-      .let(Utils.runOnTab<Seiyuu[]>(this.routingSvc.tab$, 'magazines'))
+      .let(this.routingSvc.runOnTab<Seiyuu[]>('magazines'))
       .map(seiyuus => seiyuus.map(seiyuu => seiyuu.displayName).sort())
       .switchMap(names => this.getMagazines(names))                                               .do(Utils.asrt('Magazine list'))
       .do(() => this.pending = false)
-      .let(Utils.replayOnTab<Magazine[]>(this.routingSvc.tab$, 'magazines'))
+      .let(this.routingSvc.replayOnTab('magazines'))
       .withLatestFrom(this.seiyuuSvc.displayList$)
       .map(([magazines,seiyuus]) => {
         let iss = magazines.reduce((p, c) => p + c.issues.length, 0);

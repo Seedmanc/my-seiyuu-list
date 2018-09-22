@@ -4,6 +4,7 @@ import {Subject} from "rxjs/Subject";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
 
 import {Utils} from "./utils.service";
+import {Observable} from "rxjs/Observable";
 
 @Injectable()
 export class RoutingService {
@@ -43,4 +44,21 @@ export class RoutingService {
     return this.router.navigate([this.tab, newList.join(',')]);
   }
 
+  runOnTab<T>(tabName: string): (source: Observable<T>) => Observable<T> {
+    return (source: Observable<T>): Observable<T> => {
+      return source
+        .combineLatest(this.tab$)
+        .filter(([,tab]) => tab == tabName)
+        .map(([seiyuus,]) => seiyuus)                                                 .do(Utils.asrt(`runOnTab[${tabName}]`, x => !x[0] || x[0].name))
+        .distinctUntilChanged((x,y) => x['map'](e => e['name']).sort().join() == y['map'](e => e['name']).sort().join())
+    }
+  }
+
+  replayOnTab<T>(tabName: string): (source: Observable<T>) => Observable<T> {
+    return (source: Observable<T>): Observable<T> => {
+      return source
+        .combineLatest(this.tab$.filter(tab => tab == tabName))
+        .map(([data,]) => data)                                                        .do(Utils.asrt(`replayOnTab[${tabName}]`))
+    }
+  }
 }

@@ -43,28 +43,4 @@ describe('Utils', () => {
   it('should find a kanji name in the list', () =>
     expect(Utils.kanjiCompare('茅原 実里', ['茅原実里'])).toBeTruthy()
   );
-
-  it('should run only on tab', () => {
-    let source = new Subject();
-    let tab$ = new Subject<string>();
-    let result;
-
-    source.let(Utils.runOnTab(tab$.asObservable(), 'photo')).subscribe(x => result = x);
-
-    source.next([{name:'derp'}, {name:'hurr'}]);
-    expect(result).toBeFalsy();
-    tab$.next('notphoto');
-    expect(result).toBeFalsy();
-    tab$.next('photo');
-    expect(result).toBeTruthy();
-    result = null;
-    source.next([{name:'derp'}, {name:'hurr'}]);
-    tab$.next('photo');
-    expect(result).toBeFalsy();
-    source.next([{name:'durr'}]);
-    expect(result).toBeTruthy();
-    result = null;
-    tab$.next('notphoto');
-    expect(result).toBeFalsy();
-  });
 });

@@ -1,5 +1,4 @@
 import {env} from "../../environments/environment";
-import {Observable} from "rxjs/Observable";
 
 export class Utils {
   private static readonly parser = document.createElement("textarea");
@@ -51,24 +50,6 @@ export class Utils {
     Utils.parser.innerHTML = html;
 
     return Utils.parser.value;
-  }
-
-  static runOnTab<T>(tabStream:Observable<string>, tabName: string): (source: Observable<T>) => Observable<T> {
-    return (source: Observable<T>): Observable<T> => {
-      return source
-        .combineLatest(tabStream)
-        .filter(([,tab]) => tab == tabName)
-        .map(([seiyuus,]) => seiyuus)                                                 .do(Utils.asrt(`runOnTab[${tabName}]`, x => !x[0] || x[0].name))
-        .distinctUntilChanged((x,y) => x['map'](e => e['name']).sort().join() == y['map'](e => e['name']).sort().join())
-    }
-  }
-
-  static replayOnTab<T>(tabStream:Observable<string>, tabName: string): (source: Observable<T>) => Observable<T> {
-    return (source: Observable<T>): Observable<T> => {
-      return source
-        .combineLatest(tabStream.filter(tab => tab == tabName))
-        .map(([data,]) => data)                                                        .do(Utils.asrt(`replayOnTab[${tabName}]`))
-    }
   }
 
 }

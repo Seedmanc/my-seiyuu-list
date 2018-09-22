@@ -50,7 +50,7 @@ describe('my-seiyuu-list App', () => {
         browser.manage().logs().get('browser')
           .then(browserLog => {expect(browserLog.filter(event => !!~event.message.indexOf('Anime requested')).length).toBeFalsy();});
         console.log('no extra anime requests');
-        //expect(page.statusBar().getText()).toContain('anime found'); //TODO implement
+        expect(page.statusBar().getText()).toContain('anime found');
 
         page.tabs().get(1).click();
         browser.wait(EC.presenceOf(element(by.css('#magazines'))), to);
@@ -60,7 +60,7 @@ describe('my-seiyuu-list App', () => {
         panel.close().click();
         browser.wait(EC.presenceOf(panel2.photo()), to);
         browser.sleep(500);
-      //expect(page.statusBar().getText()).toContain('magazines'); //TODO implement
+        expect(page.statusBar().getText()).toContain('magazines');
 
         browser.manage().logs().get('browser')
           .then(browserLog => {expect(browserLog.filter(event =>

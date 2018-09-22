@@ -37,17 +37,16 @@ export class PhotoService {
 
     this.seiyuuSvc.displayList$
       .do(() => this.page = 0)
-      .let(Utils.runOnTab<Seiyuu[]>(this.routingSvc.tab$, 'photos'))
+      .let(this.routingSvc.runOnTab<Seiyuu[]>('photos'))
       .map(seiyuus => seiyuus.map(seiyuu => seiyuu.displayName))
       .combineLatest(this.pageDelta)                                                                   .do(Utils.lg('photoPage'))
       .switchMap(([names,]) => this.wrapper(names))
       .do(() => this.pending = false)
-      .let(Utils.replayOnTab<PhotoPage>(this.routingSvc.tab$, 'photos'))
+      .let(this.routingSvc.replayOnTab('photos'))
       .do(page => {
         if (page.total)
           this.messageSvc.status(`${page.total} image${Utils.pluralize(page.total)} found`);
       })
-      .distinctUntilChanged((x,y) => JSON.stringify(x) == JSON.stringify(y))
       .subscribe(this.displayPhotos$);
   }
 

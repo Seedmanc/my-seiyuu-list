@@ -19,6 +19,7 @@ import {UniqPipe} from "../../_misc/uniq.pipe";
 import { Location} from '@angular/common';
 import {SortLinkComponent} from "../../sort-link/sort-link.component";
 import {SorterService} from "../sorter.service";
+import {Subject} from "rxjs/Subject";
 
 describe('RoutingService', () => {
   let location: Location;
@@ -73,6 +74,30 @@ describe('RoutingService', () => {
     })
    )
   );
+
+
+  it('should run only on tab', inject([RoutingService], (service: RoutingService) => {
+    let source = new Subject();
+    let result;
+
+    source.let(service.runOnTab('photo')).subscribe(x => result = x);
+
+    source.next([{name:'derp'}, {name:'hurr'}]);
+    expect(result).toBeFalsy();
+    service.tab$.next('notphoto');
+    expect(result).toBeFalsy();
+    service.tab$.next('photo');
+    expect(result).toBeTruthy();
+    result = null;
+    source.next([{name:'derp'}, {name:'hurr'}]);
+    service.tab$.next('photo');
+    expect(result).toBeFalsy();
+    source.next([{name:'durr'}]);
+    expect(result).toBeTruthy();
+    result = null;
+    service.tab$.next('notphoto');
+    expect(result).toBeFalsy();
+  }));
 
   //TODO routeId$ can't be properly tested it seems as it requires a real Router
 });

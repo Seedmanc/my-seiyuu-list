@@ -32,23 +32,25 @@ export class AnimeService {
 
     this.seiyuuSvc.selected$.subscribe(id => {if (id) Anime.activeSeiyuu = id;});
 
-    this.seiyuuSvc.loadedSeiyuu$                                                                   .do(Utils.asrt('A loadedSeiyuu', x => Array.isArray(x)))
-      .let(Utils.runOnTab<Seiyuu[]>(this.routingSvc.tab$, 'anime'))
+    this.seiyuuSvc.loadedSeiyuu$                                                                    .do(Utils.asrt('A loadedSeiyuu', x => Array.isArray(x)))
+      .let(this.routingSvc.runOnTab<Seiyuu[]>('anime'))
       .combineLatest(this.mainOnly$.distinctUntilChanged())
       .map(([seiyuus, mainOnly]) => this.animePerSeiyuu(seiyuus, mainOnly))                        .do(Utils.asrt('A roles by anime sets'))
       .map(rolesByAnimeSets => this.sharedAnime(rolesByAnimeSets))                                 .do(Utils.asrt('A shared anime'),
                                                                                                      x => Array.isArray(x) && x[0] && Array.isArray(x[0].rolesBySeiyuu))
-      .let(Utils.replayOnTab(this.routingSvc.tab$, 'anime'))
       .do(({anime, seiyuuCount}) => {
-
+        if (seiyuuCount) {
+          this.loadDetails(anime.map(a => a._id).filter(id => !Anime.detailsCache[id]))
+            .subscribe();
+        }
+      })
+      .let(this.routingSvc.replayOnTab('anime'))
+      .do(({anime, seiyuuCount}) => {
         if (seiyuuCount) {
           this.messageSvc.status(
             `${anime.length || 'no'} ${seiyuuCount > 1 ? 'shared ' : ''}anime found`
           );
-          this.loadDetails(anime.map(a => a._id).filter(id => !Anime.detailsCache[id]))
-            .subscribe();
         }
-
       })
       .combineLatest(this.seiyuuSvc.selected$.distinctUntilChanged())                               .do(Utils.asrt('Anime results'))   //TODO toggle grouping by role tier
       .map(([data]) => data.anime)

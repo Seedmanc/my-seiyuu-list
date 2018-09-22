@@ -34,7 +34,6 @@ import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/combineLatest';
 import 'rxjs/add/operator/distinctUntilChanged';
-import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/publishLast';
 import 'rxjs/add/operator/delayWhen';
 import 'rxjs/add/operator/bufferToggle';
