@@ -38,6 +38,8 @@
   font-weight: bold;
   min-width: 14rem;
   padding: 1rem;
+  padding-top: 0;
+  align-self: start;
 }
 
 

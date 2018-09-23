@@ -14,6 +14,7 @@ import {Seiyuu} from "../_models/seiyuu.model";
 export class MagazineService {
   display$: BehaviorSubject<any> = new BehaviorSubject([]);
   pending = false;
+  selectedSeiyuu: string[] = [];
 
   private cache: {[key: string]: Magazine[]} = {};
 
@@ -23,6 +24,7 @@ export class MagazineService {
               private seiyuuSvc: SeiyuuService) {
 
     this.seiyuuSvc.displayList$                                                                   .do(Utils.asrt('M displayList', x => Array.isArray(x)))
+      .do(seiyuus => this.selectedSeiyuu = seiyuus.map(s => s.displayName))
       .let(this.routingSvc.runOnTab<Seiyuu[]>('magazines'))
       .map(seiyuus => seiyuus.map(seiyuu => seiyuu.displayName).sort())
       .switchMap(names => this.getMagazines(names))                                               .do(Utils.asrt('Magazine list'))

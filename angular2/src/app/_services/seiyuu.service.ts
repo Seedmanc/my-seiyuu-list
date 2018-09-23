@@ -38,8 +38,7 @@ export class SeiyuuService {
     // ensure ids received from routing correspond to real values when they're ready
     this.routeId$ = this.routingSvc.routeId$.skip(1)
       .delayWhen(() => this.totalList$)
-      .map(ids => ids.filter(id => !!this.cachedSeiyuu[id]))
-      .distinctUntilChanged((x,y) => x.slice().sort().join() == y.slice().sort().join())                   .do(Utils.asrt('S routeId', x => Array.isArray(x)))
+      .map(ids => ids.filter(id => !!this.cachedSeiyuu[id]))                                               .do(Utils.asrt('S routeId', x => Array.isArray(x)))
       .share();
 
     // load full details for selected seiyuu(s), batching requests together

@@ -49,8 +49,7 @@ export class RoutingService {
       return source
         .combineLatest(this.tab$)
         .filter(([,tab]) => tab == tabName)
-        .map(([seiyuus,]) => seiyuus)                                                 .do(Utils.asrt(`runOnTab[${tabName}]`, x => !x[0] || x[0].name))
-        .distinctUntilChanged((x,y) => x['map'](e => e['name']).sort().join() == y['map'](e => e['name']).sort().join())
+        .map(([seiyuus,]) => seiyuus)                                                 .do(Utils.asrt(`runOnTab[${tabName}]`, x => !x[0] || x[0].name));
     }
   }
 

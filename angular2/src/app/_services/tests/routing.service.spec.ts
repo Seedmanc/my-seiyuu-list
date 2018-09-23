@@ -89,9 +89,6 @@ describe('RoutingService', () => {
     service.tab$.next('photo');
     expect(result).toBeTruthy();
     result = null;
-    source.next([{name:'derp'}, {name:'hurr'}]);
-    service.tab$.next('photo');
-    expect(result).toBeFalsy();
     source.next([{name:'durr'}]);
     expect(result).toBeTruthy();
     result = null;
