@@ -9,10 +9,11 @@ import {RoutingService} from "./routing.service";
 import {Magazine} from "../_models/magazine.model";
 import {Utils} from "./utils.service";
 import {Seiyuu} from "../_models/seiyuu.model";
+import {ReplaySubject} from "rxjs/ReplaySubject";
 
 @Injectable()
 export class MagazineService {
-  display$: BehaviorSubject<any> = new BehaviorSubject([]);
+  displayMagazines$: ReplaySubject<any[]> = new ReplaySubject(1);
   pending = false;
   selectedSeiyuu: string[] = [];
 
@@ -29,20 +30,8 @@ export class MagazineService {
       .map(seiyuus => seiyuus.map(seiyuu => seiyuu.displayName).sort())
       .switchMap(names => this.getMagazines(names))                                               .do(Utils.asrt('Magazine list'))
       .do(() => this.pending = false)
-      .let(this.routingSvc.replayOnTab('magazines'))
-      .withLatestFrom(this.seiyuuSvc.displayList$)
-      .map(([magazines,seiyuus]) => {
-        let iss = magazines.reduce((p, c) => p + c.issues.length, 0);
-
-        if (seiyuus.length)
-          this.messageSvc.status(
-            magazines.length ?
-              `found ${iss} issue${Utils.pluralize(iss)} in ${magazines.length} magazine${Utils.pluralize(magazines.length)}`:
-              'no magazines found'
-          );
-        return magazines;
-      })
-      .subscribe(this.display$);
+      .withLatestFrom(this.seiyuuSvc.displayList$, (results, seiyuus) => [results, seiyuus.length])
+      .subscribe(this.displayMagazines$);
   }
 
   private getMagazines(names: string[]): Observable<Magazine[]> {

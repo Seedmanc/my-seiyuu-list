@@ -98,7 +98,7 @@ export class SeiyuuService {
     this.namesake$.next(this.namesake$.getValue().filter(nmsk => nmsk.displayName !== name));
   }
 
-  addSearch(search$: Observable<string>) {
+  addSearch(search$: Observable<string>) { //hax
     const [found$, notFound$] = search$                                                                    .do(Utils.lg('Search'))
       .filter(value => !!value)
       .withLatestFrom(this.totalList$)

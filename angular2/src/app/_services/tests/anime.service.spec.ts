@@ -56,9 +56,8 @@ describe('AnimeService', () => {
     inject([AnimeService, HttpTestingController, SeiyuuService, MessagesService],
       (service:AnimeService, backend:HttpTestingController, seiyuuSvc:SeiyuuService, msgSvc:MessagesService) => {
       let y;
-      let spy = spyOn(msgSvc, 'status');
 
-      service.displayAnime$.subscribe(data => x = data);
+      service.displayAnime$.subscribe(([data]) => x = data);
       seiyuuSvc.selected$.subscribe(data => y = data);
 
       let loaded = Object.assign({}, model);
@@ -67,7 +66,6 @@ describe('AnimeService', () => {
       mockList(backend, [[basicModel,basicModel]]);
 
       expect(y).toBe(model._id);
-      expect(spy).toHaveBeenCalledWith('4 anime found');
       backend.expectOne({
         url: `${env.mongoUrl}/collections/anime?apiKey=${env.apiKey}&f={"title":1,"pic":1}&q={"_id":{"$in":[1,2,3,2829]}}`,
         method:'GET'
@@ -94,9 +92,8 @@ describe('AnimeService', () => {
     inject([AnimeService, HttpTestingController, SeiyuuService, MessagesService],
       (service:AnimeService, backend:HttpTestingController, seiyuuSvc:SeiyuuService, msgSvc:MessagesService) => {
       let y;
-      let spy = spyOn(msgSvc, 'status');
 
-      service.displayAnime$.subscribe(data => x = data);
+      service.displayAnime$.subscribe(([data]) => x = data);
       seiyuuSvc.selected$.subscribe(data => y = data);
 
       let loaded = Object.assign({}, model);
@@ -120,7 +117,6 @@ describe('AnimeService', () => {
       mockList(backend, [[basicModel,basicModel]]);
 
       expect(y).toBe(model2._id);
-      expect(spy).toHaveBeenCalledWith('3 shared anime found');
       backend.expectOne({
         url: `${env.mongoUrl}/collections/anime?apiKey=${env.apiKey}&f={"title":1,"pic":1}&q={"_id":{"$in":[2,3,2829]}}`,
         method:'GET'
@@ -142,7 +138,6 @@ describe('AnimeService', () => {
         '{"_id":2829,"rolesBySeiyuu":{"0":[{"name":"Pierre","main":false,"_id":0}],"578":[{"name":"Pierre","main":false,"_id":578}]},"main":false,"link":"//myanimelist.net/anime/2829","thumb":"//myanimelist.net/images/anime/12/26250v.jpg","firstCharacter":"Pierre","characters":[{"name":"Pierre","main":false}],"title":"Ie Naki Ko Remi"}'      );
 
       service.mainOnly$.next(true);
-      expect(spy).toHaveBeenCalledWith('1 shared anime found');
       backend.expectNone({
           url: `${env.mongoUrl}/collections/anime?apiKey=${env.apiKey}&f={"title":1,"pic":1}&q={"_id":{"$in":[2]}}`,
           method:'GET'
@@ -156,9 +151,8 @@ describe('AnimeService', () => {
       inject([AnimeService, HttpTestingController, SeiyuuService, MessagesService],
         (service:AnimeService, backend:HttpTestingController, seiyuuSvc:SeiyuuService, msgSvc:MessagesService) => {
         let y;
-        let spy = spyOn(msgSvc, 'status');
 
-        service.displayAnime$.subscribe(data => x = data);
+        service.displayAnime$.subscribe(([data]) => x = data);
         seiyuuSvc.selected$.subscribe(data => y = data);
 
         let loaded = Object.assign({}, model);
@@ -170,7 +164,6 @@ describe('AnimeService', () => {
         mockList(backend, [[basicModel,basicModel]]);
 
         expect(y).toBe(model2._id);
-        expect(spy).toHaveBeenCalledWith('no shared anime found');
 
         expect(JSON.stringify(x)).toBe('[]');
 

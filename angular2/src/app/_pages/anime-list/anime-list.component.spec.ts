@@ -56,4 +56,25 @@ describe('AnimeListComponent', () => {
       expect(y).toBe(false);
     })
   );
+
+  it('should report results', inject([AnimeService, MessagesService],
+    (service: AnimeService, msgSvc: MessagesService) => {
+      let spy = spyOn(msgSvc, 'results');
+
+      service.displayAnime$.next([[], 0]);
+      expect(spy).toHaveBeenCalledWith(0, 0, 'anime');
+      spy.calls.reset();
+
+      service.displayAnime$.next([['derp'], 0]);
+      expect(spy).toHaveBeenCalledWith('1 anime', 0, 'anime');
+      spy.calls.reset();
+
+      service.displayAnime$.next([['derp'], 1]);
+      expect(spy).toHaveBeenCalledWith('1 anime', 1, 'anime');
+      spy.calls.reset();
+
+      service.displayAnime$.next([['derp', 'hurr'], 2]);
+      expect(spy).toHaveBeenCalledWith('2 shared anime', 2, 'shared anime');
+    })
+  );
 });

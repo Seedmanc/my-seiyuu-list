@@ -49,15 +49,7 @@ export class RoutingService {
       return source
         .combineLatest(this.tab$)
         .filter(([,tab]) => tab == tabName)
-        .map(([seiyuus,]) => seiyuus)                                                 .do(Utils.asrt(`runOnTab[${tabName}]`, x => !x[0] || x[0].name));
-    }
-  }
-
-  replayOnTab<T>(tabName: string): (source: Observable<T>) => Observable<T> {
-    return (source: Observable<T>): Observable<T> => {
-      return source
-        .combineLatest(this.tab$.filter(tab => tab == tabName))
-        .map(([data,]) => data)                                                        .do(Utils.asrt(`replayOnTab[${tabName}]`))
+        .map(([seiyuus,]) => seiyuus)                                                 .do(Utils.asrt(`runOnTab[${tabName}]`, x => !x[0] || x[0].displayName));
     }
   }
 }

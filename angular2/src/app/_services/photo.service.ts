@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {Observable} from "rxjs/Observable";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {env} from "../../environments/environment";
+import {ReplaySubject} from "rxjs/ReplaySubject";
 
 import {RestService} from "./rest.service";
 import {SeiyuuService} from "./seiyuu.service";
@@ -15,12 +16,12 @@ interface PhotoPage {
   next?: boolean;
   prev?: boolean;
   pageNum?: number;
-  total?: string|number;
+  total?: number;
 }
 
 @Injectable()
 export class PhotoService {
-  displayPhotos$: BehaviorSubject<PhotoPage> = new BehaviorSubject({});
+  displayPhotos$: ReplaySubject<[PhotoPage, number]> = new ReplaySubject(1);
   pending: boolean;
 
   private pageDelta: BehaviorSubject<number> = new BehaviorSubject(0);
@@ -42,11 +43,7 @@ export class PhotoService {
       .combineLatest(this.pageDelta)                                                                   .do(Utils.lg('photoPage'))
       .switchMap(([names,]) => this.wrapper(names))
       .do(() => this.pending = false)
-      .let(this.routingSvc.replayOnTab('photos'))
-      .do(page => {
-        if (page.total)
-          this.messageSvc.status(`${page.total} image${Utils.pluralize(page.total)} found`);
-      })
+      .withLatestFrom(this.seiyuuSvc.displayList$, (page, seiyuus) => [page, seiyuus.length])
       .subscribe(this.displayPhotos$);
   }
 
@@ -87,7 +84,7 @@ export class PhotoService {
         let newDoc = document.implementation.createHTMLDocument('newDoc');
         newDoc.documentElement.innerHTML = rawhtml;
         let spans = newDoc.querySelectorAll('span.thumb');
-        let total: any = 'no';
+        let total = 0;
 
         [].slice.call(spans)
           .forEach(span => {

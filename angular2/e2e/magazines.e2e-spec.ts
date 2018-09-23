@@ -44,7 +44,7 @@ describe('magazine lookups', () => {
     browser.wait(EC.presenceOf(page.magazine('hm3_special').container), to);
     let x = element(by.css('#magazines')).$$('.issue-row').count();
 
-    x.then(xx => {expect(app.statusBar().getText()).toContain(`found ${xx} issues `);});
+    x.then(xx => {expect(app.statusBar().getText()).toContain(`${xx} issues `);});
 
     let name2 = 'Koshimizu Ami';
     app.searchInput().clear();

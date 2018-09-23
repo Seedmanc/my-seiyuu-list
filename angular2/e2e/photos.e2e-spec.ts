@@ -27,7 +27,7 @@ describe('photo lookups', () => {
     expect(page.next().getAttribute('disabled')).toBeTruthy();
     expect(page.prev().getAttribute('disabled')).toBeTruthy();
     expect(page.page().getText()).toBe('0');
-    expect(app.statusBar().getText()).toBe('1 image found');
+    expect(app.statusBar().getText()).toBe('1 photo found');
     expect(page.more().getAttribute('href')).toBe('http://koe.booru.org/index.php?page=post&s=list&tags=~davidyuk_jenya');
   });
 
@@ -49,14 +49,14 @@ describe('photo lookups', () => {
     expect(page.thumbs().count()).toBeLessThan(20);
     expect(page.next().getAttribute('disabled')).toBeTruthy();
 
-    expect(app.statusBar().getText()).toContain('images found');
+    expect(app.statusBar().getText()).toContain('photos found');
     expect(page.more().getAttribute('href')).toBe('http://koe.booru.org/index.php?page=post&s=list&tags=~chihara_minori+~koshimizu_ami');
     panel.close().click();
     expect(page.thumbs().count()).toBe(20);
 
     panel2.close().click();
     expect(page.thumbs().count()).toBe(0);
-    expect(app.statusBar().getText()).toBe('');
+    expect(app.statusBar().getText()).toContain('cached');
   });
 
   it('should switch pages', () => {

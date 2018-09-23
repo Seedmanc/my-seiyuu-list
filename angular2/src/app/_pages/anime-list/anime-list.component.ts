@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+
 import {ActivatedRoute } from "@angular/router";
 import {RoutingService} from "../../_services/routing.service";
 import {PageComponent} from "../../_misc/page.component";
 import {AnimeService} from "../../_services/anime.service";
 import {SorterService} from "../../_services/sorter.service";
+import {MessagesService} from "../../_services/messages.service";
 
 @Component({
   selector: 'msl-anime-list',
@@ -27,6 +29,7 @@ export class AnimeListComponent extends PageComponent implements OnInit {
 
   constructor(protected route: ActivatedRoute,
               protected routingSvc: RoutingService,
+              private messageSvc: MessagesService,
               public animeSvc: AnimeService,
               public sorter: SorterService) {
       super(route, routingSvc);
@@ -39,9 +42,18 @@ export class AnimeListComponent extends PageComponent implements OnInit {
 
     this.animeSvc.displayAnime$
       .takeUntil(this.unsubscribe$)
-      .subscribe(animes => {
-        this.output[0].list = animes.filter(a => a.main);
-        this.output[1].list = animes.filter(a => !a.main);
+      .do(([anime, seiyuuCount]) => {
+        let entity = seiyuuCount > 1 ? 'shared anime' : 'anime';
+
+          this.messageSvc.results(
+            anime.length && `${anime.length} ${entity}`,
+            seiyuuCount,
+            entity
+          );
+      })
+      .subscribe(([anime]) => {
+        this.output[0].list = anime.filter(a => a.main);
+        this.output[1].list = anime.filter(a => !a.main);
       });
 
     if (localStorage.mainOnly) {

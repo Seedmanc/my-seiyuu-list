@@ -43,7 +43,7 @@ describe('my-seiyuu-list App', () => {
         browser.manage().logs().get('browser')
           .then(browserLog => {expect(browserLog.find(event => !!~event.message.indexOf('Photos requested'))).toBeTruthy();});
         console.log('1 photo request');
-        expect(page.statusBar().getText()).toContain('image');
+        expect(page.statusBar().getText()).toContain('photo');
 
         page.tabs().get(0).click();
         browser.wait(EC.presenceOf(anime.mainOnly()), to);
@@ -69,7 +69,7 @@ describe('my-seiyuu-list App', () => {
 
         page.tabs().get(2).click();
         browser.wait(EC.presenceOf(photo.thumbContainer()), to);
-        expect(page.statusBar().getText()).toContain('image');
+        expect(page.statusBar().getText()).toContain('photo');
     });
   });
 

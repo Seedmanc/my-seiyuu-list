@@ -7,10 +7,7 @@ export class MessagesService {
   message$: Subject<{isError?:boolean, data?: string}> = new BehaviorSubject({});
   resetSearch$ = new Subject();
 
-  private counts = {
-    seiyuu: 0,
-    anime: 0
-  };
+  private counts: any = {};
 
   constructor() { }
 
@@ -23,10 +20,10 @@ export class MessagesService {
   }
 
   totals() {
-    if (this.counts.seiyuu)
-      this.status(this.counts.seiyuu + ` seiyuu ${this.counts.anime ? '& ' +this.counts.anime+' anime ' : ''}records cached`)
-    else
+    if (this.counts.seiyuu === 0) {
       this.error('no cached records found');
+    } else if (this.counts.seiyuu || this.counts.anime)
+      this.status(this.counts.seiyuu + ` seiyuu ${this.counts.anime ? '& ' + this.counts.anime + ' anime ' : ''}records cached`)
   }
 
   blank() {
@@ -37,6 +34,14 @@ export class MessagesService {
     document.title = `My Seiyuu List ${seiyuus.length ? 
       ' - ' + seiyuus.map(seiyuu => seiyuu.name).join(', ') :
       ''}`;
+  }
+
+  results(text: string, hasSeiyuu: boolean, type: string) {
+    if (hasSeiyuu) {
+      this.status(`${text || 'no '+type} found`)
+    } else {
+      this.totals();
+    }
   }
 
   setTotals(counts: any) {

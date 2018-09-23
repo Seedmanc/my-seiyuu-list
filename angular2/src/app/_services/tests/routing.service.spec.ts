@@ -75,7 +75,6 @@ describe('RoutingService', () => {
    )
   );
 
-
   it('should run only on tab', inject([RoutingService], (service: RoutingService) => {
     let source = new Subject();
     let result;

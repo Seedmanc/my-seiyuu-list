@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Observable} from "rxjs/Observable";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
+import {ReplaySubject} from "rxjs/ReplaySubject";
 
 import {RestService} from "./rest.service";
 import {Utils} from "./utils.service";
@@ -12,7 +13,7 @@ import {Seiyuu} from "../_models/seiyuu.model";
 
 @Injectable()
 export class AnimeService {
-  displayAnime$: BehaviorSubject<any[]> = new BehaviorSubject([]);
+  displayAnime$: ReplaySubject<any[]> = new ReplaySubject(1);
   mainOnly$: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
   constructor(private rest: RestService,
@@ -38,22 +39,13 @@ export class AnimeService {
       .map(([seiyuus, mainOnly]) => this.animePerSeiyuu(seiyuus, mainOnly))                        .do(Utils.asrt('A roles by anime sets'))
       .map(rolesByAnimeSets => this.sharedAnime(rolesByAnimeSets))                                 .do(Utils.asrt('A shared anime'),
                                                                                                      x => Array.isArray(x) && x[0] && Array.isArray(x[0].rolesBySeiyuu))
-      .do(({anime, seiyuuCount}) => {
+      .do(([anime, seiyuuCount]) => {
         if (seiyuuCount) {
           this.loadDetails(anime.map(a => a._id).filter(id => !Anime.detailsCache[id]))
             .subscribe();
         }
       })
-      .let(this.routingSvc.replayOnTab('anime'))
-      .do(({anime, seiyuuCount}) => {
-        if (seiyuuCount) {
-          this.messageSvc.status(
-            `${anime.length || 'no'} ${seiyuuCount > 1 ? 'shared ' : ''}anime found`
-          );
-        }
-      })
-      .combineLatest(this.seiyuuSvc.selected$.distinctUntilChanged())                               .do(Utils.asrt('Anime results'))   //TODO toggle grouping by role tier
-      .map(([data]) => data.anime)
+      .combineLatest(this.seiyuuSvc.selected$.distinctUntilChanged(), x => x)                      .do(Utils.asrt('Anime results'))   //TODO toggle grouping by role tier
       .subscribe(this.displayAnime$);
   }
 
@@ -110,7 +102,7 @@ export class AnimeService {
       });
     });
 
-    return {anime: result, seiyuuCount: rolesByAnimeSets.length};
+    return [result, rolesByAnimeSets.length];
   }
 
   private loadDetails(ids: number[]): Observable<any[]> {

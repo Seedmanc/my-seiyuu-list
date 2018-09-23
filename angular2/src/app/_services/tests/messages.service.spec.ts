@@ -44,6 +44,7 @@ describe('MessagesService', () => {
     inject([MessagesService], (service:MessagesService) => {
       let x;
 
+      service.setTotals({seiyuu: 0});
       service.message$.subscribe(data => x=data);
       service.totals();
       expect(JSON.stringify(x)).toEqual(JSON.stringify({isError: true, data: 'no cached records found'}));
@@ -56,6 +57,23 @@ describe('MessagesService', () => {
       service.totals();
       expect(JSON.stringify(x)).toEqual(JSON.stringify({isError: false, data: '2 seiyuu & 3 anime records cached'}));
     })
-  )
+  );
+
+  it('should process results',  inject([MessagesService], (service:MessagesService) => {
+    let spy = spyOn(service, 'status');
+    let spy1 = spyOn(service, 'totals');
+    let x = null;
+
+    service.message$.subscribe(data => x=data);
+    service.results('derp', false, 'hurr');
+    expect(spy1).toHaveBeenCalled();
+
+    service.results('', true, 'derps');
+    expect(spy).toHaveBeenCalledWith('no derps found');
+
+    service.results('10 hurr', true, 'hurrs');
+    expect(spy.calls.mostRecent().args[0]).toBe('10 hurr found');
+   })
+  );
 
 });
