@@ -7,6 +7,6 @@ Search anime by a combination of voice actors in it
 
 ## Status
 
-Working on the upcoming 2.0 version, rewriting MSL in Angular5/RxJS.
+Working on the upcoming 2.0 version, rewriting MSL in Angular2/RxJS.
 
 Preview -  http://seedmanc.github.io/my-seiyuu-list/2/#/anime/53,70
