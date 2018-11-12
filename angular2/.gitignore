@@ -40,4 +40,6 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
-*.json
+package-lock.json
+anime*.json
+seiyuu*.json
