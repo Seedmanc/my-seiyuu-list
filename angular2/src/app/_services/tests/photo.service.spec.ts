@@ -8,8 +8,9 @@ import {PhotoService} from "../photo.service";
 import {RoutingServiceMock} from "./routing.service.mock";
 import {RoutingService} from "../routing.service";
 import { Seiyuu} from "../../_models/seiyuu.model";
-import {Observable} from "rxjs/Observable";
 import {SeiyuuServiceMock} from "./seiyuu.service.mock";
+import {of} from "rxjs/observable/of";
+import {_throw} from "rxjs/observable/throw";
 
 let x;
 let djresult = { html: `<span class="thumb img-thumbnail">
@@ -38,7 +39,7 @@ describe('PhotoService', () => {
        (seiyuuSvc: SeiyuuService, service:PhotoService, rest: RestService,   routingSvc: RoutingService) => {
       service.displayPhotos$.subscribe(([data]) => x = data);
 
-      let spy = spyOn(rest, 'yahooQueryCall').and.returnValue(Observable.of(djresult2));
+      let spy = spyOn(rest, 'yahooQueryCall').and.returnValue(of(djresult2));
 
       routingSvc.tab$.next('photos');
       seiyuuSvc.displayList$['next']([new Seiyuu({name: 'Davidyuk Jenya'})]);
@@ -58,7 +59,7 @@ describe('PhotoService', () => {
        (seiyuuSvc: SeiyuuService, service:PhotoService, rest: RestService,   routingSvc: RoutingService) => {
       service.displayPhotos$.subscribe(([data]) => x = data);
 
-      let spy = spyOn(rest, 'yahooQueryCall').and.returnValue(Observable.of(djresult2));
+      let spy = spyOn(rest, 'yahooQueryCall').and.returnValue(of(djresult2));
 
       seiyuuSvc.displayList$['next']([new Seiyuu({name: 'Davidyuk Jenya'}), new Seiyuu({name: 'Chihara Minori'})]);
       routingSvc.tab$.next('photos');
@@ -77,7 +78,7 @@ describe('PhotoService', () => {
        (seiyuuSvc: SeiyuuService, service:PhotoService, rest: RestService,   routingSvc: RoutingService) => {
       service.displayPhotos$.subscribe(([data]) => x = data);
 
-      let spy = spyOn(rest, 'yahooQueryCall').and.returnValue(Observable.of(djresult2));
+      let spy = spyOn(rest, 'yahooQueryCall').and.returnValue(of(djresult2));
 
       seiyuuSvc.displayList$['next']([new Seiyuu({name: 'Davidyuk Jenya'}), new Seiyuu({name: 'Chihara Minori'})]);
 
@@ -103,7 +104,7 @@ describe('PhotoService', () => {
        (seiyuuSvc: SeiyuuService, service:PhotoService, rest: RestService,   routingSvc: RoutingService) => {
       service.displayPhotos$.subscribe(([data]) => x = data);
 
-      let spy = spyOn(rest, 'yahooQueryCall').and.returnValue(Observable.of(djresult2));
+      let spy = spyOn(rest, 'yahooQueryCall').and.returnValue(of(djresult2));
 
       routingSvc.tab$.next('photos');
       expect(spy).not.toHaveBeenCalled();
@@ -124,7 +125,7 @@ describe('PhotoService', () => {
       service.displayPhotos$.subscribe(([{html, ...data}]) => x = data);
       let djresult20 = {...djresult2};
       djresult20.data = (new Array(20)).fill(djresult20.data).join('');
-      let spy = spyOn(rest, 'yahooQueryCall').and.returnValue(Observable.of(djresult20));
+      let spy = spyOn(rest, 'yahooQueryCall').and.returnValue(of(djresult20));
 
       routingSvc.tab$.next('photos');
       seiyuuSvc.displayList$['next']([new Seiyuu({name: 'Davidyuk Jenya'})]);
@@ -147,7 +148,7 @@ describe('PhotoService', () => {
       let s = 0;
       let djresult10 = {...djresult2};
       djresult10.data = (new Array(10)).fill(djresult10.data).join('');
-      let spy = spyOn(rest, 'yahooQueryCall').and.returnValue(Observable.of(djresult10));
+      let spy = spyOn(rest, 'yahooQueryCall').and.returnValue(of(djresult10));
       let spy3 = spyOn(msgSvc, 'results');
 
       service.displayPhotos$.subscribe(([{html, ...data}, seiyuuCoumt]) => {x = data; s=seiyuuCoumt});
@@ -165,7 +166,7 @@ describe('PhotoService', () => {
        (seiyuuSvc: SeiyuuService, service:PhotoService, rest: RestService, routingSvc: RoutingService, msgSvc: MessagesService) => {
       service.displayPhotos$.subscribe(([data]) => x = data);
 
-      let spy = spyOn(rest, 'yahooQueryCall').and.returnValue(Observable.throw({message:'errmsg'}));
+      let spy = spyOn(rest, 'yahooQueryCall').and.returnValue(_throw({message:'errmsg'}));
 
        routingSvc.tab$.next('photos');
        seiyuuSvc.displayList$['next']([new Seiyuu({name: 'Davidyuk Jenya'})]);

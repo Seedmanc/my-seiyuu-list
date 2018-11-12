@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import "rxjs/Rx";
-import {Observable} from "rxjs/Observable";
+import {of} from "rxjs/observable/of";
 import {basicModel, basicModel2, model, model2} from "../../_models/tests/seiyuu.model.spec";
 
 @Injectable()
@@ -23,7 +23,7 @@ export class RestServiceMock {
     let options = Object.keys(query).reduce((total, key) => total + `&${key}=${JSON.stringify(query[key])}`, '');
     console.log(arguments);
 
-    return query['q'] && query['q']._id ? Observable.of([model,model2]) : Observable.of([basicModel,basicModel2]);
+    return query['q'] && query['q']._id ? of([model,model2]) : of([basicModel,basicModel2]);
   }
 
 }

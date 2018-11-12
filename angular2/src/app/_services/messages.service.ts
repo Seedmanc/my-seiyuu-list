@@ -17,6 +17,7 @@ export class MessagesService {
 
   status(text) {
     this.message$.next({isError: false, data: text});
+    return false;
   }
 
   totals() {

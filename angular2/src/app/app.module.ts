@@ -25,8 +25,6 @@ import {env} from "../environments/environment";
 import { SortLinkComponent } from './sort-link/sort-link.component';
 import {ExternalLinkDirective} from "./_misc/externalLink.directive";
 
-import 'rxjs/add/observable/fromEvent';
-import 'rxjs/add/observable/empty';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/map';
@@ -38,8 +36,6 @@ import 'rxjs/add/operator/publishLast';
 import 'rxjs/add/operator/delayWhen';
 import 'rxjs/add/operator/bufferToggle';
 import 'rxjs/add/operator/throttleTime';
-import 'rxjs/add/observable/timer';
-import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/merge';
 import 'rxjs/add/operator/partition';

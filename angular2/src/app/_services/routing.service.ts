@@ -49,7 +49,7 @@ export class RoutingService {
       return source
         .combineLatest(this.tab$)
         .filter(([,tab]) => tab == tabName)
-        .map(([seiyuus,]) => seiyuus)                                                 .do(Utils.asrt(`runOnTab[${tabName}]`, x => !x[0] || x[0].displayName));
+        .map(([seiyuus,]) => seiyuus)                                               //  .do(Utils.asrt(`runOnTab[${tabName}]`, x => !x[0] || x[0].displayName));
     }
   }
 }

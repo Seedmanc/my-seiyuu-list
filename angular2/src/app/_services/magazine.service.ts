@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {Observable} from "rxjs/Observable";
+import {of} from "rxjs/observable/of";
+import {empty} from "rxjs/observable/empty";
 
 import {RestService} from "./rest.service";
 import {MessagesService} from "./messages.service";
@@ -42,13 +43,13 @@ export class MagazineService {
 
       this.cache[names.join()] ?
 
-        Observable.of(this.cache[names.join()])
+        of(this.cache[names.join()])
         : this.rest.googleQueryCall(names)                                                      .do(Utils.lg('Magazines requested', 'warn'))
           .catch(err => {
-            let result = Observable.of(err);
+            let result = of(err);
 
             if (err.error && err.error.message.includes('callback'))
-              result = Observable.empty()
+              result = empty()
             else
               this.pending = false;
 
@@ -66,7 +67,7 @@ export class MagazineService {
           })
           .do(list => this.cache[names.join()] = list)
 
-      : Observable.of([]);
+      : of([]);
   }
 
 }

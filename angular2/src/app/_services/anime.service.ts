@@ -2,11 +2,12 @@ import {Injectable} from '@angular/core';
 import {Observable} from "rxjs/Observable";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {ReplaySubject} from "rxjs/ReplaySubject";
+import {of} from "rxjs/observable/of";
 
 import {RestService} from "./rest.service";
 import {Utils} from "./utils.service";
 import {MessagesService} from "./messages.service";
-import {Anime, HashOfRoles, Role} from "../_models/anime.model";
+import {Anime, HashOfRoles} from "../_models/anime.model";
 import {SeiyuuService} from "./seiyuu.service";
 import {RoutingService} from "./routing.service";
 import {Seiyuu} from "../_models/seiyuu.model";
@@ -116,7 +117,7 @@ export class AnimeService {
           q: {'_id': {'$in': ids}}
         }
       })                                                                                       .do(Utils.lg('Anime requested', 'warn')) :
-      Observable.of([])
+      of([])
      )
       .do(details => details.forEach(detail => Anime.detailsCache[detail._id] = detail));
   }

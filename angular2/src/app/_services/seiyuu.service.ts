@@ -2,6 +2,9 @@ import { Injectable } from '@angular/core';
 import {Observable} from "rxjs/Observable";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {Subject} from "rxjs/Subject";
+import {timer} from "rxjs/observable/timer";
+import {of} from "rxjs/observable/of";
+import 'rxjs/add/operator/do';
 
 import {BasicSeiyuu,  Seiyuu} from "../_models/seiyuu.model";
 import {RestService} from "./rest.service";
@@ -43,7 +46,7 @@ export class SeiyuuService {
 
     // load full details for selected seiyuu(s), batching requests together
     this.updateRequest$                                                                                    .do(Utils.lg('S updateRequest'))
-      .bufferToggle(this.updateRequest$.throttleTime(200), () => Observable.timer(200))
+      .bufferToggle(this.updateRequest$.throttleTime(200), () => timer(200))
       .flatMap(ids => this.loadByIds(ids))                                                                 .do(Utils.lg('Seiyuu details requested', 'warn'))
       .withLatestFrom(this.routeId$)
       .do(([seiyuus, ids]) => {
@@ -112,7 +115,7 @@ export class SeiyuuService {
     const [single$, multiple$] = found$                                                                    .do(Utils.lg('S found'))
       .withLatestFrom(this.displayList$
         .map(list => list.length))
-      .filter(([,count]) => count < 4 || !!this.messageSvc.status('maximum of 4 people are allowed'))
+      .filter(([,count]) => count < 4 || this.messageSvc.status('maximum of 4 people are allowed'))
       .map(([list]) => list)
       .share()
       .partition(list => list.length === 1);
@@ -153,7 +156,7 @@ export class SeiyuuService {
         console.warn(err.message, err.error && err.error.message);
         ids.forEach(id => this.removeById(id));
 
-        return Observable.of([]);
+        return of([]);
       });
   }
 

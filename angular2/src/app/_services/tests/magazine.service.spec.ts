@@ -7,7 +7,7 @@ import {SeiyuuService} from "../seiyuu.service";
 import {RoutingServiceMock} from "./routing.service.mock";
 import {RoutingService} from "../routing.service";
 import { Seiyuu} from "../../_models/seiyuu.model";
-import {Observable} from "rxjs/Observable";
+import {of} from "rxjs/observable/of";
 import {SeiyuuServiceMock} from "./seiyuu.service.mock";
 import {MagazineService} from "../magazine.service";
 
@@ -33,7 +33,7 @@ describe('MagazineService', () => {
       service.pending = true;
 
       let spy = spyOn(rest, 'googleQueryCall').and
-        .returnValue(Observable.of(
+        .returnValue(of(
 {"version":"0.6","reqId":"0","status":"ok","sig":"229708994","table":{"cols":[{"id":"A","label":"","type":"string"},{"id":"B","label":"","type":"string"},{"id":"C","label":"","type":"string"}],
   "rows":[{"c":[{"v":"22 2005"},{"v":"hm3 Special:"},{"v":"Maeda Konomi, Chihara Minori"}]},
           {"c":[{"v":"23 2006"},{"v":"hm3 Special:"},{"v":"Maeda Konomi, Chihara Minori"}]},
@@ -59,7 +59,7 @@ describe('MagazineService', () => {
       service.pending = true;
 
       let spy = spyOn(rest, 'googleQueryCall').and
-        .returnValue(Observable.of(
+        .returnValue(of(
 {"version":"0.6","reqId":"0","status":"ok","sig":"229708994","table":{"cols":[{"id":"A","label":"","type":"string"},{"id":"B","label":"","type":"string"},{"id":"C","label":"","type":"string"}],
   "rows":[{"c":[{"v":"22 2005"},{"v":"hm3 Special:"},{"v":"Maeda Konomi, Chihara Minori"}]},
           {"c":[{"v":"23 2006"},{"v":"hm3 Special:"},{"v":"Maeda Konomi, Chihara Minori"}]},
@@ -86,7 +86,7 @@ describe('MagazineService', () => {
       service.pending = true;
 
       let spy = spyOn(rest, 'googleQueryCall').and
-        .returnValue(Observable.of(
+        .returnValue(of(
 {"version":"0.6","reqId":"0","status":"ok","sig":"229708994","table":{"cols":[{"id":"A","label":"","type":"string"},{"id":"B","label":"","type":"string"},{"id":"C","label":"","type":"string"}],
   "rows":[{"c":[{"v":"22 2005"},{"v":"hm3 Special:"},{"v":"Maeda Konomi, Chihara Minori"}]},
           {"c":[{"v":"23 2006"},{"v":"hm3 Special:"},{"v":"Maeda Konomi, Chihara Minori"}]},

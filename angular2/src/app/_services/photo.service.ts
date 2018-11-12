@@ -3,6 +3,7 @@ import {Observable} from "rxjs/Observable";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {env} from "../../environments/environment";
 import {ReplaySubject} from "rxjs/ReplaySubject";
+import {of} from "rxjs/observable/of";
 
 import {RestService} from "./rest.service";
 import {SeiyuuService} from "./seiyuu.service";
@@ -65,10 +66,10 @@ export class PhotoService {
 
     return hasNames ?
       this.cache[key] ?
-        Observable.of(this.cache[key]) :
+        of(this.cache[key]) :
         this.getPhotoPage(tags)
           .do(data => this.cache[key] = data) :
-      Observable.of({html:'', next: false, prev: false, pageNum: 0, total: 0});
+      of({html:'', next: false, prev: false, pageNum: 0, total: 0});
   }
 
   private getPhotoPage(tags: string): Observable<PhotoPage> {
@@ -77,7 +78,7 @@ export class PhotoService {
     return this.rest.yahooQueryCall(tags, this.page*20)                                            .do(Utils.lg('Photos requested', 'warn'))
       .catch(error => {
         setTimeout(() => this.messageSvc.error(error.message));
-        return Observable.of({data:'', paging:''});
+        return of({data:'', paging:''});
       })
       .map(({data, paging}) => {
         let rawhtml =  data.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');

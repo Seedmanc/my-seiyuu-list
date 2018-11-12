@@ -2,6 +2,7 @@ import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {SeiyuuService} from "../_services/seiyuu.service";
 import {MessagesService} from "../_services/messages.service";
 import {Observable} from "rxjs/Observable";
+import {fromEvent} from "rxjs/observable/fromEvent";
 import {Subject} from "rxjs/Subject";
 import {Utils} from "../_services/utils.service";
 
@@ -25,13 +26,13 @@ export class HeaderComponent implements OnInit {
     this.status$ = this.messageSvc.message$;
     this.name$ = this.seiyuuSvc.totalList$.map(seiyuus => seiyuus.map(seiyuu => seiyuu.name));
 
-    const input = Observable.fromEvent(this.searchInput.nativeElement, 'input')
+    const input = fromEvent(this.searchInput.nativeElement, 'input')
       .debounceTime(500)
       .withLatestFrom(this.seiyuuSvc.totalList$)
       .filter(([event,list]) => list.some(el => el.name.toLowerCase() === event['target'].value.toLowerCase()))
       .map(([event]) => event);
 
-    Observable.fromEvent(this.searchInput.nativeElement, 'change')
+    fromEvent(this.searchInput.nativeElement, 'change')
       .merge(input)                                                                                        .do(Utils.asrt('input'))
       .map((event: Event) => event.target['value'] && event.target['value'].trim().toLowerCase())
       .filter(value => !!(value && value.length > 2))
