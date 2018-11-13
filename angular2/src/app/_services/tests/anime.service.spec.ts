@@ -91,7 +91,7 @@ describe('AnimeService', () => {
   })
   );
 
-  xit('should display shared anime for multiple seiyuu, also for mainOnly',
+  it('should display shared anime for multiple seiyuu, also for mainOnly',
     inject([AnimeService, HttpTestingController, SeiyuuService, MessagesService],
       (service:AnimeService, backend:HttpTestingController, seiyuuSvc:SeiyuuService, msgSvc:MessagesService) => {
       let y;
