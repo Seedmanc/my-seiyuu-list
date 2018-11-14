@@ -23,12 +23,25 @@ interface GoogleQresponse {
   error?: any
 }
 
+interface MongoCall {
+  coll: string;
+  mode: 'GET'|'POST'|'runCommand'|'PUT';
+  query?: {
+    f?: {[key:string]: 1};
+    s?: {[key:string]: 1};
+    q?: any,
+    m?: boolean;
+    c?: boolean;
+  };
+  payload?: any;
+}
+
 @Injectable()
 export class RestService {
 
   constructor(private http: HttpClient) { }
 
-  mongoCall({coll, mode, payload={}, query={}}): Observable<any> {
+  mongoCall({coll, mode, payload={}, query={}}: MongoCall): Observable<any> {
     let path = "collections/" + coll;
 
     if (JSON.stringify(payload) === '{}') {

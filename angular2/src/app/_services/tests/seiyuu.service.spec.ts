@@ -1,8 +1,7 @@
-import {TestBed, inject, fakeAsync, tick, discardPeriodicTasks} from '@angular/core/testing';
+import {TestBed, inject, fakeAsync, tick, discardPeriodicTasks, getTestBed} from '@angular/core/testing';
 
 import { SeiyuuService } from '../seiyuu.service';
 import {RestService} from "../rest.service";
-import {HttpClientModule} from "@angular/common/http";
 import {MessagesService} from "../messages.service";
 import {RouterTestingModule} from "@angular/router/testing";
 import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
@@ -13,6 +12,7 @@ import {RoutingServiceMock} from "./routing.service.mock";
 import {RoutingService} from "../routing.service";
 import {of} from "rxjs/observable/of";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
+
 export const mockList = (backend, returned, opts?) => {
   let r = backend.expectOne({
     url:
@@ -27,22 +27,30 @@ export const basicList = [
   basicModel2
 ];
 
-describe('SeiyuuService', () => {
+ describe('SeiyuuService', () => {
   let x;
   let Stringify = require('json-stable-stringify');
+
+  let injector: TestBed;
+  let service: SeiyuuService;
+  let backend: HttpTestingController;
 
   beforeEach(() => {
     x = undefined;
     TestBed.configureTestingModule({
-      providers: [SeiyuuService, RestService, MessagesService, {provide: RoutingService, useClass: RoutingServiceMock} ],
-      imports:[HttpClientModule, RouterTestingModule, HttpClientTestingModule ]
+      providers: [ RestService, MessagesService, {provide: RoutingService, useClass: RoutingServiceMock} ],
+      imports:[RouterTestingModule, HttpClientTestingModule ]
     });
+    injector = getTestBed();
+    service = injector.get(SeiyuuService);
+    backend = injector.get(HttpTestingController);
+  });
+  afterEach(() => {
+    backend.verify({ ignoreCancelled: true});
   });
 
-  it('should on init fetch the brief list from seiyuu, toggling pending state',
-    inject([SeiyuuService, HttpTestingController, MessagesService],
-      (service:SeiyuuService, backend:HttpTestingController ) => {
-
+   it('should on init fetch the brief list from seiyuu, toggling pending state',
+      (  ) => {
         expect(service.pending).toBeTruthy();
         service.totalList$.subscribe(data => x=data);
 
@@ -50,12 +58,11 @@ describe('SeiyuuService', () => {
 
         expect(x).toBeTruthy();
         expect(service.pending).toBeFalsy();
-      })
+      }
   );
 
   it('should on ranking fetch the additional details list from seiyuu (if not yet), toggling local pending state',
-    inject([SeiyuuService, HttpTestingController, MessagesService],
-      (service:SeiyuuService, backend:HttpTestingController ) => {
+      (  ) => {
         let pending = {is: true};
 
         service.getRanking(pending).subscribe(data => x=data);
@@ -78,12 +85,12 @@ describe('SeiyuuService', () => {
           url: `${env.mongoUrl}/collections/seiyuu-test?apiKey=${env.apiKey}&f={"hits":1,"accessed":1}`,
           method:'GET'
         }, 'GET to load additional seiyuu details');
-      })
+      }
   );
 
-  it('should report if loading the brief list fails with 404',
-    inject([SeiyuuService, HttpTestingController, MessagesService],
-      (service:SeiyuuService, backend:HttpTestingController, msgSvc:MessagesService) => {
+   it('should report if loading the brief list fails with 404',
+    inject([ MessagesService],
+      ( msgSvc:MessagesService) => {
         let spy = spyOn(msgSvc, 'error');
 
         expect(service.pending).toBeTruthy();
@@ -91,15 +98,16 @@ describe('SeiyuuService', () => {
         service.totalList$.subscribe(data => x = data);
 
         mockList(backend, '', {status: 404, statusText: 'Not Found'});
+
         expect(x).toBeFalsy();
         expect(service.pending).toBeFalsy();
         expect(spy).toHaveBeenCalledWith('Error getting cached list: 404');
       })
   );
 
-  it('should report if loading the brief list fails with a network error',
-    inject([SeiyuuService, HttpTestingController, MessagesService],
-      (service:SeiyuuService, backend:HttpTestingController, msgSvc:MessagesService) => {
+   it('should report if loading the brief list fails with a network error',
+    inject([ MessagesService],
+      (  msgSvc:MessagesService) => {
         let spy = spyOn(msgSvc, 'error');
         let x;
 
@@ -108,10 +116,7 @@ describe('SeiyuuService', () => {
         service.totalList$
           .subscribe(r => x=r);
 
-        let request = backend.expectOne(
-          `${env.mongoUrl}/collections/seiyuu-test?apiKey=${env.apiKey}&f={"name":1,"count":1,"updated":1,"alternate_name":1}&s={"name":1}`
-        );
-        request.error(new ErrorEvent(''));
+        mockList(backend, null, { });
 
         expect(x).toBeFalsy();
         expect(service.pending).toBeFalsy();
@@ -120,8 +125,8 @@ describe('SeiyuuService', () => {
   );
 
   it('should report if loading details fails with 500', fakeAsync(
-    inject([SeiyuuService, HttpTestingController, MessagesService],
-      (service:SeiyuuService, backend:HttpTestingController, msgSvc:MessagesService) => {
+    inject([ MessagesService],
+      (  msgSvc:MessagesService) => {
         let spy = spyOn(msgSvc, 'error');
 
         mockList(backend, basicList);
@@ -140,8 +145,8 @@ describe('SeiyuuService', () => {
   ));
 
   it('should load seiyuu details upon an update request and emit to loaded list', fakeAsync(
-    inject([SeiyuuService, HttpTestingController, RestService, RoutingService],
-      (service:SeiyuuService, backend:HttpTestingController, restSvc:RestService, routingSvc:RoutingService) => {
+    inject([  RestService, RoutingService],
+      (  restSvc:RestService, routingSvc:RoutingService) => {
         let loaded;
         service.totalList$.subscribe(data => x=data );
         service.loadedSeiyuu$.subscribe(data => loaded=data );
@@ -176,8 +181,8 @@ describe('SeiyuuService', () => {
   ));
 
   it('should emit to loaded list from cache immediately', fakeAsync(          // TODO one of these tests breaks further testing
-    inject([SeiyuuService, HttpTestingController, RestService, RoutingService],
-      (service:SeiyuuService, backend:HttpTestingController, restSvc:RestService, routingSvc:RoutingService) => {
+    inject([  RestService, RoutingService],
+      (  restSvc:RestService, routingSvc:RoutingService) => {
         let loaded, display:any = [1];
         service.totalList$.subscribe(data => x=data );
         service.loadedSeiyuu$.subscribe(data => loaded=data );
@@ -203,13 +208,13 @@ describe('SeiyuuService', () => {
         expect(display.length).toBeTruthy();
         expect(loaded[0].pending).toBeFalsy();
 
-      discardPeriodicTasks();
+       discardPeriodicTasks();
       })
   ));
 
-  xit('should error on searching for unknown name',                         // TODO one of these tests breaks further testing
-    inject([SeiyuuService, MessagesService, HttpTestingController],
-      (service:SeiyuuService, msgSvc:MessagesService, backend:HttpTestingController) => {
+  xit('should error on searching for unknown name',
+    inject([ MessagesService ],
+      ( msgSvc:MessagesService ) => {
         let spy = spyOn(msgSvc, 'error');
 
         mockList(backend, basicList);
@@ -220,21 +225,19 @@ describe('SeiyuuService', () => {
   );
 
   it('should find by name',
-    inject([SeiyuuService,  HttpTestingController],
-      (service:SeiyuuService, backend:HttpTestingController) => {
+      ( ) => {
         service.displayList$.subscribe(data => x=data);
 
         mockList(backend, basicList);
 
         service.addSearch(of('Maeda Konomi'));
         expect(JSON.stringify(x)).toBe(JSON.stringify([new BasicSeiyuu(basicModel)]));
-      })
+      }
   );
 
   it('should remove seiyuu from display by id',
-    inject([SeiyuuService, RoutingService, HttpTestingController],
-      (service:SeiyuuService, routingSvc:RoutingService,  backend:HttpTestingController) => {
-
+    inject([ RoutingService ],
+      (  routingSvc:RoutingService ) => {
         service.displayList$.subscribe(data => x=data);
         let spy = spyOn(routingSvc, 'remove').and.callThrough();
 
@@ -249,8 +252,7 @@ describe('SeiyuuService', () => {
   );
 
   it('should remove namesakes by name',
-    inject([SeiyuuService,  HttpTestingController],
-      (service:SeiyuuService, backend:HttpTestingController) => {
+      ( ) => {
         service.displayList$.subscribe(data => x=data);
 
         mockList(backend, [basicModel,basicModel]);
@@ -259,12 +261,11 @@ describe('SeiyuuService', () => {
         service.removeByName('Maeda Konomi');
 
         expect(JSON.stringify(x)).toBe(JSON.stringify([]));
-      })
+      }
   );
 
   it('should avoid duplicates',
-    inject([SeiyuuService, MessagesService, HttpTestingController],
-      (service:SeiyuuService, msgSvc:MessagesService, backend:HttpTestingController) => {
+      ( ) => {
         service.displayList$.subscribe(data => x=data);
         let search = new BehaviorSubject('Maeda Konomi');
 
@@ -274,12 +275,12 @@ describe('SeiyuuService', () => {
         search.next('Test Name');
         search.next('Maeda Konomi');
         expect(x.length).toBe(2);
-      })
+      }
   );
 
   it('should find namesakes',
-    inject([SeiyuuService, HttpTestingController, RoutingService],
-      (service:SeiyuuService, backend:HttpTestingController, routingSvc:RoutingService) => {
+    inject([ RoutingService],
+      ( routingSvc:RoutingService) => {
         routingSvc.routeId$.next([]);
         service.displayList$ .subscribe(data => x=data);
 
@@ -292,8 +293,8 @@ describe('SeiyuuService', () => {
   );
 
   it('should pick one seiyuu from a list of namesakes',
-    inject([SeiyuuService, HttpTestingController, RoutingService],
-      (service:SeiyuuService, backend:HttpTestingController, routingSvc:RoutingService) => {
+    inject([ RoutingService],
+      (  routingSvc:RoutingService) => {
         routingSvc.routeId$.next([]);
         service.displayList$.subscribe(data => x=data);
 
@@ -312,8 +313,7 @@ describe('SeiyuuService', () => {
   );
 
   it('should limit selections to 4',
-    inject([SeiyuuService, HttpTestingController],
-      (service:SeiyuuService, backend:HttpTestingController) => {
+      ( ) => {
         service.displayList$.subscribe(data => x=data);
         let search = new BehaviorSubject('');
         let list = basicList.slice();
@@ -334,6 +334,6 @@ describe('SeiyuuService', () => {
         search.next('Maeda Konomi1');
         search.next('Maeda Konomi2');
         expect(x.length).toBe(4);
-      })
+      }
   );
 });

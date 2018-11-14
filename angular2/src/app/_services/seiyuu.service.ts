@@ -12,7 +12,7 @@ import {MessagesService} from "./messages.service";
 import {Utils} from "./utils.service";
 import {RoutingService} from "./routing.service";
 
-@Injectable()
+@Injectable({providedIn:'root'})
 export class SeiyuuService {
   totalList$: Observable<BasicSeiyuu[]>;
   displayList$: BehaviorSubject<BasicSeiyuu[]> = new BehaviorSubject([]);
