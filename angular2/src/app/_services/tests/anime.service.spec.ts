@@ -1,5 +1,4 @@
-import {TestBed,  inject} from '@angular/core/testing';
-import { HttpClientModule} from "@angular/common/http";
+import {TestBed, inject} from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import {AnimeService} from "../anime.service";
 import {RestService} from "../rest.service";
@@ -33,28 +32,31 @@ let roles =  [{
   }];
 describe('AnimeService', () => {
   x = undefined;
+  let service: AnimeService;
+  let backend: HttpTestingController;
+
   beforeEach(() => {
     Anime.detailsCache = {};
     TestBed.configureTestingModule({
-      providers: [AnimeService, RestService, MessagesService, SeiyuuService, {provide: RoutingService, useClass: RoutingServiceMock} ],
-      imports: [
-        HttpClientModule, HttpClientTestingModule
-      ],
+      providers: [AnimeService, RestService, MessagesService, {provide: RoutingService, useClass: RoutingServiceMock} ],
+      imports: [HttpClientTestingModule]
     });
+    service = TestBed.get(AnimeService);
+    backend = TestBed.get(HttpTestingController);
   });
 
   it('should fetch the record count from anime db',
-    inject([AnimeService, HttpTestingController], (service:AnimeService, backend:HttpTestingController) => {
+() => {
       backend.expectOne({
         url: `${env.mongoUrl}/collections/anime?apiKey=${env.apiKey}&c=true`,
         method:'GET'
       }, 'GET to count the # of records in the anime DB').flush(4286);
-    })
+    }
   );
 
   it('should display anime for a single seiyuu',
-    inject([AnimeService, HttpTestingController, SeiyuuService, MessagesService],
-      (service:AnimeService, backend:HttpTestingController, seiyuuSvc:SeiyuuService, msgSvc:MessagesService) => {
+    inject([SeiyuuService],
+      (seiyuuSvc:SeiyuuService) => {
     let y;
 
       service.displayAnime$.subscribe(([data]) => x = data);
@@ -92,8 +94,8 @@ describe('AnimeService', () => {
   );
 
   it('should display shared anime for multiple seiyuu, also for mainOnly',
-    inject([AnimeService, HttpTestingController, SeiyuuService, MessagesService],
-      (service:AnimeService, backend:HttpTestingController, seiyuuSvc:SeiyuuService, msgSvc:MessagesService) => {
+    inject([SeiyuuService],
+      (seiyuuSvc:SeiyuuService) => {
       let y;
 
       service.displayAnime$.subscribe(([data]) => x = data);
@@ -151,8 +153,8 @@ describe('AnimeService', () => {
   }));
 
   it('should display no shared anime for multiple seiyuu if none found',
-      inject([AnimeService, HttpTestingController, SeiyuuService, MessagesService],
-        (service:AnimeService, backend:HttpTestingController, seiyuuSvc:SeiyuuService, msgSvc:MessagesService) => {
+      inject([SeiyuuService],
+        (seiyuuSvc:SeiyuuService) => {
         let y;
 
         service.displayAnime$.subscribe(([data]) => x = data);

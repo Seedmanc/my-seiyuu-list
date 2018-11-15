@@ -2,7 +2,6 @@ import {TestBed, inject, async  } from '@angular/core/testing';
 import {RoutingService} from "../routing.service";
 import {RouterTestingModule} from "@angular/router/testing";
 import {appRoutes} from "../../app-routing.module";
-import {BaseComponent} from "../../base/base.component";
 import {AnimeListComponent} from "../../_pages/anime-list/anime-list.component";
 import {PhotoListComponent} from "../../_pages/photo-list/photo-list.component";
 import {MagazineListComponent} from "../../_pages/magazine-list/magazine-list.component";
@@ -29,7 +28,7 @@ describe('RoutingService', () => {
     TestBed.configureTestingModule({
       providers: [RoutingService, SorterService],
 
-      declarations: [BaseComponent, SortLinkComponent, AnimeListComponent, MagazineListComponent, FooterComponent, RankingComponent,
+      declarations: [ SortLinkComponent, AnimeListComponent, MagazineListComponent, FooterComponent, RankingComponent,
         PhotoListComponent, HeaderComponent, SeiyuuPanelComponent, TabsComponent, OrderByPipe, SpinnerComponent, UniqPipe],
 
       imports: [RouterTestingModule.withRoutes(appRoutes), FormsModule ],

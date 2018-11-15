@@ -1,6 +1,5 @@
 import {TestBed, inject } from '@angular/core/testing';
-import { HttpClientModule} from "@angular/common/http";
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {RestService} from "../rest.service";
 import {MessagesService} from "../messages.service";
 import {SeiyuuService} from "../seiyuu.service";
@@ -15,20 +14,21 @@ let x;
 
 describe('MagazineService', () => {
   x = undefined;
+  let service: MagazineService;
+
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [ RestService, MessagesService, SeiyuuService, MagazineService,
+      providers: [ RestService, MessagesService, MagazineService,
         {provide: RoutingService, useClass: RoutingServiceMock},  {provide: SeiyuuService, useClass: SeiyuuServiceMock}
       ],
-      imports: [
-        HttpClientModule, HttpClientTestingModule
-      ],
+      imports: [HttpClientTestingModule]
     });
+    service = TestBed.get(MagazineService);
   });
 
   it('should load magazines for a single seiyuu',
-    inject([SeiyuuService, MagazineService,  RestService , RoutingService, MessagesService],
-       (seiyuuSvc: SeiyuuService, service:MagazineService, rest: RestService,  routingSvc: RoutingService, msgSvc: MessagesService) => {
+    inject([SeiyuuService, RestService, RoutingService],
+       (seiyuuSvc: SeiyuuService, rest: RestService,  routingSvc: RoutingService) => {
       service.displayMagazines$.subscribe(([data]) => x = data);
       service.pending = true;
 
@@ -52,8 +52,8 @@ describe('MagazineService', () => {
   );
 
   it('should load magazines for multiple seiyuu',
-    inject([SeiyuuService, MagazineService,  RestService , RoutingService, MessagesService],
-       (seiyuuSvc: SeiyuuService, service:MagazineService, rest: RestService,  routingSvc: RoutingService, msgSvc: MessagesService) => {
+    inject([SeiyuuService, RestService, RoutingService],
+       (seiyuuSvc: SeiyuuService, rest: RestService,  routingSvc: RoutingService) => {
       let s = 0;
       service.displayMagazines$.subscribe(([data, sc]) => {x = data; s=sc;});
       service.pending = true;
@@ -80,8 +80,8 @@ describe('MagazineService', () => {
   );
 
   it('should take magazines from cache on repeating queries',
-    inject([SeiyuuService, MagazineService,  RestService , RoutingService, MessagesService],
-       (seiyuuSvc: SeiyuuService, service:MagazineService, rest: RestService,  routingSvc: RoutingService, msgSvc: MessagesService) => {
+    inject([SeiyuuService, RestService , RoutingService],
+       (seiyuuSvc: SeiyuuService, rest: RestService,  routingSvc: RoutingService) => {
       service.displayMagazines$.subscribe(([data]) => x = data);
       service.pending = true;
 
@@ -111,7 +111,5 @@ describe('MagazineService', () => {
       expect(spy).toHaveBeenCalledTimes(2);
     })
   );
-
-
 
 });

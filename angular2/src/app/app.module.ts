@@ -19,7 +19,6 @@ import {OrderByPipe} from "./_misc/orderBy.pipe";
 import {RestService} from "./_services/rest.service";
 import {MessagesService} from "./_services/messages.service";
 import { SpinnerComponent } from './spinner/spinner.component';
-import { BaseComponent } from './base/base.component';
 import {UniqPipe} from "./_misc/uniq.pipe";
 import {env} from "../environments/environment";
 import { SortLinkComponent } from './sort-link/sort-link.component';
@@ -61,7 +60,6 @@ import "rxjs/add/operator/takeUntil";
     OrderByPipe,
     UniqPipe,
     SpinnerComponent,
-    BaseComponent,
     SortLinkComponent,
     ExternalLinkDirective
   ],
