@@ -1,7 +1,6 @@
 import {TestBed, inject, fakeAsync, tick, discardPeriodicTasks, getTestBed} from '@angular/core/testing';
 
 import { SeiyuuService } from '../seiyuu.service';
-import {RestService} from "../rest.service";
 import {MessagesService} from "../messages.service";
 import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
 import {env} from "../../../environments/environment";
@@ -18,7 +17,7 @@ describe('zSeiyuuService', () => {
   beforeEach(() => {
     x = undefined;
     TestBed.configureTestingModule({
-      providers: [ RestService, MessagesService, {provide: RoutingService, useClass: RoutingServiceMock} ],
+      providers: [ MessagesService, {provide: RoutingService, useClass: RoutingServiceMock} ],
       imports:[HttpClientTestingModule ]
     });
     injector = getTestBed();

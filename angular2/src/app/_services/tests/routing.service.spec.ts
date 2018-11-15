@@ -26,7 +26,7 @@ describe('RoutingService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [RoutingService, SorterService],
+      providers: [SorterService],
 
       declarations: [ SortLinkComponent, AnimeListComponent, MagazineListComponent, FooterComponent, RankingComponent,
         PhotoListComponent, HeaderComponent, SeiyuuPanelComponent, TabsComponent, OrderByPipe, SpinnerComponent, UniqPipe],

@@ -16,7 +16,6 @@ import { MagazineListComponent } from './_pages/magazine-list/magazine-list.comp
 import { PhotoListComponent } from './_pages/photo-list/photo-list.component';
 import { SeiyuuPanelComponent } from './seiyuu-panel/seiyuu-panel.component';
 import {OrderByPipe} from "./_misc/orderBy.pipe";
-import {RestService} from "./_services/rest.service";
 import {MessagesService} from "./_services/messages.service";
 import { SpinnerComponent } from './spinner/spinner.component';
 import {UniqPipe} from "./_misc/uniq.pipe";
@@ -71,7 +70,7 @@ import "rxjs/add/operator/takeUntil";
     FormsModule,
     RouterModule
   ],
-  providers: [RestService, MessagesService],
+  providers: [MessagesService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

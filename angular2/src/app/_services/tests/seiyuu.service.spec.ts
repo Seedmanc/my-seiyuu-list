@@ -37,7 +37,7 @@ export const basicList = [
   beforeEach(() => {
     x = undefined;
     TestBed.configureTestingModule({
-      providers: [ RestService, MessagesService, {provide: RoutingService, useClass: RoutingServiceMock} ],
+      providers: [ MessagesService, {provide: RoutingService, useClass: RoutingServiceMock} ],
       imports:[RouterTestingModule, HttpClientTestingModule ]
     });
     service = TestBed.get(SeiyuuService);

@@ -37,7 +37,7 @@ export class MessagesService {
       ''}`;
   }
 
-  results(text: string, hasSeiyuu: boolean, type: string) {
+  results(text: string, hasSeiyuu, type: string) {
     if (hasSeiyuu) {
       this.status(`${text || 'no '+type} found`)
     } else {

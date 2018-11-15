@@ -1,5 +1,5 @@
 import {TestBed, inject} from '@angular/core/testing';
-import {HttpClient, HttpClientModule} from "@angular/common/http";
+import {HttpClient} from "@angular/common/http";
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import {RestService} from "../rest.service";
 import {env} from "../../../environments/environment";
@@ -11,10 +11,7 @@ const mkresponse = /*'handleJsonp(*/{"version":"0.6","reqId":"0","status":"ok","
 describe('RestService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [RestService],
-      imports: [
-        HttpClientModule, HttpClientTestingModule
-      ],
+      imports: [HttpClientTestingModule],
     });
   });
 

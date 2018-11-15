@@ -26,7 +26,7 @@ describe('PhotoService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [ RestService, MessagesService, SeiyuuService, PhotoService,
+      providers: [MessagesService, SeiyuuService, PhotoService,
         {provide: RoutingService, useClass: RoutingServiceMock},  {provide: SeiyuuService, useClass: SeiyuuServiceMock}
       ],
       imports: [HttpClientTestingModule]

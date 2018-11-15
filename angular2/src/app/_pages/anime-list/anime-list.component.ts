@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-
 import {ActivatedRoute } from "@angular/router";
+
 import {RoutingService} from "../../_services/routing.service";
 import {PageComponent} from "../../_misc/page.component";
 import {AnimeService} from "../../_services/anime.service";

@@ -5,7 +5,6 @@ import {RankingComponent} from "../ranking/ranking.component";
 import {OrderByPipe} from "../_misc/orderBy.pipe";
 import {SeiyuuService} from "../_services/seiyuu.service";
 import {RestService} from "../_services/rest.service";
-import { HttpClientModule} from "@angular/common/http";
 import {MessagesService} from "../_services/messages.service";
 import {RoutingService} from "../_services/routing.service";
 import {RouterTestingModule} from "@angular/router/testing";
@@ -22,11 +21,11 @@ describe('FooterComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ FooterComponent, RankingComponent, OrderByPipe, SortLinkComponent, SpinnerComponent],
-      providers: [SorterService,
-        SeiyuuService, {provide: RestService, useClass: RestServiceMock}, MessagesService,
+      providers: [SorterService, SeiyuuService, MessagesService,
+        {provide: RestService, useClass: RestServiceMock},
         {provide: RoutingService, useClass: RoutingServiceMock}
       ],
-      imports:[HttpClientModule, RouterTestingModule]
+      imports:[ RouterTestingModule]
     })
     .compileComponents();
   }));

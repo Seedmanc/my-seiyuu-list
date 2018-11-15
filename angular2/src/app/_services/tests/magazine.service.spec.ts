@@ -18,7 +18,7 @@ describe('MagazineService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [ RestService, MessagesService, MagazineService,
+      providers: [MessagesService, MagazineService,
         {provide: RoutingService, useClass: RoutingServiceMock},  {provide: SeiyuuService, useClass: SeiyuuServiceMock}
       ],
       imports: [HttpClientTestingModule]

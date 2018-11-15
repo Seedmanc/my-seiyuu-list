@@ -6,7 +6,7 @@ import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {Utils} from "./utils.service";
 import {Observable} from "rxjs/Observable";
 
-@Injectable()
+@Injectable({providedIn:'root'})
 export class RoutingService {
   routeId$: BehaviorSubject<number[]> = new BehaviorSubject([]);
   paramMap$ = new Subject<any>();

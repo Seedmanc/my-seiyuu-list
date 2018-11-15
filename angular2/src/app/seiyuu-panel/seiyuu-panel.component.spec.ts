@@ -6,7 +6,6 @@ import {SeiyuuService} from "../_services/seiyuu.service";
 import {AnimeService} from "../_services/anime.service";
 import {RestService} from "../_services/rest.service";
 import {RoutingService} from "../_services/routing.service";
-import {HttpClientModule} from "@angular/common/http";
 import {RouterTestingModule} from "@angular/router/testing";
 import {MessagesService} from "../_services/messages.service";
 import {BasicSeiyuu, Seiyuu} from "../_models/seiyuu.model";
@@ -23,7 +22,7 @@ describe('SeiyuuPanelComponent', () => {
       declarations: [ SeiyuuPanelComponent, SpinnerComponent ],
       providers:[SeiyuuService, AnimeService, {provide: RestService, useClass: RestServiceMock},
         {provide: RoutingService, useClass: RoutingServiceMock} , MessagesService],
-      imports:[HttpClientModule, RouterTestingModule]
+      imports:[ RouterTestingModule]
     })
     .compileComponents();
   }));

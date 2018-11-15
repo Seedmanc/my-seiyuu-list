@@ -36,7 +36,7 @@ interface MongoCall {
   payload?: any;
 }
 
-@Injectable()
+@Injectable({providedIn:'root'})
 export class RestService {
 
   constructor(private http: HttpClient) { }

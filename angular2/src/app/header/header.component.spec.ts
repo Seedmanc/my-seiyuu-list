@@ -6,7 +6,6 @@ import {UniqPipe} from "../_misc/uniq.pipe";
 import {SpinnerComponent} from "../spinner/spinner.component";
 import {SeiyuuService} from "../_services/seiyuu.service";
 import {RestService} from "../_services/rest.service";
-import {HttpClientModule} from "@angular/common/http";
 import {MessagesService} from "../_services/messages.service";
 import {RoutingService} from "../_services/routing.service";
 import {RouterTestingModule} from "@angular/router/testing";
@@ -21,7 +20,7 @@ describe('HeaderComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ HeaderComponent, UniqPipe, SpinnerComponent ],
-      imports: [FormsModule, HttpClientModule, RouterTestingModule],
+      imports: [FormsModule, RouterTestingModule],
       providers: [SeiyuuService,  {provide: RestService, useClass: RestServiceMock}, MessagesService,
         {provide: RoutingService, useClass: RoutingServiceMock}, AnimeService]
     })

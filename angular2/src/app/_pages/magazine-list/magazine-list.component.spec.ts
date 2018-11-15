@@ -2,7 +2,6 @@ import {async, ComponentFixture, inject, TestBed} from '@angular/core/testing';
 import {RoutingService} from "../../_services/routing.service";
 import {RouterTestingModule} from "@angular/router/testing";
 import {RoutingServiceMock} from "../../_services/tests/routing.service.mock";
-import {RestService} from "../../_services/rest.service";
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import {MessagesService} from "../../_services/messages.service";
 import {SeiyuuService} from "../../_services/seiyuu.service";
@@ -17,7 +16,7 @@ describe('MagazineListComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ MagazineListComponent, SpinnerComponent ],
-      providers: [{provide: RoutingService, useClass: RoutingServiceMock}, MagazineService, RestService, MessagesService, SeiyuuService],
+      providers: [{provide: RoutingService, useClass: RoutingServiceMock}, MagazineService, MessagesService, SeiyuuService],
       imports: [RouterTestingModule,  HttpClientTestingModule]
     })
     .compileComponents();
