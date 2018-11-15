@@ -11,6 +11,7 @@ import {RestService} from "./rest.service";
 import {MessagesService} from "./messages.service";
 import {Utils} from "./utils.service";
 import {RoutingService} from "./routing.service";
+import {env} from "../../environments/environment";
 
 @Injectable({providedIn:'root'})
 export class SeiyuuService {
@@ -142,7 +143,7 @@ export class SeiyuuService {
 
   private loadByIds(ids: number[]): Observable<Seiyuu[]> {
     return this.rest.mongoCall({
-      coll: 'seiyuu-test',
+      coll: env.seiyuuDB,
       mode: 'GET',
       query: {
         q: {
@@ -162,7 +163,7 @@ export class SeiyuuService {
 
   private getTotalList(): Observable<BasicSeiyuu[]> {
     return this.rest.mongoCall({
-      coll: 'seiyuu-test',
+      coll: env.seiyuuDB,
       mode: 'GET',
       query: {
         f: {name: 1, count: 1, updated: 1, alternate_name: 1},
@@ -188,7 +189,7 @@ export class SeiyuuService {
       .do(list => {
         if (!this.rankingLoaded)
           this.rest.mongoCall({
-            coll: 'seiyuu-test',
+            coll: env.seiyuuDB,
             mode: 'GET',
             query: {
               f: {hits: 1, accessed: 1}
