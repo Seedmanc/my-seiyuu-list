@@ -8,6 +8,7 @@
 #magazines {
   max-height: calc(100vh - 15rem);
   overflow: auto;
+  margin: 0.5rem 0;
 }
 @media (max-width: 768px) {
   #magazines {
@@ -24,7 +25,6 @@
   border: 1px solid #AAA;
   border-radius: 0.5rem;
 
-  margin-top: 1rem;
   padding: 1rem 0;
   background: #fafafa;
 }
@@ -32,6 +32,10 @@
   .magazine {
     flex-direction: column;
   }
+}
+
+.magazine + .magazine {
+  margin-top: 1rem;
 }
 
 .type {

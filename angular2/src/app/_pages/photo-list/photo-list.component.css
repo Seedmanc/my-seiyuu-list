@@ -3,6 +3,10 @@
   margin-bottom: 20%;
 }
 
+.row {
+  margin-bottom: 0.5rem;
+}
+
 /deep/ .img-thumbnail {
   padding: 0!important;
 }
@@ -23,9 +27,7 @@
 }
 
 #thumbContainer {
-  min-height: 660px;
-
-  padding-top:   5px;
+  margin-top:   5px;
   margin-bottom: 4px;
 
   text-align:center;

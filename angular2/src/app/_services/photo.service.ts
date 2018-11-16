@@ -12,7 +12,7 @@ import {RoutingService} from "./routing.service";
 import {MessagesService} from "./messages.service";
 import {Seiyuu} from "../_models/seiyuu.model";
 
-interface PhotoPage {
+export interface PhotoPage {
   html?: string;
   next?: boolean;
   prev?: boolean;
@@ -68,7 +68,7 @@ export class PhotoService {
         of(this.cache[key]) :
         this.getPhotoPage(tags)
           .do(data => this.cache[key] = data) :
-      of({html:'', next: false, prev: false, pageNum: 0, total: 0});
+      of(null);
   }
 
   private getPhotoPage(tags: string): Observable<PhotoPage> {

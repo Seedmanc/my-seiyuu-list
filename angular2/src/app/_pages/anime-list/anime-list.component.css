@@ -105,8 +105,9 @@ th.tier {
 .wrapper {
   max-height: calc(100vh - 180px);
   overflow-y: auto;
-  margin-right: -7px;
-  min-height: 140px;
+  margin-right: -6.5px;
+  margin-bottom: 0.5rem;
+  min-height: 0.5rem;
 }
 
 .table-responsive {
@@ -116,5 +117,6 @@ th.tier {
 @media (max-width: 768px) {
   .wrapper {
     max-height: calc(100vh - 520px);
+    min-height: 14rem;
   }
 }

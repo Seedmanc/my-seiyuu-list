@@ -1,5 +1,5 @@
 <div class="col-md-12 no-gutter table-responsive">
-  <table class="table table-fixed table-condensed header table-striped" id="rolesHeader">
+  <table class="table table-fixed table-condensed header table-striped" id="rolesHeader" *ngIf="(seiyuuSvc.displayList$ | async)?.length">
     <colgroup>
       <col width="1%">
       <col width="70%">

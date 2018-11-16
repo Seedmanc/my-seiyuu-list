@@ -2,7 +2,7 @@ import { AppPage } from './po/app.po';
 import {browser, by, element, protractor} from "protractor";
 import {SeiyuuPage} from "./po/seiyuu.po";
 import {AnimePage} from "./po/anime.po";
-import {PhotoPage} from "./po/photos.po";
+import {PhotosPage} from "./po/photos.po";
 
 describe('my-seiyuu-list App', () => {
   let page: AppPage;
@@ -17,7 +17,7 @@ describe('my-seiyuu-list App', () => {
   it('should only issue a request to load data when on its page', () => {
     AppPage.navigateTo('#/magazines/578').then(()=> {
       let seiyuu = new SeiyuuPage();
-      let photo = new PhotoPage();
+      let photo = new PhotosPage();
       let panel = seiyuu.panel('Maeda Konomi');
       let anime = new AnimePage();
 

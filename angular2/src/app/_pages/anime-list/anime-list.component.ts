@@ -45,16 +45,18 @@ export class AnimeListComponent extends PageComponent implements OnInit {
     this.animeSvc.displayAnime$
       .takeUntil(this.unsubscribe$)
       .do(anime => {
-        let seiyuuCount = this.seiyuuSvc.loadedSeiyuu$.getValue().length;
-        let entity = seiyuuCount > 1 ? 'shared anime' : 'anime';
+        let entity = this.seiyuuSvc.loadedSeiyuu$.getValue().length > 1 ?
+          'shared anime' :
+          'anime';
 
-          this.messageSvc.results(
-            anime.length && `${anime.length} ${entity}`,
-            seiyuuCount,
-            entity
-          );
+        this.messageSvc.results(
+          anime,
+          anime => `${anime.length} [${entity}]`,
+          true
+        );
       })
       .subscribe(anime => {
+        anime = anime || [];
         this.output[0].list = anime.filter(a => a.main);
         this.output[1].list = anime.filter(a => !a.main);
       });

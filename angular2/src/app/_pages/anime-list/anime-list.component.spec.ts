@@ -62,25 +62,13 @@ describe('AnimeListComponent', () => {
   it('should report results', inject([AnimeService, MessagesService, SeiyuuService],
     (service: AnimeService, msgSvc: MessagesService, seiyuuSvc:SeiyuuService) => {
       let spy = spyOn(msgSvc, 'results');
+      let l = [];
+      service.displayAnime$.next(l);
 
-      service.displayAnime$.next([]);
-
-      expect(spy).toHaveBeenCalledWith(0, 0, 'anime');
-      spy.calls.reset();
-
-      service.displayAnime$.next([<Anime>{_id:1}]);
-      expect(spy).toHaveBeenCalledWith('1 anime', 0, 'anime');
-      spy.calls.reset();
-
-      seiyuuSvc.loadedSeiyuu$.next([new Seiyuu(model)]);
-      service.displayAnime$.next([<Anime>{_id:1}]);
-      expect(spy).toHaveBeenCalledWith('1 anime', 1, 'anime');
-      spy.calls.reset();
-
-      seiyuuSvc.loadedSeiyuu$.next([new Seiyuu(model), new Seiyuu(model)]);
-      service.displayAnime$.next([<Anime>{_id:1}, <Anime>{_id:2}]);
-      seiyuuSvc.loadedSeiyuu$.next([new Seiyuu(model),new Seiyuu(model)]);
-      expect(spy).toHaveBeenCalledWith('2 shared anime', 2, 'shared anime');
+      expect(spy).toHaveBeenCalled();
+      expect(spy.calls.mostRecent().args[0]).toBe(l);
+      expect(spy.calls.mostRecent().args[1].toString()).toBe('anime => `${anime.length} [${entity}]`');
+      expect(spy.calls.mostRecent().args[2]).toBe(true);
     })
   );
 });

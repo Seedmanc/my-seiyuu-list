@@ -34,6 +34,7 @@ export class AnimeService {
 
     this.seiyuuSvc.selected$.subscribe(id => {if (id) Anime.activeSeiyuu = id;});
 
+
     this.seiyuuSvc.loadedSeiyuu$                                                                    .do(Utils.asrt('A loadedSeiyuu', x => Array.isArray(x)))
       .let(this.routingSvc.runOnTab<Seiyuu[]>('anime'))
       .combineLatest(this.mainOnly$.distinctUntilChanged())
@@ -41,7 +42,7 @@ export class AnimeService {
       .map(rolesByAnimeSets => this.sharedAnime(rolesByAnimeSets))                                 .do(Utils.asrt('A shared anime'),
                                                                                                      x => Array.isArray(x) && x[0] && Array.isArray(x[0].rolesBySeiyuu))
       .do(anime => {
-        if (seiyuuSvc.loadedSeiyuu$.getValue().length) {
+        if (anime) {
           this.loadDetails(anime.map(a => a._id).filter(id => !Anime.detailsCache[id]))
             .subscribe();
         }
@@ -71,6 +72,8 @@ export class AnimeService {
   }
 
   private sharedAnime(rolesByAnimeSets: HashOfRoles[]): Anime[] {
+    if (!rolesByAnimeSets.length) return null;
+
     // find shared anime by checking the shortest list for inclusion in all other lists
     let leastAnime = rolesByAnimeSets
       .sort((s1, s2) => Object.keys(s1).length - Object.keys(s2).length);
@@ -87,7 +90,7 @@ export class AnimeService {
     });
 
     // turn the list of shared anime {[animeId]: {main, characterName, #seiyuuId}[]} into the Anime object
-    let result = Object.keys(sharedAnime).map(_id => {
+    return Object.keys(sharedAnime).map(_id => {
       let rolesBySeiyuu: HashOfRoles = {};
 
       sharedAnime[_id].forEach(anime => {
@@ -102,8 +105,6 @@ export class AnimeService {
         rolesBySeiyuu
       });
     });
-
-    return result;
   }
 
   private loadDetails(ids: number[]): Observable<any[]> {

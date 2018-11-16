@@ -1,6 +1,6 @@
 import { browser, by, element } from 'protractor';
 
-export class PhotoPage {
+export class PhotosPage {
   static navigateTo() {
     return browser.get('/#/photos/0');
   }

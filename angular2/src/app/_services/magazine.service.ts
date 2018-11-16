@@ -66,7 +66,7 @@ export class MagazineService {
           })
           .do(list => this.cache[names.join()] = list)
 
-      : of([]);
+      : of(null);
   }
 
 }

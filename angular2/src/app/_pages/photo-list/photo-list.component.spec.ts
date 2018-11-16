@@ -33,19 +33,13 @@ describe('PhotoListComponent', () => {
   it('should report results', inject([PhotoService, MessagesService, SeiyuuService],
     (service: PhotoService, msgSvc: MessagesService, seiyuuSvc:SeiyuuService) => {
       let spy = spyOn(msgSvc, 'results');
+      let l = [];
+      service.displayPhotos$.next(l);
 
-      service.displayPhotos$.next({});
-      expect(spy).toHaveBeenCalledWith(undefined, 0, 'photos');
-      spy.calls.reset();
-
-      service.displayPhotos$.next({total: 1});
-      expect(spy).toHaveBeenCalledWith('1 photo', 0, 'photos');
-      spy.calls.reset();
-
-      seiyuuSvc.displayList$.next([new Seiyuu(model)]);
-      service.displayPhotos$.next({total: 2});
-      expect(spy).toHaveBeenCalledWith('2 photos', 1, 'photos');
-      spy.calls.reset();
+      expect(spy).toHaveBeenCalled();
+      expect(spy.calls.mostRecent().args[0]).toBe(l);
+      expect(spy.calls.mostRecent().args[1].toString()).toBe('page => `${page.total} [photo]${utils_service_1.Utils.pluralize(page.total)}`');
+      expect(spy.calls.mostRecent().args[2]).toBe(undefined);
     })
   );
 });

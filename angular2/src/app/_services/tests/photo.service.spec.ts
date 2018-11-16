@@ -114,15 +114,19 @@ describe('PhotoService', () => {
       seiyuuSvc.displayList$['next']([]);
       expect(spy).toHaveBeenCalledTimes(1);
 
-      expect(x.html).toBeFalsy();
-      expect(JSON.stringify(x)).toBe(JSON.stringify({html:'', next: false, prev: false, pageNum: 0, total: 0}));
+      expect(x).toBeFalsy();
     })
   );
 
   it('should switch pages and cache previous calls',
     inject([SeiyuuService, RestService , RoutingService],
        (seiyuuSvc: SeiyuuService, rest: RestService, routingSvc: RoutingService) => {
-      service.displayPhotos$.subscribe(( {html, ...data} ) => x = data);
+      service.displayPhotos$.subscribe(page => {
+        if (page) {
+          delete page.html;
+          x = page;
+        }
+      });
       let djresult20 = {...djresult2};
       djresult20.data = (new Array(20)).fill(djresult20.data).join('');
       let spy = spyOn(rest, 'yahooQueryCall').and.returnValue(of(djresult20));
@@ -150,7 +154,12 @@ describe('PhotoService', () => {
       let spy = spyOn(rest, 'yahooQueryCall').and.returnValue(of(djresult10));
       let spy3 = spyOn(msgSvc, 'results');
 
-      service.displayPhotos$.subscribe(( {html, ...data} ) =>  x = data );
+       service.displayPhotos$.subscribe(page => {
+         if (page) {
+           delete page.html;
+           x = page;
+         }
+       });
       routingSvc.tab$.next('photos');
       seiyuuSvc.displayList$['next']([new Seiyuu({name: 'Davidyuk Jenya'})]);
       expect(spy).toHaveBeenCalledWith('davidyuk_jenya+solo', 0);
@@ -162,7 +171,11 @@ describe('PhotoService', () => {
   it('should process errors',
     fakeAsync(inject([SeiyuuService,RestService, RoutingService, MessagesService],
        (seiyuuSvc: SeiyuuService, rest: RestService, routingSvc: RoutingService, msgSvc: MessagesService) => {
-      service.displayPhotos$.subscribe( data  => x = data);
+       service.displayPhotos$.subscribe(page => {
+         if (page) {
+           x = page;
+         }
+       });
 
       let spy = spyOn(rest, 'yahooQueryCall').and.returnValue(_throw({message:'errmsg'}));
 

@@ -1,20 +1,20 @@
 import {browser, by, element, protractor} from "protractor";
-import {PhotoPage} from "./po/photos.po";
+import {PhotosPage} from "./po/photos.po";
 import {AppPage} from "./po/app.po";
 import {SeiyuuPage} from "./po/seiyuu.po";
 
 describe('photo lookups', () => {
-  let page: PhotoPage;
+  let page: PhotosPage;
   let app: AppPage;
   let seiyuu: SeiyuuPage;
   let EC = protractor.ExpectedConditions;
   let to = 5000;
 
   beforeEach(() => {
-    page = new PhotoPage();
+    page = new PhotosPage();
     app = new AppPage();
     seiyuu = new SeiyuuPage();
-    PhotoPage.navigateTo();
+    PhotosPage.navigateTo();
   });
 
   it('should load photo when a seiyuu is selected from photo page', () => {

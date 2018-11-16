@@ -65,14 +65,17 @@ describe('MessagesService', () => {
     let x = null;
 
     service.message$.subscribe(data => x=data);
-    service.results('derp', false, 'hurr');
+    service.results(null,(n)=>'hurr');
     expect(spy1).toHaveBeenCalled();
 
-    service.results('', true, 'derps');
+    service.results([], ()=>'a [derp] 7');
     expect(spy).toHaveBeenCalledWith('no derps found');
 
-    service.results('10 hurr', true, 'hurrs');
-    expect(spy.calls.mostRecent().args[0]).toBe('10 hurr found');
+    service.results([], ()=>'a [derp] 7', true);
+    expect(spy).toHaveBeenCalledWith('no derp found');
+
+    service.results([1,2], () => '[hurr]');
+    expect(spy.calls.mostRecent().args[0]).toBe('hurr found');
    })
   );
 

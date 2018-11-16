@@ -7,7 +7,6 @@ import {MagazineService} from "../../_services/magazine.service";
 import {Utils} from "../../_services/utils.service";
 import {MessagesService} from "../../_services/messages.service";
 import {Magazine} from "../../_models/magazine.model";
-import {SeiyuuService} from "../../_services/seiyuu.service";
 
 @Component({
   selector: 'msl-magazine-list',
@@ -19,7 +18,6 @@ export class MagazineListComponent extends PageComponent implements OnInit {
 
   constructor(public magazineSvc: MagazineService,
               private messageSvc: MessagesService,
-              private seiyuuSvc: SeiyuuService,
               protected route: ActivatedRoute,
               protected routingSvc: RoutingService) {
     super(route, routingSvc);
@@ -30,15 +28,15 @@ export class MagazineListComponent extends PageComponent implements OnInit {
 
     this.magazineSvc.displayMagazines$
       .takeUntil(this.unsubscribe$)
-      .do(magazines => {
-        let iss = magazines.reduce((p, c) => p + c.issues.length, 0);
-
+      .do(magazines =>
         this.messageSvc.results(
-          magazines.length && `${iss} issue${Utils.pluralize(iss)} in ${magazines.length} magazine${Utils.pluralize(magazines.length)}`,
-          this.seiyuuSvc.displayList$.getValue().length,
-          'magazines'
-        );
-      })
+          magazines,
+          magazines => {
+            let iss = magazines.reduce((p, c) => p + c.issues.length, 0);
+            return `${iss} issue${Utils.pluralize(iss)} in ${magazines.length} [magazine]${Utils.pluralize(magazines.length)}`;
+          }
+        )
+      )
       .subscribe(x => this.list = x);
   }
 

@@ -37,9 +37,14 @@ export class MessagesService {
       ''}`;
   }
 
-  results(text: string, hasSeiyuu, type: string) {
-    if (hasSeiyuu) {
-      this.status(`${text || 'no '+type} found`)
+  results(list: any, template: ((number) => string), singular?: boolean) {
+    if (list) {
+      let text = template(list);
+      let type = text.match(/\[(.+?)\]/g)[0] + (singular ? '' : 's');
+      let result = (list.length || list.total) ?
+        text :
+        'no '+type;
+      this.status(result.replace(/[\[\]]/g,'') + ' found');
     } else {
       this.totals();
     }
