@@ -6,6 +6,7 @@ import {RoutingService} from "../../_services/routing.service";
 import {PhotoService} from "../../_services/photo.service";
 import {Utils} from "../../_services/utils.service";
 import {MessagesService} from "../../_services/messages.service";
+import {SeiyuuService} from "../../_services/seiyuu.service";
 
 @Component({
   selector: 'msl-photo-list',
@@ -20,6 +21,7 @@ export class PhotoListComponent extends PageComponent implements OnInit {
 
   constructor(public photoSvc: PhotoService,
               private messageSvc: MessagesService,
+              private seiyuuSvc: SeiyuuService,
               protected route: ActivatedRoute,
               protected routingSvc: RoutingService) {
     super(route, routingSvc);
@@ -30,14 +32,14 @@ export class PhotoListComponent extends PageComponent implements OnInit {
 
     this.photoSvc.displayPhotos$
       .takeUntil(this.unsubscribe$)                                                                       .do(Utils.asrt('photo'))
-      .do(([page, seiyuuCount]) => {
+      .do(page => {
         this.messageSvc.results(
           page.total && `${page.total} photo${Utils.pluralize(page.total)}`,
-          seiyuuCount,
+          this.seiyuuSvc.displayList$.getValue().length,
           'photos'
         );
       })
-      .subscribe(([result]) =>  Object.assign(this, result));
+      .subscribe(result =>  Object.assign(this, result));
   }
 
 

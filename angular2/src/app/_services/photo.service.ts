@@ -22,7 +22,7 @@ interface PhotoPage {
 
 @Injectable()
 export class PhotoService {
-  displayPhotos$: ReplaySubject<[PhotoPage, number]> = new ReplaySubject(1);
+  displayPhotos$: ReplaySubject<PhotoPage> = new ReplaySubject(1);
   pending: boolean;
 
   private pageDelta: BehaviorSubject<number> = new BehaviorSubject(0);
@@ -44,7 +44,6 @@ export class PhotoService {
       .combineLatest(this.pageDelta)                                                                   .do(Utils.lg('photoPage'))
       .switchMap(([names,]) => this.wrapper(names))
       .do(() => this.pending = false)
-      .withLatestFrom(this.seiyuuSvc.displayList$, (page, seiyuus) => [page, seiyuus.length])
       .subscribe(this.displayPhotos$);
   }
 

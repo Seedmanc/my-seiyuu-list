@@ -57,17 +57,16 @@ describe('AnimeService', () => {
   it('should display anime for a single seiyuu',
     inject([SeiyuuService],
       (seiyuuSvc:SeiyuuService) => {
-    let y;
+      let y;
 
-      service.displayAnime$.subscribe(([data]) => x = data);
+      service.displayAnime$.subscribe(data => x = data);
       seiyuuSvc.selected$.subscribe(data => y = data);
 
       let loaded = Object.assign({}, model);
       loaded.roles.push(...roles);
 
-
-        seiyuuSvc.loadedSeiyuu$.next([new Seiyuu(loaded)]);
-        mockList(backend, [basicModel,basicModel]);
+      seiyuuSvc.loadedSeiyuu$.next([new Seiyuu(loaded)]);
+      mockList(backend, [basicModel,basicModel]);
 
       expect(y).toBe(model._id);
       backend.expectOne({
@@ -89,8 +88,7 @@ describe('AnimeService', () => {
 '{"_id":2,"rolesBySeiyuu":{"578":[{"name":"Character 1","main":true,"_id":578}]},"main":true,"link":"//myanimelist.net/anime/2","thumb":"//myanimelist.net/pic2v.jpg","firstCharacter":"Character 1","characters":[{"name":"Character 1","main":true}],"title":"title 2"}');
       expect(JSON.stringify(x[2])).toBe(
 '{"_id":3,"rolesBySeiyuu":{"578":[{"name":"Character 3","main":false,"_id":578}]},"main":false,"link":"//myanimelist.net/anime/3","thumb":"//myanimelist.net/pic3v.jpg","firstCharacter":"Character 3","characters":[{"name":"Character 3","main":false}],"title":"title 3"}');
-
-  })
+    })
   );
 
   it('should display shared anime for multiple seiyuu, also for mainOnly',
@@ -98,7 +96,7 @@ describe('AnimeService', () => {
       (seiyuuSvc:SeiyuuService) => {
       let y;
 
-      service.displayAnime$.subscribe(([data]) => x = data);
+      service.displayAnime$.subscribe(data => x = data);
       seiyuuSvc.selected$.subscribe(data => y = data);
 
       let loaded = Object.assign({}, model);
@@ -157,7 +155,7 @@ describe('AnimeService', () => {
         (seiyuuSvc:SeiyuuService) => {
         let y;
 
-        service.displayAnime$.subscribe(([data]) => x = data);
+        service.displayAnime$.subscribe(data => x = data);
         seiyuuSvc.selected$.subscribe(data => y = data);
 
         let loaded = Object.assign({}, model);

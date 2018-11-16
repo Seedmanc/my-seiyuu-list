@@ -37,7 +37,7 @@ describe('PhotoService', () => {
   it('should load photos for a single seiyuu with 1 photo',
     inject([SeiyuuService, RestService , RoutingService],
        (seiyuuSvc: SeiyuuService, rest: RestService,   routingSvc: RoutingService) => {
-      service.displayPhotos$.subscribe(([data]) => x = data);
+      service.displayPhotos$.subscribe( data  => x = data);
 
       let spy = spyOn(rest, 'yahooQueryCall').and.returnValue(of(djresult2));
 
@@ -57,7 +57,7 @@ describe('PhotoService', () => {
   it('should load photos for multiple seiyuu',
     inject([SeiyuuService, RestService, RoutingService],
        (seiyuuSvc: SeiyuuService, rest: RestService, routingSvc: RoutingService) => {
-      service.displayPhotos$.subscribe(([data]) => x = data);
+      service.displayPhotos$.subscribe( data => x = data);
 
       let spy = spyOn(rest, 'yahooQueryCall').and.returnValue(of(djresult2));
 
@@ -76,7 +76,7 @@ describe('PhotoService', () => {
   it('should only load photos when on their tab, only call again when seiyuu change',
     inject([SeiyuuService, RestService, RoutingService],
        (seiyuuSvc: SeiyuuService, rest: RestService, routingSvc: RoutingService) => {
-      service.displayPhotos$.subscribe(([data]) => x = data);
+      service.displayPhotos$.subscribe( data  => x = data);
 
       let spy = spyOn(rest, 'yahooQueryCall').and.returnValue(of(djresult2));
 
@@ -102,7 +102,7 @@ describe('PhotoService', () => {
   it('should not call when no seiyuu',
     inject([SeiyuuService, RestService, RoutingService],
        (seiyuuSvc: SeiyuuService, rest: RestService, routingSvc: RoutingService) => {
-      service.displayPhotos$.subscribe(([data]) => x = data);
+      service.displayPhotos$.subscribe( data  => x = data);
 
       let spy = spyOn(rest, 'yahooQueryCall').and.returnValue(of(djresult2));
 
@@ -122,7 +122,7 @@ describe('PhotoService', () => {
   it('should switch pages and cache previous calls',
     inject([SeiyuuService, RestService , RoutingService],
        (seiyuuSvc: SeiyuuService, rest: RestService, routingSvc: RoutingService) => {
-      service.displayPhotos$.subscribe(([{html, ...data}]) => x = data);
+      service.displayPhotos$.subscribe(( {html, ...data} ) => x = data);
       let djresult20 = {...djresult2};
       djresult20.data = (new Array(20)).fill(djresult20.data).join('');
       let spy = spyOn(rest, 'yahooQueryCall').and.returnValue(of(djresult20));
@@ -145,17 +145,15 @@ describe('PhotoService', () => {
   it('should count images properly',
     inject([SeiyuuService, RestService , RoutingService, MessagesService],
        (seiyuuSvc: SeiyuuService, rest: RestService, routingSvc: RoutingService, msgSvc: MessagesService) => {
-      let s = 0;
       let djresult10 = {...djresult2};
       djresult10.data = (new Array(10)).fill(djresult10.data).join('');
       let spy = spyOn(rest, 'yahooQueryCall').and.returnValue(of(djresult10));
       let spy3 = spyOn(msgSvc, 'results');
 
-      service.displayPhotos$.subscribe(([{html, ...data}, seiyuuCoumt]) => {x = data; s=seiyuuCoumt});
+      service.displayPhotos$.subscribe(( {html, ...data} ) =>  x = data );
       routingSvc.tab$.next('photos');
       seiyuuSvc.displayList$['next']([new Seiyuu({name: 'Davidyuk Jenya'})]);
       expect(spy).toHaveBeenCalledWith('davidyuk_jenya+solo', 0);
-      expect(s).toEqual(1);
 
       expect(JSON.stringify(x)).toBe(JSON.stringify({"pageNum":0,"total":10,"next":false,"prev":false}));
     })
@@ -164,7 +162,7 @@ describe('PhotoService', () => {
   it('should process errors',
     fakeAsync(inject([SeiyuuService,RestService, RoutingService, MessagesService],
        (seiyuuSvc: SeiyuuService, rest: RestService, routingSvc: RoutingService, msgSvc: MessagesService) => {
-      service.displayPhotos$.subscribe(([data]) => x = data);
+      service.displayPhotos$.subscribe( data  => x = data);
 
       let spy = spyOn(rest, 'yahooQueryCall').and.returnValue(_throw({message:'errmsg'}));
 

@@ -11,6 +11,9 @@ import {MessagesService} from "../../_services/messages.service";
 import {SeiyuuService} from "../../_services/seiyuu.service";
 import {SortLinkComponent} from "../../sort-link/sort-link.component";
 import {SorterService} from "../../_services/sorter.service";
+import {Seiyuu} from "../../_models/seiyuu.model";
+import { model} from "../../_models/tests/seiyuu.model.spec";
+import {Anime} from "../../_models/anime.model";
 
 describe('AnimeListComponent', () => {
   let component: AnimeListComponent;
@@ -56,23 +59,27 @@ describe('AnimeListComponent', () => {
     })
   );
 
-  it('should report results', inject([AnimeService, MessagesService],
-    (service: AnimeService, msgSvc: MessagesService) => {
+  it('should report results', inject([AnimeService, MessagesService, SeiyuuService],
+    (service: AnimeService, msgSvc: MessagesService, seiyuuSvc:SeiyuuService) => {
       let spy = spyOn(msgSvc, 'results');
 
-      service.displayAnime$.next([[], 0]);
+      service.displayAnime$.next([]);
+
       expect(spy).toHaveBeenCalledWith(0, 0, 'anime');
       spy.calls.reset();
 
-      service.displayAnime$.next([['derp'], 0]);
+      service.displayAnime$.next([<Anime>{_id:1}]);
       expect(spy).toHaveBeenCalledWith('1 anime', 0, 'anime');
       spy.calls.reset();
 
-      service.displayAnime$.next([['derp'], 1]);
+      seiyuuSvc.loadedSeiyuu$.next([new Seiyuu(model)]);
+      service.displayAnime$.next([<Anime>{_id:1}]);
       expect(spy).toHaveBeenCalledWith('1 anime', 1, 'anime');
       spy.calls.reset();
 
-      service.displayAnime$.next([['derp', 'hurr'], 2]);
+      seiyuuSvc.loadedSeiyuu$.next([new Seiyuu(model), new Seiyuu(model)]);
+      service.displayAnime$.next([<Anime>{_id:1}, <Anime>{_id:2}]);
+      seiyuuSvc.loadedSeiyuu$.next([new Seiyuu(model),new Seiyuu(model)]);
       expect(spy).toHaveBeenCalledWith('2 shared anime', 2, 'shared anime');
     })
   );

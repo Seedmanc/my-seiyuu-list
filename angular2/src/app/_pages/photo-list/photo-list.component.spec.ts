@@ -8,6 +8,8 @@ import {SeiyuuService} from "../../_services/seiyuu.service";
 import {SpinnerComponent} from "../../spinner/spinner.component";
 import {PhotoListComponent} from "./photo-list.component";
 import {PhotoService} from "../../_services/photo.service";
+import {model} from "../../_models/tests/seiyuu.model.spec";
+import {Seiyuu} from "../../_models/seiyuu.model";
 
 describe('PhotoListComponent', () => {
   let component: PhotoListComponent;
@@ -28,19 +30,20 @@ describe('PhotoListComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should report results', inject([PhotoService, MessagesService],
-    (service: PhotoService, msgSvc: MessagesService) => {
+  it('should report results', inject([PhotoService, MessagesService, SeiyuuService],
+    (service: PhotoService, msgSvc: MessagesService, seiyuuSvc:SeiyuuService) => {
       let spy = spyOn(msgSvc, 'results');
 
-      service.displayPhotos$.next([{}, 0]);
+      service.displayPhotos$.next({});
       expect(spy).toHaveBeenCalledWith(undefined, 0, 'photos');
       spy.calls.reset();
 
-      service.displayPhotos$.next([{total: 1}, 0]);
+      service.displayPhotos$.next({total: 1});
       expect(spy).toHaveBeenCalledWith('1 photo', 0, 'photos');
       spy.calls.reset();
 
-      service.displayPhotos$.next([{total: 2}, 1]);
+      seiyuuSvc.displayList$.next([new Seiyuu(model)]);
+      service.displayPhotos$.next({total: 2});
       expect(spy).toHaveBeenCalledWith('2 photos', 1, 'photos');
       spy.calls.reset();
     })

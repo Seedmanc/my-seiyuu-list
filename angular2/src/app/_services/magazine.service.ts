@@ -14,7 +14,7 @@ import {ReplaySubject} from "rxjs/ReplaySubject";
 
 @Injectable()
 export class MagazineService {
-  displayMagazines$: ReplaySubject<any[]> = new ReplaySubject(1);
+  displayMagazines$: ReplaySubject<Magazine[]> = new ReplaySubject(1);
   pending = false;
   selectedSeiyuu: string[] = [];
 
@@ -31,7 +31,6 @@ export class MagazineService {
       .map(seiyuus => seiyuus.map(seiyuu => seiyuu.displayName).sort())
       .switchMap(names => this.getMagazines(names))                                               .do(Utils.asrt('Magazine list'))
       .do(() => this.pending = false)
-      .withLatestFrom(this.seiyuuSvc.displayList$, (results, seiyuus) => [results, seiyuus.length])
       .subscribe(this.displayMagazines$);
   }
 

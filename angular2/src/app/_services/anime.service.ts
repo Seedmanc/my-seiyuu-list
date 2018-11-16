@@ -14,7 +14,7 @@ import {Seiyuu} from "../_models/seiyuu.model";
 
 @Injectable()
 export class AnimeService {
-  displayAnime$: ReplaySubject<any[]> = new ReplaySubject(1);
+  displayAnime$: ReplaySubject<Anime[]> = new ReplaySubject(1);
   mainOnly$: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
   constructor(private rest: RestService,
@@ -40,8 +40,8 @@ export class AnimeService {
       .map(([seiyuus, mainOnly]) => this.animePerSeiyuu(seiyuus, mainOnly))                        .do(Utils.asrt('A roles by anime sets'))
       .map(rolesByAnimeSets => this.sharedAnime(rolesByAnimeSets))                                 .do(Utils.asrt('A shared anime'),
                                                                                                      x => Array.isArray(x) && x[0] && Array.isArray(x[0].rolesBySeiyuu))
-      .do(([anime, seiyuuCount]) => {
-        if (seiyuuCount) {
+      .do(anime => {
+        if (seiyuuSvc.loadedSeiyuu$.getValue().length) {
           this.loadDetails(anime.map(a => a._id).filter(id => !Anime.detailsCache[id]))
             .subscribe();
         }
@@ -70,7 +70,7 @@ export class AnimeService {
     });
   }
 
-  private sharedAnime(rolesByAnimeSets: HashOfRoles[]) {
+  private sharedAnime(rolesByAnimeSets: HashOfRoles[]): Anime[] {
     // find shared anime by checking the shortest list for inclusion in all other lists
     let leastAnime = rolesByAnimeSets
       .sort((s1, s2) => Object.keys(s1).length - Object.keys(s2).length);
@@ -103,7 +103,7 @@ export class AnimeService {
       });
     });
 
-    return [result, rolesByAnimeSets.length];
+    return result;
   }
 
   private loadDetails(ids: number[]): Observable<any[]> {

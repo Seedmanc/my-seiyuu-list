@@ -29,7 +29,7 @@ describe('MagazineService', () => {
   it('should load magazines for a single seiyuu',
     inject([SeiyuuService, RestService, RoutingService],
        (seiyuuSvc: SeiyuuService, rest: RestService,  routingSvc: RoutingService) => {
-      service.displayMagazines$.subscribe(([data]) => x = data);
+      service.displayMagazines$.subscribe(data => x = data);
       service.pending = true;
 
       let spy = spyOn(rest, 'googleQueryCall').and
@@ -54,8 +54,7 @@ describe('MagazineService', () => {
   it('should load magazines for multiple seiyuu',
     inject([SeiyuuService, RestService, RoutingService],
        (seiyuuSvc: SeiyuuService, rest: RestService,  routingSvc: RoutingService) => {
-      let s = 0;
-      service.displayMagazines$.subscribe(([data, sc]) => {x = data; s=sc;});
+      service.displayMagazines$.subscribe(data => x = data);
       service.pending = true;
 
       let spy = spyOn(rest, 'googleQueryCall').and
@@ -70,7 +69,6 @@ describe('MagazineService', () => {
       seiyuuSvc.displayList$['next']([new Seiyuu({name: 'Maeda Konomi'}), new Seiyuu({name: 'Chihara Minori'})]);
 
       expect(spy).toHaveBeenCalledWith(['Chihara Minori', 'Maeda Konomi']);
-      expect(s).toEqual(2);
 
       expect(JSON.stringify(x)).toBe(JSON.stringify([{"magazine":"hm3 Special","issues":[{"issue":"22 2005","seiyuus":["Chihara Minori", 'Maeda Konomi']},
         {"issue":"23 2006","seiyuus":["Chihara Minori", 'Maeda Konomi']}]},
@@ -82,7 +80,7 @@ describe('MagazineService', () => {
   it('should take magazines from cache on repeating queries',
     inject([SeiyuuService, RestService , RoutingService],
        (seiyuuSvc: SeiyuuService, rest: RestService,  routingSvc: RoutingService) => {
-      service.displayMagazines$.subscribe(([data]) => x = data);
+      service.displayMagazines$.subscribe( data  => x = data);
       service.pending = true;
 
       let spy = spyOn(rest, 'googleQueryCall').and
