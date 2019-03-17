@@ -1,6 +1,3 @@
-import { Injectable } from '@angular/core';
-
-@Injectable()
 export class SorterService {
   ascending: boolean = true;
   orderByField: string;

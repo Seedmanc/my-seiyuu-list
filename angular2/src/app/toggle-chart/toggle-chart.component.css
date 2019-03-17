@@ -1,0 +1,21 @@
+#toggleChart {
+  display: none;
+}
+
+.toggle-chart {
+  margin-top: 0.25rem;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+:checked + .toggle-chart {
+  background-color: #0a6;
+  margin-bottom: 3rem;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  :checked + .toggle-chart {
+    margin-bottom: 0.25rem;
+  }
+}

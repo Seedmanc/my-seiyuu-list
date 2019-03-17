@@ -69,8 +69,6 @@ th.tier {
 }
 
 .char-list {
-  position: absolute;
-  right: -0.2rem;
   z-index: 1;
   display: none;
 

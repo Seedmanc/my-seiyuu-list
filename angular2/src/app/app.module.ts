@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import {Router} from "@angular/router";
 import {HttpClientJsonpModule, HttpClientModule} from '@angular/common/http';
 
+import {env} from "../environments/environment";
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { TabsComponent } from './tabs/tabs.component';
@@ -15,13 +16,14 @@ import { AnimeListComponent } from './_pages/anime-list/anime-list.component';
 import { MagazineListComponent } from './_pages/magazine-list/magazine-list.component';
 import { PhotoListComponent } from './_pages/photo-list/photo-list.component';
 import { SeiyuuPanelComponent } from './seiyuu-panel/seiyuu-panel.component';
+import { AnimeChartComponent } from './anime-chart/anime-chart.component';
 import {OrderByPipe} from "./_misc/orderBy.pipe";
 import {MessagesService} from "./_services/messages.service";
 import { SpinnerComponent } from './spinner/spinner.component';
 import {UniqPipe} from "./_misc/uniq.pipe";
-import {env} from "../environments/environment";
 import { SortLinkComponent } from './sort-link/sort-link.component';
 import {ExternalLinkDirective} from "./_misc/externalLink.directive";
+import {ToggleChartComponent} from "./toggle-chart/toggle-chart.component";
 
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/filter';
@@ -60,7 +62,9 @@ import "rxjs/add/operator/takeUntil";
     UniqPipe,
     SpinnerComponent,
     SortLinkComponent,
-    ExternalLinkDirective
+    ExternalLinkDirective,
+    AnimeChartComponent,
+    ToggleChartComponent
   ],
   imports: [
     BrowserModule,

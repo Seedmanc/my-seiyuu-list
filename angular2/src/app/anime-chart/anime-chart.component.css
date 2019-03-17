@@ -1,0 +1,25 @@
+.float {
+  float: left;
+  padding: 0.5rem 1rem;
+}
+
+.top {
+  text-align: center;
+  width: 30%;
+}
+
+#chart th {
+  padding: 0;
+  padding-top: 5px;
+}
+
+.side div {
+  writing-mode: vertical-rl;
+  text-orientation: sideways;
+  transform: scale(-1,-1);
+  text-align: center;
+}
+
+.side {
+  padding: 15% 0!important;
+}

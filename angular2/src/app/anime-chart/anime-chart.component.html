@@ -1,0 +1,9 @@
+<table class="table table-fixed table-condensed" id="chart" *ngIf="seiyuuSvc.loadedSeiyuu$ | async as seiyuus">
+  <tr><th class="visible-xs">&nbsp;</th><th class="top" *ngFor="let seiyuu of seiyuus.slice().reverse()">{{seiyuu.name}}</th></tr>
+  <tr *ngFor="let row of animeSvc.displayChart$ | async; let i = index">
+    <th class="side visible-xs"><div><span>{{seiyuus[i].name}}</span></div></th>
+    <td *ngFor="let col of row.slice().reverse()">
+      <div class="float" *ngFor="let anime of col">{{anime._id}}</div>
+    </td>
+  </tr>
+</table>

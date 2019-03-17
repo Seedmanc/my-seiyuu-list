@@ -7,6 +7,7 @@ import {AnimeService} from "../../_services/anime.service";
 import {SorterService} from "../../_services/sorter.service";
 import {MessagesService} from "../../_services/messages.service";
 import {SeiyuuService} from "../../_services/seiyuu.service";
+import {BusService} from "../../_services/bus.service";
 
 @Component({
   selector: 'msl-anime-list',
@@ -33,7 +34,8 @@ export class AnimeListComponent extends PageComponent implements OnInit {
               private messageSvc: MessagesService,
               private seiyuuSvc: SeiyuuService,
               public animeSvc: AnimeService,
-              public sorter: SorterService) {
+              public sorter: SorterService,
+              public bus: BusService) {
       super(route, routingSvc);
     }
 
