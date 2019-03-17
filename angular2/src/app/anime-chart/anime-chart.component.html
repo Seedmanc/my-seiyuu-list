@@ -1,9 +1,15 @@
-<table class="table table-fixed table-condensed" id="chart" *ngIf="seiyuuSvc.loadedSeiyuu$ | async as seiyuus">
-  <tr><th class="visible-xs">&nbsp;</th><th class="top" *ngFor="let seiyuu of seiyuus.slice().reverse()">{{seiyuu.name}}</th></tr>
-  <tr *ngFor="let row of animeSvc.displayChart$ | async; let i = index">
-    <th class="side visible-xs"><div><span>{{seiyuus[i].name}}</span></div></th>
-    <td *ngFor="let col of row.slice().reverse()">
-      <div class="float" *ngFor="let anime of col">{{anime._id}}</div>
-    </td>
-  </tr>
-</table>
+<div id="chart" *ngIf="seiyuuSvc.loadedSeiyuu$ | async as seiyuus">
+  <div class="row header">
+    <div class="visible-xs">&nbsp;</div>
+    <div class="top" *ngFor="let seiyuu of seiyuus.slice().reverse()" [style.width]="100/seiyuus.length-1 + '%'">{{seiyuu.name}}</div>
+  </div>
+  <div class="row" *ngFor="let row of animeSvc.displayChart$ | async; let x = index">
+    <div class="side visible-xs header">
+      <div><span>{{seiyuus[x].name}}</span></div>
+    </div>
+    <div *ngFor="let col of row.slice().reverse(); let y = index" [style.width]="'calc('+(100/seiyuus.length-1) + '% - 0.5rem)'"
+         class="cell" [class.well]="x != seiyuus.length-y-1">
+      <a *ngFor="let anime of col" [title]="anime.title" [href]="anime.link">{{anime._id}}</a>
+    </div>
+  </div>
+</div>

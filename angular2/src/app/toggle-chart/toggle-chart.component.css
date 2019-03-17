@@ -9,9 +9,8 @@
 }
 
 :checked + .toggle-chart {
-  background-color: #0a6;
+  background-color: #e6e6e6;
   margin-bottom: 3rem;
-  color: white;
 }
 
 @media (max-width: 768px) {

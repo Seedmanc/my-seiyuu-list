@@ -16,6 +16,7 @@ export class AnimeChartComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.animeSvc.displayChart$.subscribe(console.info);
   }
 
 }

@@ -1,25 +1,57 @@
-.float {
-  float: left;
-  padding: 0.5rem 1rem;
+.cell > a {
+  display: flex;
+  width: 32px;
+  height: 32px;
+  overflow: hidden;
+
+  justify-content: center;
+  align-items: center;
+
+  border: 4px solid #2e51a2;
+  border-radius: 16px;
+  background: white;
+}
+
+.cell > a + a {
+  margin-left: 0.8rem;
 }
 
 .top {
   text-align: center;
-  width: 30%;
+  padding-top: 0.5rem;
 }
 
-#chart th {
-  padding: 0;
-  padding-top: 5px;
+.header {
+  font-weight: bold;
 }
+
+.row {
+  display: flex;
+  padding-left: 1rem;
+}
+
+.cell {
+  display: flex;
+  height: 214px;
+  overflow: hidden;
+
+  justify-content: space-around;
+  align-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+
+  margin-bottom: 0.5rem;
+  margin-left: 0.5rem;
+  padding: 0.7rem 1.4rem;
+}
+
 
 .side div {
+  display: flex;
+  height: 214px;
+  justify-content: center;
+
   writing-mode: vertical-rl;
   text-orientation: sideways;
   transform: scale(-1,-1);
-  text-align: center;
-}
-
-.side {
-  padding: 15% 0!important;
 }
