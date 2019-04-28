@@ -52,4 +52,8 @@ export class Utils {
     return Utils.parser.value;
   }
 
+  static flattenDeep<T>(arr1): T[] {
+    return arr1.reduce((acc, val) => Array.isArray(val) ? acc.concat(Utils.flattenDeep(val)) : acc.concat(val), []);
+  }
+
 }

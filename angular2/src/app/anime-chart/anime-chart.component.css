@@ -1,19 +1,30 @@
 .cell > a {
   display: flex;
-  width: 32px;
+  max-width: 32px;
   height: 32px;
   overflow: hidden;
 
-  justify-content: center;
   align-items: center;
 
   border: 4px solid #2e51a2;
   border-radius: 16px;
   background: white;
+  font-size: 0.8em;
+
+  white-space: nowrap;
+  transition: max-width 0.25s;
+}
+
+.cell > a:hover {
+  max-width: 100%;
+  padding-right: 0.5rem;
+
+  transition-duration: 0.5s;
+  transition-delay: 0.3s;
 }
 
 .cell > a + a {
-  margin-left: 0.8rem;
+  margin-top: 16px;
 }
 
 .top {
@@ -36,8 +47,9 @@
   overflow: hidden;
 
   justify-content: space-around;
-  align-content: space-around;
+  align-content: space-evenly;
   align-items: center;
+  flex-direction: column;
   flex-wrap: wrap;
 
   margin-bottom: 0.5rem;
@@ -51,7 +63,21 @@
   height: 214px;
   justify-content: center;
 
+  padding-left: 0.25rem;
+
   writing-mode: vertical-rl;
   text-orientation: sideways;
   transform: scale(-1,-1);
+}
+
+.anime-thumb {
+  display: block;
+  height: 32px;
+  min-width: 28px;
+}
+
+@media (max-width: 768px) {
+  .cell {
+    padding: 0.5rem 0;
+  }
 }

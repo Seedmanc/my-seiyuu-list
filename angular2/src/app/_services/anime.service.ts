@@ -11,6 +11,7 @@ import {Anime, HashOfRoles} from "../_models/anime.model";
 import {SeiyuuService} from "./seiyuu.service";
 import {RoutingService} from "./routing.service";
 import {Seiyuu} from "../_models/seiyuu.model";
+import {BusService} from "./bus.service";
 
 @Injectable()
 export class AnimeService {
@@ -19,6 +20,7 @@ export class AnimeService {
   mainOnly$: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
   constructor(private rest: RestService,
+              private bus: BusService,
               private messageSvc: MessagesService,
               private routingSvc: RoutingService,
               private seiyuuSvc: SeiyuuService) {
@@ -44,7 +46,7 @@ export class AnimeService {
       .map(rolesByAnimeSets => this.sharedAnime(rolesByAnimeSets))                                 .do(Utils.asrt('A shared anime'),
                                                                                                      x => Array.isArray(x) && x[0] && Array.isArray(x[0].rolesBySeiyuu))
       .do(anime => {
-        if (anime) {
+        if (anime && !this.bus.toggleChart) {
           this.loadDetails(anime.map(a => a._id).filter(id => !Anime.detailsCache[id]))
             .subscribe();
         }
@@ -111,15 +113,22 @@ export class AnimeService {
   }
 
   private makeChart(rolesByAnimeSets: HashOfRoles[]) {
-    this.displayChart$.next(
-      rolesByAnimeSets.map((seiyuuX, x) => {
+     let chart: Anime[][][] = rolesByAnimeSets.map((seiyuuX, x) => {
         return rolesByAnimeSets.map((seiyuuY, y) => {
           if (x < y) {
             return this.sharedAnime([seiyuuX, seiyuuY]);
           } else return [];
         })
-      })
-    );
+      });
+
+     let animeIds = Utils.unique(Utils.flattenDeep<Anime>(chart), '_id')
+       .map(a => +a._id)
+       .filter(id => !Anime.detailsCache[id])
+       .sort();
+     this.loadDetails(animeIds)
+       .subscribe();
+
+    this.displayChart$.next(chart);
   };
 
   private loadDetails(ids: number[]): Observable<any[]> {

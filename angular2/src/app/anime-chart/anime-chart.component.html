@@ -1,7 +1,9 @@
 <div id="chart" *ngIf="seiyuuSvc.loadedSeiyuu$ | async as seiyuus">
   <div class="row header">
     <div class="visible-xs">&nbsp;</div>
-    <div class="top" *ngFor="let seiyuu of seiyuus.slice().reverse()" [style.width]="100/seiyuus.length-1 + '%'">{{seiyuu.name}}</div>
+    <div class="top" *ngFor="let seiyuu of seiyuus.slice().reverse()" [style.width]="100/seiyuus.length-1 + '%'">
+      {{seiyuu.name}}
+    </div>
   </div>
   <div class="row" *ngFor="let row of animeSvc.displayChart$ | async; let x = index">
     <div class="side visible-xs header">
@@ -9,7 +11,10 @@
     </div>
     <div *ngFor="let col of row.slice().reverse(); let y = index" [style.width]="'calc('+(100/seiyuus.length-1) + '% - 0.5rem)'"
          class="cell" [class.well]="x != seiyuus.length-y-1">
-      <a *ngFor="let anime of col" [title]="anime.title" [href]="anime.link">{{anime._id}}</a>
+      <a *ngFor="let anime of col" [title]="anime.title" [href]="anime.link">
+        <img class="anime-thumb" [src]="anime.thumb" [alt]="anime._id"/>
+        {{anime.title}}
+      </a>
     </div>
   </div>
 </div>

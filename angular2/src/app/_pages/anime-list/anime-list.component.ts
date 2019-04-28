@@ -32,7 +32,7 @@ export class AnimeListComponent extends PageComponent implements OnInit {
   constructor(protected route: ActivatedRoute,
               protected routingSvc: RoutingService,
               private messageSvc: MessagesService,
-              private seiyuuSvc: SeiyuuService,
+              public seiyuuSvc: SeiyuuService,
               public animeSvc: AnimeService,
               public sorter: SorterService,
               public bus: BusService) {
