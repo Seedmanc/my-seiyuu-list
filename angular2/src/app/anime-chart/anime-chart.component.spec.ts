@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AnimeChartComponent } from './anime-chart.component';
 
-describe('AnimeChartComponent', () => {
+xdescribe('AnimeChartComponent', () => {
   let component: AnimeChartComponent;
   let fixture: ComponentFixture<AnimeChartComponent>;
 

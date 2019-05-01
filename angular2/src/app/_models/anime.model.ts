@@ -31,7 +31,7 @@ export class Anime {
   }
   get characters(): Role[] {
     return (this.rolesBySeiyuu[Anime.activeSeiyuu] || [])
-      .sort((role1, role2) => +(role1.main < role2.main))
+      .sort((role1, role2) => role1.main == role2.main ? 0 : +role2.main || -1)
       .map(({name, main}) => ({name: Utils.decodeHtml(name), main}));
   }
   get firstCharacter(): string {

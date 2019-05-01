@@ -11,9 +11,9 @@ import {MessagesService} from "../../_services/messages.service";
 import {SeiyuuService} from "../../_services/seiyuu.service";
 import {SortLinkComponent} from "../../sort-link/sort-link.component";
 import {SorterService} from "../../_services/sorter.service";
-import {Seiyuu} from "../../_models/seiyuu.model";
-import { model} from "../../_models/tests/seiyuu.model.spec";
-import {Anime} from "../../_models/anime.model";
+import {ToggleChartComponent} from "../../toggle-chart/toggle-chart.component";
+import {BusService} from "../../_services/bus.service";
+import {AnimeChartComponent} from "../../anime-chart/anime-chart.component";
 
 describe('AnimeListComponent', () => {
   let component: AnimeListComponent;
@@ -21,8 +21,8 @@ describe('AnimeListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AnimeListComponent, OrderByPipe, SortLinkComponent],
-      providers: [SorterService, {provide: RoutingService, useClass: RoutingServiceMock}, AnimeService, MessagesService, SeiyuuService],
+      declarations: [ AnimeListComponent, OrderByPipe, SortLinkComponent, AnimeChartComponent, ToggleChartComponent],
+      providers: [SorterService, {provide: RoutingService, useClass: RoutingServiceMock}, AnimeService, MessagesService, SeiyuuService, BusService],
       imports: [RouterTestingModule, FormsModule, HttpClientTestingModule]
     })
     .compileComponents();

@@ -19,6 +19,8 @@ import { Location} from '@angular/common';
 import {SortLinkComponent} from "../../sort-link/sort-link.component";
 import {SorterService} from "../sorter.service";
 import {Subject} from "rxjs/Subject";
+import {ToggleChartComponent} from "../../toggle-chart/toggle-chart.component";
+import {AnimeChartComponent} from "../../anime-chart/anime-chart.component";
 
 describe('RoutingService', () => {
   let location: Location;
@@ -29,7 +31,8 @@ describe('RoutingService', () => {
       providers: [SorterService],
 
       declarations: [ SortLinkComponent, AnimeListComponent, MagazineListComponent, FooterComponent, RankingComponent,
-        PhotoListComponent, HeaderComponent, SeiyuuPanelComponent, TabsComponent, OrderByPipe, SpinnerComponent, UniqPipe],
+        PhotoListComponent, HeaderComponent, SeiyuuPanelComponent, TabsComponent, OrderByPipe, SpinnerComponent, UniqPipe,
+      ToggleChartComponent, AnimeChartComponent],
 
       imports: [RouterTestingModule.withRoutes(appRoutes), FormsModule ],
     });

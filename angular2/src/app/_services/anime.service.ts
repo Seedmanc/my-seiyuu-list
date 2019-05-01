@@ -81,7 +81,7 @@ export class AnimeService {
     // find shared anime by checking the shortest list for inclusion in all other lists
     let leastAnime = rolesByAnimeSets
       .sort((s1, s2) => Object.keys(s1).length - Object.keys(s2).length);
-    let sharedAnime = Object.assign({}, leastAnime[0]);
+    let sharedAnime = leastAnime[0];
 
     leastAnime.slice(1).forEach(rolesByAnime => {
       Object.keys(sharedAnime).forEach(id => {
@@ -99,7 +99,6 @@ export class AnimeService {
 
       sharedAnime[_id].forEach(anime => {
         if (rolesBySeiyuu[anime._id]) {
-          if (!rolesBySeiyuu[anime._id].find(el => el.name == anime.name && el.main == anime.main))
             rolesBySeiyuu[anime._id].push(anime);
         } else {
           rolesBySeiyuu[anime._id] = [anime];
@@ -116,7 +115,7 @@ export class AnimeService {
      let chart: Anime[][][] = rolesByAnimeSets.map((seiyuuX, x) => {
         return rolesByAnimeSets.map((seiyuuY, y) => {
           if (x < y) {
-            return this.sharedAnime([seiyuuX, seiyuuY]);
+            return this.sharedAnime(JSON.parse(JSON.stringify([seiyuuX, seiyuuY]))); //TODO what the fuck
           } else return [];
         })
       });

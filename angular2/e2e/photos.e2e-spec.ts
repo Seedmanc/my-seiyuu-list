@@ -3,7 +3,7 @@ import {PhotosPage} from "./po/photos.po";
 import {AppPage} from "./po/app.po";
 import {SeiyuuPage} from "./po/seiyuu.po";
 
-describe('photo lookups', () => {
+xdescribe('photo lookups', () => {
   let page: PhotosPage;
   let app: AppPage;
   let seiyuu: SeiyuuPage;

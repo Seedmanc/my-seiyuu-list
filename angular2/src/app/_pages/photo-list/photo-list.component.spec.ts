@@ -33,7 +33,7 @@ describe('PhotoListComponent', () => {
   it('should report results', inject([PhotoService, MessagesService, SeiyuuService],
     (service: PhotoService, msgSvc: MessagesService, seiyuuSvc:SeiyuuService) => {
       let spy = spyOn(msgSvc, 'results');
-      let l = [];
+      let l = {};
       service.displayPhotos$.next(l);
 
       expect(spy).toHaveBeenCalled();
