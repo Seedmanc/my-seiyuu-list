@@ -4,27 +4,40 @@
   height: 32px;
   overflow: hidden;
 
+  margin-top: 16px;
+  margin-bottom: 8px;
   align-items: center;
 
   border: 4px solid #2e51a2;
   border-radius: 16px;
   background: white;
   font-size: 0.8em;
-
   white-space: nowrap;
-  transition: max-width 0.25s;
+  transition: max-width,margin 0.25s ease-in;
+}
+
+.cell.short > a {
+  margin: 0;
+  max-width: 100%;
+  height: 32px;
+  padding-right: 0.5rem;
 }
 
 .cell > a:hover {
+  border-width: 2px;
+  height: 34px;
   max-width: 100%;
   padding-right: 0.5rem;
 
-  transition-duration: 0.5s;
-  transition-delay: 0.3s;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+
+  transition-duration: 0.5s,0.25s;
+  transition-delay: 0.1s,0s;
 }
 
 .cell > a + a {
-  margin-top: 16px;
+  margin-top: 8px;
 }
 
 .top {
@@ -56,7 +69,6 @@
   margin-left: 0.5rem;
   padding: 0.7rem 1.4rem;
 }
-
 
 .side div {
   display: flex;

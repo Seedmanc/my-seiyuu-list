@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute } from "@angular/router";
 
-import {PageComponent} from "../../_misc/page.component";
+import {PageComponent} from "../page.component";
 import {RoutingService} from "../../_services/routing.service";
 import {PhotoPage, PhotoService} from "../../_services/photo.service";
 import {Utils} from "../../_services/utils.service";

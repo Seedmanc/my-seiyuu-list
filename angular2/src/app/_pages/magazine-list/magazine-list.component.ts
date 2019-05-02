@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute } from "@angular/router";
 
 import {RoutingService} from "../../_services/routing.service";
-import {PageComponent} from "../../_misc/page.component";
+import {PageComponent} from "../page.component";
 import {MagazineService} from "../../_services/magazine.service";
 import {Utils} from "../../_services/utils.service";
 import {MessagesService} from "../../_services/messages.service";

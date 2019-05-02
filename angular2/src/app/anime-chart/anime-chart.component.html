@@ -10,7 +10,7 @@
       <div><span>{{seiyuus[x].name}}</span></div>
     </div>
     <div *ngFor="let col of row.slice().reverse(); let y = index" [style.width]="'calc('+(100/seiyuus.length-1) + '% - 0.5rem)'"
-         class="cell" [class.well]="x != seiyuus.length-y-1">
+         class="cell" [class.well]="x != seiyuus.length-y-1" [class.short]="col.length <= 5">
       <a *ngFor="let anime of col" [title]="anime.title" [href]="anime.link">
         <img class="anime-thumb" [src]="anime.thumb" [alt]="anime._id"/>
         {{anime.title}}
