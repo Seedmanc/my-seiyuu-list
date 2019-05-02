@@ -28,7 +28,7 @@ describe('my-seiyuu-list App', () => {
           expect(browserLog.find(event => !!~event.message.indexOf('Anime requested'))).toBeFalsy();
           expect(browserLog.find(event => !!~event.message.indexOf('Magazines requested'))).toBeTruthy();
         });
-      //expect(page.statusBar().getText()).toContain('magazines');
+      expect(page.statusBar().getText()).toContain('magazines');
       console.log('1 magazine request');
 
       page.tabs().get(0).click();
@@ -60,15 +60,15 @@ describe('my-seiyuu-list App', () => {
         panel.close().click();
         browser.wait(EC.presenceOf(panel2.photo()), to);
         browser.sleep(500);
-        //expect(page.statusBar().getText()).toContain('magazines');
+        expect(page.statusBar().getText()).toContain('magazines');
 
         browser.manage().logs().get('browser')
           .then(browserLog => {expect(browserLog.filter(event =>
             !!~event.message.indexOf('Anime requested') || !!~event.message.indexOf('Photos requested')).length).toBeFalsy();});
         console.log('no extra photo or anime requests');
 
-        page.tabs().get(2).click();
-        browser.wait(EC.presenceOf(photo.thumbContainer()), to);
+        //page.tabs().get(2).click();
+        //browser.wait(EC.presenceOf(photo.thumbContainer()), to);
         //expect(page.statusBar().getText()).toContain('photo');
     });
   });

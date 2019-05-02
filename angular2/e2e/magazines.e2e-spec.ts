@@ -57,7 +57,6 @@ describe('magazine lookups', () => {
   it('should show when no magazines are found', () => {
     AppPage.navigateTo('#/magazines/53,578');
 
-    browser.wait(EC.presenceOf(page.spinner()), to);
     browser.wait(EC.presenceOf(element(by.css('#magazines'))), to);
     expect(app.statusBar().getText()).toContain(`no magazines found`);
   });
