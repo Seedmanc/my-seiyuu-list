@@ -60,7 +60,7 @@ describe('AnimeListComponent', () => {
   );
 
   it('should report results', inject([AnimeService, MessagesService, SeiyuuService],
-    (service: AnimeService, msgSvc: MessagesService, seiyuuSvc:SeiyuuService) => {
+    (service: AnimeService, msgSvc: MessagesService) => {
       let spy = spyOn(msgSvc, 'results');
       let l = [];
       service.displayAnime$.next(l);
@@ -69,6 +69,16 @@ describe('AnimeListComponent', () => {
       expect(spy.calls.mostRecent().args[0]).toBe(l);
       expect(spy.calls.mostRecent().args[1].toString()).toBe('anime => `${anime.length} [${entity}]`');
       expect(spy.calls.mostRecent().args[2]).toBe(true);
+    })
+  );
+
+  it('shouldn\'t report when chart is enabled', inject([AnimeService, MessagesService, BusService],
+    (service: AnimeService, msgSvc: MessagesService, bus: BusService) => {
+      let spy = spyOn(msgSvc, 'results');
+      bus.toggleChart = true;
+      service.displayAnime$.next([]);
+
+      expect(spy).not.toHaveBeenCalled();
     })
   );
 });

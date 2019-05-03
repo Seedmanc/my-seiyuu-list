@@ -37,7 +37,7 @@ export class MessagesService {
       ''}`;
   }
 
-  results(list: any, template: ((number) => string), singular?: boolean) {
+  results(list: any, template: ((number) => string), singular?: boolean) { //TODO do I need the singular param?
     if (list) {
       let text = template(list);
       let type = text.match(/\[(.+?)\]/g)[0] + (singular ? '' : 's');

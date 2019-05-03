@@ -4,6 +4,7 @@ import {SeiyuuService} from "./_services/seiyuu.service";
 import {AnimeService} from "./_services/anime.service";
 import {PhotoService} from "./_services/photo.service";
 import {MagazineService} from "./_services/magazine.service";
+import {RoutingService} from "./_services/routing.service";
 
 @Component({
   selector: 'msl-root',
@@ -12,7 +13,7 @@ import {MagazineService} from "./_services/magazine.service";
   providers: [AnimeService, MagazineService, PhotoService]
 })
 export class AppComponent {
-  constructor(public seiyuuSvc: SeiyuuService) {
+  constructor(public seiyuuSvc: SeiyuuService, public routingSvc: RoutingService) {
     console.clear();
   }
 }

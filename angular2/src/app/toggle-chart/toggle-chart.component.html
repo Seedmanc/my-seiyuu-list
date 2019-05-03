@@ -1,4 +1,4 @@
-<div ><!--*ngIf="(routingSvc.tab$ | async) == 'anime'"-->
+<div [class.disabled]="disabled" [title]="disabled ? 'Select at least two seiyuu' : ''">
   <input type="checkbox" id="toggleChart" [(ngModel)]="bus.toggleChart">
   <label class="btn btn-default btn-block btn-sm toggle-chart" for="toggleChart">
     toggle anime {{bus.toggleChart ? 'list' : 'chart'}}

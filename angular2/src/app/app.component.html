@@ -4,7 +4,8 @@
   </div>
   <div class="row">
     <div class="col-sm-3 col-lg-2" id="list-wrapper">
-      <msl-toggle-chart class="hidden-xs"></msl-toggle-chart>
+      <msl-toggle-chart class="hidden-xs" [disabled]="(seiyuuSvc.loadedSeiyuu$ | async).length < 2"
+                        *ngIf="(routingSvc.tab$ | async) == 'anime'"></msl-toggle-chart>
       <msl-seiyuu-panel *ngFor="let seiyuu of seiyuuSvc.displayList$ | async" [seiyuu]="seiyuu"></msl-seiyuu-panel>
     </div>
     <div class="col-sm-9 col-lg-10" id="router-wrapper">

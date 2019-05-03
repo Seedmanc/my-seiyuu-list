@@ -1,7 +1,6 @@
-import {Component} from '@angular/core';
+import {Component, Input} from '@angular/core';
 
 import {BusService} from "../_services/bus.service";
-import {RoutingService} from "../_services/routing.service";
 
 @Component({
   selector: 'msl-toggle-chart',
@@ -9,7 +8,8 @@ import {RoutingService} from "../_services/routing.service";
   styleUrls: ['./toggle-chart.component.css']
 })
 export class ToggleChartComponent {
+  @Input() disabled: boolean;
 
-  constructor(public bus: BusService, public routingSvc: RoutingService) {  }
+  constructor(public bus: BusService) {  }
 
 }

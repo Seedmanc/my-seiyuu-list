@@ -47,6 +47,8 @@ export class AnimeListComponent extends PageComponent implements OnInit {
     this.animeSvc.displayAnime$
       .takeUntil(this.unsubscribe$)
       .do(anime => {
+        if (this.bus.toggleChart) return;
+
         let entity = this.seiyuuSvc.loadedSeiyuu$.getValue().length > 1 ?
           'shared anime' :
           'anime';
