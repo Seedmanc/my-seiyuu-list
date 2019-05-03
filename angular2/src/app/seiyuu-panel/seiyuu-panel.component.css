@@ -15,7 +15,7 @@ table.text-center {
   margin-bottom: 6px;
 }
 .well:not(.namesake).hover{
-  border: 1px black solid;
+  border: 1px #0a6 solid;
 }
 
 .close {

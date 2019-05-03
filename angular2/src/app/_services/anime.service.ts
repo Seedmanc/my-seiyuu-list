@@ -40,11 +40,13 @@ export class AnimeService {
 
     this.seiyuuSvc.loadedSeiyuu$                                                                    .do(Utils.asrt('A loadedSeiyuu', x => Array.isArray(x)))
       .let(this.routingSvc.runOnTab<Seiyuu[]>('anime'))
-      .combineLatest(this.mainOnly$.distinctUntilChanged())
-      .map(([seiyuus, mainOnly]) => this.animePerSeiyuu(seiyuus, mainOnly))                        .do(Utils.asrt('A roles by anime sets'))
+      .combineLatest(this.mainOnly$.distinctUntilChanged(), x => x)
+      .map(seiyuus => this.animePerSeiyuu(seiyuus))                                                 .do(Utils.asrt('A roles by anime sets'))
       .do(rolesByAnimeSets => this.makeChart(rolesByAnimeSets))
-      .map(rolesByAnimeSets => this.sharedAnime(rolesByAnimeSets))                                 .do(Utils.asrt('A shared anime'),
-                                                                                                     x => Array.isArray(x) && x[0] && Array.isArray(x[0].rolesBySeiyuu))
+      .map(rolesByAnimeSets => this.sharedAnime(rolesByAnimeSets,
+        this.mainOnly$.getValue() ? 'main' : null)
+      )                                                                                             .do(Utils.asrt('A shared anime'),
+                                                                                                        x => Array.isArray(x) && x[0] && Array.isArray(x[0].rolesBySeiyuu))
       .do(anime => {
         if (anime && !this.bus.toggleChart) {
           this.loadDetails(anime.map(a => a._id).filter(id => !Anime.detailsCache[id]))
@@ -56,18 +58,16 @@ export class AnimeService {
   }
 
 
-  private animePerSeiyuu(seiyuus: Seiyuu[], mainOnly: boolean): HashOfRoles[] {
+  private animePerSeiyuu(seiyuus: Seiyuu[]): HashOfRoles[] {
     // make list of anime per seiyuu with each anime containing list of roles for that seiyuu in it
     return seiyuus.map(({_id, roles}) => {
       let rolesByAnime: HashOfRoles = {};
 
       roles.forEach(role => {
-        if (!mainOnly || role.main) {
-          if (rolesByAnime[role._id]) {
-            rolesByAnime[role._id].push({...role, _id});
-          } else {
-            rolesByAnime[role._id] = [{...role, _id}];
-          }
+        if (rolesByAnime[role._id]) {
+          rolesByAnime[role._id].push({...role, _id});
+        } else {
+          rolesByAnime[role._id] = [{...role, _id}];
         }
       });
 
@@ -75,48 +75,79 @@ export class AnimeService {
     });
   }
 
-  private sharedAnime(rolesByAnimeSets: HashOfRoles[]): Anime[] {
+  private sharedAnime(rolesByAnimeSets: HashOfRoles[], tier?: 'main'|'!main'): Anime[] {
     if (!rolesByAnimeSets.length) return null;
+    let sharedAnimeMain;
 
-    // find shared anime by checking the shortest list for inclusion in all other lists
-    let leastAnime = rolesByAnimeSets
-      .sort((s1, s2) => Object.keys(s1).length - Object.keys(s2).length);
-    let sharedAnime = leastAnime[0];
+    rolesByAnimeSets = JSON.parse(JSON.stringify(rolesByAnimeSets)) //TODO what the fuck;
 
-    leastAnime.slice(1).forEach(rolesByAnime => {
-      Object.keys(sharedAnime).forEach(id => {
-        if (!rolesByAnime[id]) {
-          delete sharedAnime[id];
-        } else {
-          sharedAnime[id].push(...rolesByAnime[id]);
-        }
+    if (tier) { // prefilter the role sets by main tier
+      sharedAnimeMain = roleIntersection(
+          rolesByAnimeSets.map(hashOfRoles => {
+          return Object.keys(hashOfRoles).reduce((acc, cur) => {
+            let roleList = hashOfRoles[cur].filter(role => role.main);
+            if (roleList.length)
+              acc[cur] = roleList;
+            return acc;
+          }, {})
+        })
+      );
+
+      if (tier == 'main')
+        return sharedAnimeMain
+      else    // return anime where selected seiyuu don't have main roles all at the same time
+        return roleIntersection(rolesByAnimeSets)
+          .filter(anime => !sharedAnimeMain.find(sharedMain => sharedMain._id == anime._id));
+    }
+
+    return roleIntersection(rolesByAnimeSets);
+
+
+    function roleIntersection(roleSets: HashOfRoles[]): Anime[] {
+      // find shared anime by checking the shortest list for inclusion in all other lists
+      let leastAnime = roleSets
+        .sort((s1, s2) => Object.keys(s1).length - Object.keys(s2).length);
+      let sharedAnime = leastAnime[0];
+
+      leastAnime.slice(1).forEach(rolesByAnime => {
+        Object.keys(sharedAnime).forEach(id => {
+          if (!rolesByAnime[id]) {
+            delete sharedAnime[id];
+          } else {
+            sharedAnime[id].push(...rolesByAnime[id]);
+          }
+        });
       });
-    });
 
-    // turn the list of shared anime {[animeId]: {main, characterName, #seiyuuId}[]} into the Anime object
-    return Object.keys(sharedAnime).map(_id => {
-      let rolesBySeiyuu: HashOfRoles = {};
+      // turn the list of shared anime {[animeId]: {main, characterName, #seiyuuId}[]} into the Anime object
+      return Object.keys(sharedAnime).map(_id => {
+        let rolesBySeiyuu: HashOfRoles = {};
 
-      sharedAnime[_id].forEach(anime => {
-        if (rolesBySeiyuu[anime._id]) {
+        sharedAnime[_id].forEach(anime => {
+          if (rolesBySeiyuu[anime._id]) {
             rolesBySeiyuu[anime._id].push(anime);
-        } else {
-          rolesBySeiyuu[anime._id] = [anime];
-        }
+          } else {
+            rolesBySeiyuu[anime._id] = [anime];
+          }
+        });
+        return new Anime({
+          _id,
+          rolesBySeiyuu
+        });
       });
-      return new Anime({
-        _id,
-        rolesBySeiyuu
-      });
-    });
+    }
+
   }
 
   private makeChart(rolesByAnimeSets: HashOfRoles[]) {
      let chart: Anime[][][] = rolesByAnimeSets.map((seiyuuX, x) => {
         return rolesByAnimeSets.map((seiyuuY, y) => {
           if (x < y) {
-            return this.sharedAnime(JSON.parse(JSON.stringify([seiyuuX, seiyuuY]))); //TODO what the fuck
-          } else return [];
+            return this.sharedAnime([seiyuuX, seiyuuY], 'main');
+          } else if (x > y) {
+            return this.sharedAnime([seiyuuX, seiyuuY], '!main');
+          } else
+            return [];
         })
       });
 

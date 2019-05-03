@@ -2,15 +2,58 @@
   display: none;
 }
 
+.legend {
+  display: none;
+
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85em;
+}
+
 .toggle-chart {
   margin-top: 0.25rem;
   margin-bottom: 0.5rem;
+
   font-weight: bold;
 }
 
 :checked + .toggle-chart {
   background-color: #e6e6e6;
-  margin-bottom: 3rem;
+  margin-bottom: 0;
+}
+
+:checked + .toggle-chart + .legend {
+  display: flex;
+  height: 3rem;
+}
+
+.top-left::before ,
+.bottom-right::after  {
+  content: ' ';
+
+  display: inline-block;
+  width: 0;
+  height: 0;
+
+  vertical-align: middle;
+  border-style: solid;
+}
+
+.top-left,
+.bottom-right {
+  vertical-align: middle;
+}
+
+.top-left::before {
+  border-width: 24px 24px 0 0;
+  border-color: #0a6 transparent transparent transparent;
+  margin-right: -10px;
+}
+
+.bottom-right::after {
+  border-width: 0 0 24px 24px;
+  border-color: transparent transparent #0a6 transparent;
+  margin-left: -10px;
 }
 
 @media (max-width: 768px) {
