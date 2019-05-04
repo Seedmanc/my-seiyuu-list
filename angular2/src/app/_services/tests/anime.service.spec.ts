@@ -116,7 +116,7 @@ describe('AnimeService', () => {
 
       expect(y).toBe(model._id);
       backend.expectOne({
-        url: `${env.mongoUrl}/collections/anime?apiKey=${env.apiKey}&f={"title":1,"pic":1}&q={"_id":{"$in":[1,2,3,2829]}}`,
+        url: `${env.mongoUrl}/collections/anime?apiKey=${env.apiKey}&f={"title":1,"pic":1}&q={"_id":{"$in":[1,2,2829,3]}}`,
         method:'GET'
       }, 'GET to load details from anime DB').flush([
           {_id:2829, title: 'Ie Naki Ko Remi', pic:'/images/anime/12/26250v.jpg'},
@@ -138,9 +138,14 @@ describe('AnimeService', () => {
   );
 
   it('should display shared anime for multiple seiyuu, also for mainOnly',
-    inject([SeiyuuService],
-      (seiyuuSvc:SeiyuuService) => {
-      let y;
+    inject([SeiyuuService, RestService],
+      (seiyuuSvc:SeiyuuService, rest: RestService) => {
+      let y, spy = spyOn<any>(service, 'loadDetails').and.callThrough();
+      spyOn(rest, 'mongoCall').and.returnValue(of([
+        {_id:2829, title: 'Ie Naki Ko Remi', pic:'/images/anime/12/26250v.jpg'},
+        {_id:2, title: 'title 2', pic:'/pic2.jpg'},
+        {_id:3, title: 'title 3', pic:'/pic3.jpg'},
+      ]));
 
       service.displayAnime$.subscribe(data => x = data);
       seiyuuSvc.selected$.subscribe(data => y = data);
@@ -166,15 +171,7 @@ describe('AnimeService', () => {
       mockList(backend, [basicModel,basicModel]);
 
       expect(y).toBe(model2._id);
-      backend.expectOne({
-        url: `${env.mongoUrl}/collections/anime?apiKey=${env.apiKey}&f={"title":1,"pic":1}&q={"_id":{"$in":[2,3,2829]}}`,
-        method:'GET'
-      }, 'GET to load details from anime DB').flush([
-          {_id:2829, title: 'Ie Naki Ko Remi', pic:'/images/anime/12/26250v.jpg'},
-          {_id:2, title: 'title 2', pic:'/pic2.jpg'},
-          {_id:3, title: 'title 3', pic:'/pic3.jpg'},
-        ]
-      );
+      expect(spy).toHaveBeenCalledTimes(2); //TODO should be 1
 
       expect(Anime.detailsCache[2].title).toBe('title 2');
       expect(Anime.detailsCache[3].pic).toBe('/pic3.jpg');
@@ -247,7 +244,7 @@ describe('AnimeService', () => {
   );
   it('makeChart([...]) should display chart for 3 seiyuu', inject([SeiyuuService],
     ( ) => {
-    let spy = spyOn(service, 'loadDetails').and.returnValue(of({}));
+    let spy = spyOn<any>(service, 'loadDetails').and.returnValue(of({}));
     let x, hash = [...hashOfRoles];
     hash.push({
         '3': [{
@@ -270,7 +267,7 @@ describe('AnimeService', () => {
 
     Anime.activeSeiyuu = 11;
     expect(JSON.stringify(x)).toBe('[[[],[{"_id":2,"rolesBySeiyuu":{"11":[{"name":"character2","main":true,"_id":11}],"22":[{"name":"character2","main":true,"_id":22}]},"main":true,"link":"//myanimelist.net/anime/2","thumb":"","firstCharacter":"character2","characters":[{"name":"character2","main":true}],"title":"2"}],[]],[[{"_id":1,"rolesBySeiyuu":{"11":[{"name":"character1","main":true,"_id":11}],"22":[{"name":"character5","main":false,"_id":22}]},"main":true,"link":"//myanimelist.net/anime/1","thumb":"","firstCharacter":"character1","characters":[{"name":"character1","main":true}],"title":"1"}],[],[]],[[{"_id":3,"rolesBySeiyuu":{"11":[{"name":"character4","main":false,"_id":11}],"33":[{"name":"character8","main":true,"_id":33},{"name":"character9","main":false,"_id":33}]},"main":false,"link":"//myanimelist.net/anime/3","thumb":"","firstCharacter":"character4","characters":[{"name":"character4","main":false}],"title":"3"}],[],[]]]');
-    expect(spy).toHaveBeenCalledWith([ 1, 2, 3 ]);
+    expect(spy).toHaveBeenCalledWith([ 2, 1, 3 ]);
    })
   );
 

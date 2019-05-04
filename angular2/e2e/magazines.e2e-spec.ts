@@ -21,7 +21,6 @@ describe('magazine lookups', () => {
     AppPage.navigateTo('#/magazines/53');
     let panel = seiyuu.panel('Chihara Minori');
 
-    browser.wait(EC.presenceOf(page.spinner()), to);
     browser.wait(EC.presenceOf(element(by.css('#magazines'))), to);
 
     expect(page.magazines().isPresent()).toBeTruthy();

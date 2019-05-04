@@ -28,7 +28,7 @@ describe('zSeiyuuService', () => {
     backend.verify({ ignoreCancelled: true});
   });
 
-   it('should report if loading the brief list fails with 404',
+   xit('should report if loading the brief list fails with 404',
      inject([ MessagesService],
        ( msgSvc:MessagesService) => {
          let spy = spyOn(msgSvc, 'error');
@@ -45,7 +45,7 @@ describe('zSeiyuuService', () => {
        })
    );
 
-   it('should report if loading the brief list fails with a network error',
+  xit('should report if loading the brief list fails with a network error',
      inject([ MessagesService],
        (  msgSvc:MessagesService) => {
          let spy = spyOn(msgSvc, 'error');

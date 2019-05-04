@@ -49,7 +49,7 @@ export class AnimeService {
                                                                                                         x => Array.isArray(x) && x[0] && Array.isArray(x[0].rolesBySeiyuu))
       .do(anime => {
         if (anime && !this.bus.toggleChart) {
-          this.loadDetails(anime.map(a => a._id).filter(id => !Anime.detailsCache[id]))
+          this.loadDetails(anime.map(a => +a._id))
             .subscribe();
         }
       })
@@ -152,9 +152,7 @@ export class AnimeService {
       });
 
      let animeIds = Utils.unique(Utils.flattenDeep<Anime>(chart), '_id')
-       .map(a => +a._id)
-       .filter(id => !Anime.detailsCache[id])
-       .sort();
+       .map(a => +a._id);
      this.loadDetails(animeIds)
        .subscribe();
 
@@ -162,6 +160,7 @@ export class AnimeService {
   };
 
   private loadDetails(ids: number[]): Observable<any[]> {
+    ids = ids.filter(id => !Anime.detailsCache[id]).sort();
 
     return (ids.length ?
       this.rest.mongoCall({
