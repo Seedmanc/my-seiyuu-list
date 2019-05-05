@@ -13,7 +13,8 @@
          class="cell" [ngClass]="{well: x != seiyuus.length-y-1, short:col.length <= 5, main:x < seiyuus.length-y-1}">
       <a *ngFor="let anime of col" [title]="anime.title + (anime.firstCharacter ? (':\n' + anime.firstCharacter) : '')"
          [href]="anime.link">
-        <img class="anime-thumb" [src]="anime.thumb"/>
+        <img class="anime-thumb" [src]="anime.thumb" *ngIf="anime.thumb"/>
+        <msl-spinner class="anime-thumb" *ngIf="!anime.thumb" size="26px"></msl-spinner>
         {{anime.title}}
       </a>
     </div>

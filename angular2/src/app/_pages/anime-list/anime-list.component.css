@@ -72,6 +72,8 @@ th.tier {
   z-index: 1;
   display: none;
 
+  pointer-events: none;
+
   background: white;
   padding: 0.5rem 1rem;
   border: 1px solid lightgrey;
@@ -88,7 +90,14 @@ th.tier {
   margin-right: -0.5rem;
 }
 .more-chars:hover + .char-list {
+  position: absolute;
   display: block;
+  right: 0;
+}
+
+#main tr:last-of-type .more-chars:hover + .char-list,
+#supporting tr:last-of-type .more-chars:hover + .char-list {
+  bottom: 3rem;
 }
 
 .locked {

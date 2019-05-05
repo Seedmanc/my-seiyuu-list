@@ -54,13 +54,13 @@
 
 .top-left::before {
   border-width: 24px 24px 0 0;
-  border-color: #0a6 transparent transparent transparent;
+  border-color: #2e51a2 transparent transparent transparent;
   margin-right: -10px;
 }
 
 .bottom-right::after {
   border-width: 0 0 24px 24px;
-  border-color: transparent transparent #0a6 transparent;
+  border-color: transparent transparent #2e51a2 transparent;
   margin-left: -10px;
 }
 

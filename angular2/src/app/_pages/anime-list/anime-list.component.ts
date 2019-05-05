@@ -7,7 +7,6 @@ import {AnimeService} from "../../_services/anime.service";
 import {SorterService} from "../../_services/sorter.service";
 import {MessagesService} from "../../_services/messages.service";
 import {SeiyuuService} from "../../_services/seiyuu.service";
-import {BusService} from "../../_services/bus.service";
 
 @Component({
   selector: 'msl-anime-list',
@@ -34,8 +33,7 @@ export class AnimeListComponent extends PageComponent implements OnInit {
               private messageSvc: MessagesService,
               public seiyuuSvc: SeiyuuService,
               public animeSvc: AnimeService,
-              public sorter: SorterService,
-              public bus: BusService) {
+              public sorter: SorterService) {
       super(route, routingSvc);
     }
 
@@ -47,7 +45,7 @@ export class AnimeListComponent extends PageComponent implements OnInit {
     this.animeSvc.displayAnime$
       .takeUntil(this.unsubscribe$)
       .do(anime => {
-        if (this.bus.toggleChart) return;
+        if (this.animeSvc.toggleChart$.getValue()) return;
 
         let entity = this.seiyuuSvc.loadedSeiyuu$.getValue().length > 1 ?
           'shared anime' :

@@ -13,12 +13,12 @@
     <option [value]="name" *ngFor="let name of name$ | async | uniq"></option>
   </datalist>
 
-  <div class="col-lg-7 col-md-6 col-sm-5 no-gutter" id="statusWrapper">
+  <div class="col-lg-8 col-md-6 col-sm-5 no-gutter" id="statusWrapper">
     <msl-spinner float="left" *ngIf="seiyuuSvc.pending"></msl-spinner>
     <div id="status" [ngClass]="{error: (status$ | async).isError}"
       title="You can look up any seiyuu regardless of the cached records #">{{(status$ | async).data}}</div>
   </div>
-  <div class="col-md-3 col-sm-4 text-center no-gutter">
+  <div class="col-lg-2 col-md-3 col-sm-4 text-center no-gutter">
     <a href="#" title="search"><img src="assets/msl-logo-200-white.png" alt="reset" id="msl-logo"></a>
   </div>
 </div>

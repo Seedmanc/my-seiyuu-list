@@ -11,16 +11,15 @@ import {Anime, HashOfRoles} from "../_models/anime.model";
 import {SeiyuuService} from "./seiyuu.service";
 import {RoutingService} from "./routing.service";
 import {Seiyuu} from "../_models/seiyuu.model";
-import {BusService} from "./bus.service";
 
 @Injectable()
 export class AnimeService {
   displayAnime$: ReplaySubject<Anime[]> = new ReplaySubject(1);
   displayChart$: ReplaySubject<Anime[][][]> = new ReplaySubject(1);
   mainOnly$: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  toggleChart$ = new BehaviorSubject(false);
 
   constructor(private rest: RestService,
-              private bus: BusService,
               private messageSvc: MessagesService,
               private routingSvc: RoutingService,
               private seiyuuSvc: SeiyuuService) {
@@ -40,15 +39,22 @@ export class AnimeService {
 
     this.seiyuuSvc.loadedSeiyuu$                                                                    .do(Utils.asrt('A loadedSeiyuu', x => Array.isArray(x)))
       .let(this.routingSvc.runOnTab<Seiyuu[]>('anime'))
+      .do(list => {
+        if (list.length < 2 && this.toggleChart$.getValue())
+          this.toggleChart$.next(false);
+      })
       .combineLatest(this.mainOnly$.distinctUntilChanged(), x => x)
       .map(seiyuus => this.animePerSeiyuu(seiyuus))                                                 .do(Utils.asrt('A roles by anime sets'))
-      .do(rolesByAnimeSets => this.makeChart(rolesByAnimeSets))
+      .combineLatest(this.toggleChart$.distinctUntilChanged(), x => x)
+      .do(rolesByAnimeSets => {
+        if (this.toggleChart$.getValue()) this.makeChart(rolesByAnimeSets)
+      })
       .map(rolesByAnimeSets => this.sharedAnime(rolesByAnimeSets,
         this.mainOnly$.getValue() ? 'main' : null)
       )                                                                                             .do(Utils.asrt('A shared anime'),
                                                                                                         x => Array.isArray(x) && x[0] && Array.isArray(x[0].rolesBySeiyuu))
       .do(anime => {
-        if (anime && !this.bus.toggleChart) {
+        if (anime && !this.toggleChart$.getValue()) {
           this.loadDetails(anime.map(a => +a._id))
             .subscribe();
         }

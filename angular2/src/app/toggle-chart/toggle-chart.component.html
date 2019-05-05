@@ -1,7 +1,7 @@
 <div [class.disabled]="disabled" [title]="disabled ? 'Select at least two seiyuu' : ''">
-  <input type="checkbox" id="toggleChart" [(ngModel)]="bus.toggleChart">
+  <input type="checkbox" id="toggleChart" #toggle>
   <label class="btn btn-default btn-block btn-sm toggle-chart" for="toggleChart">
-    toggle anime {{bus.toggleChart ? 'list' : 'chart'}}
+    toggle anime {{toggle.checked ? 'list' : 'chart'}}
   </label>
   <div class="legend">
     <span class="top-left"> &ndash; main only</span> / <span class="bottom-right">rest &ndash; </span>

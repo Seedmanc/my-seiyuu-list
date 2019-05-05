@@ -1,10 +1,10 @@
-<msl-toggle-chart class="visible-xs-block"></msl-toggle-chart>
+<msl-toggle-chart class="visible-xs-block" [disabled]="(seiyuuSvc.loadedSeiyuu$ | async).length < 2"></msl-toggle-chart>
 
 <div class="col-md-12 no-gutter table-responsive">
-  <msl-anime-chart *ngIf="bus.toggleChart"></msl-anime-chart>
+  <msl-anime-chart *ngIf="animeSvc.toggleChart$ | async"></msl-anime-chart>
 
   <table class="table table-fixed table-condensed header table-striped" id="rolesHeader"
-         *ngIf="(seiyuuSvc.displayList$ | async)?.length && !bus.toggleChart">
+         *ngIf="(seiyuuSvc.displayList$ | async)?.length && !(animeSvc.toggleChart$ | async)">
     <colgroup>
       <col width="1%">
       <col width="70%">
@@ -41,7 +41,7 @@
       </tr>
     </thead>
   </table>
-  <div class="wrapper" [hidden]="bus.toggleChart">
+  <div class="wrapper" [hidden]="animeSvc.toggleChart$ | async">
     <table class="table table-fixed table-condensed table-striped" id="rolesTable">
       <colgroup>
         <col width="1%">
