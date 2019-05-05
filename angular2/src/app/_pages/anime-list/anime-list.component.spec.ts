@@ -12,8 +12,8 @@ import {SeiyuuService} from "../../_services/seiyuu.service";
 import {SortLinkComponent} from "../../sort-link/sort-link.component";
 import {SorterService} from "../../_services/sorter.service";
 import {ToggleChartComponent} from "../../toggle-chart/toggle-chart.component";
-import {BusService} from "../../_services/bus.service";
 import {AnimeChartComponent} from "../../anime-chart/anime-chart.component";
+import {SpinnerComponent} from "../../spinner/spinner.component";
 
 describe('AnimeListComponent', () => {
   let component: AnimeListComponent;
@@ -21,8 +21,8 @@ describe('AnimeListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AnimeListComponent, OrderByPipe, SortLinkComponent, AnimeChartComponent, ToggleChartComponent],
-      providers: [SorterService, {provide: RoutingService, useClass: RoutingServiceMock}, AnimeService, MessagesService, SeiyuuService, BusService],
+      declarations: [ AnimeListComponent, OrderByPipe, SortLinkComponent, AnimeChartComponent, ToggleChartComponent, SpinnerComponent],
+      providers: [SorterService, {provide: RoutingService, useClass: RoutingServiceMock}, AnimeService, MessagesService, SeiyuuService],
       imports: [RouterTestingModule, FormsModule, HttpClientTestingModule]
     })
     .compileComponents();
@@ -72,10 +72,10 @@ describe('AnimeListComponent', () => {
     })
   );
 
-  it('shouldn\'t report when chart is enabled', inject([AnimeService, MessagesService, BusService],
-    (service: AnimeService, msgSvc: MessagesService, bus: BusService) => {
+  it('shouldn\'t report when chart is enabled', inject([AnimeService, MessagesService],
+    (service: AnimeService, msgSvc: MessagesService) => {
       let spy = spyOn(msgSvc, 'results');
-      bus.toggleChart = true;
+      service.toggleChart$.next(true);
       service.displayAnime$.next([]);
 
       expect(spy).not.toHaveBeenCalled();

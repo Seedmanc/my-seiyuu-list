@@ -3,10 +3,10 @@ import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing'
 import { AnimeChartComponent } from './anime-chart.component';
 import {AnimeService} from "../_services/anime.service";
 import {MessagesService} from "../_services/messages.service";
-import {BusService} from "../_services/bus.service";
 import {HttpClientTestingModule} from "@angular/common/http/testing";
 import {RouterTestingModule} from "@angular/router/testing";
 import {Anime} from "../_models/anime.model";
+import {SpinnerComponent} from "../spinner/spinner.component";
 
 describe('AnimeChartComponent', () => {
   let component: AnimeChartComponent;
@@ -14,8 +14,8 @@ describe('AnimeChartComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AnimeChartComponent],
-      providers: [ AnimeService, MessagesService, BusService],
+      declarations: [ AnimeChartComponent, SpinnerComponent],
+      providers: [ AnimeService, MessagesService],
       imports: [RouterTestingModule, HttpClientTestingModule]
     })
     .compileComponents();

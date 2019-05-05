@@ -12,7 +12,6 @@ import {Seiyuu} from "../../_models/seiyuu.model";
 import {Anime, HashOfRoles} from "../../_models/anime.model";
 import {mockList} from "./seiyuu.service.spec";
 import {of} from "rxjs/observable/of";
-import {BusService} from "../bus.service";
 
 let x;
 let roles =  [{
@@ -171,7 +170,7 @@ describe('AnimeService', () => {
       mockList(backend, [basicModel,basicModel]);
 
       expect(y).toBe(model2._id);
-      expect(spy).toHaveBeenCalledTimes(2); //TODO should be 1
+      expect(spy).toHaveBeenCalledTimes(1);
 
       expect(Anime.detailsCache[2].title).toBe('title 2');
       expect(Anime.detailsCache[3].pic).toBe('/pic3.jpg');
@@ -297,10 +296,8 @@ describe('AnimeService', () => {
 
 
   it('should call makeChart and load details if chart is enabled w/o redundant calls',
-    inject([SeiyuuService, RestService, BusService],
-      (seiyuuSvc:SeiyuuService, rest: RestService, bus: BusService) => {
-        let y;
-
+    inject([SeiyuuService ],
+      (seiyuuSvc:SeiyuuService ) => {
         let loaded = Object.assign({}, model);
         loaded.roles.push(...roles);
         let spy1 = spyOn<any>(service, 'makeChart').and.callThrough();
@@ -320,20 +317,33 @@ describe('AnimeService', () => {
           "main": false,
           "_id": 4
         });
-        bus.toggleChart = true;
         seiyuuSvc.loadedSeiyuu$.next([new Seiyuu(loaded),new Seiyuu(loaded2)]);
 
-        expect(spy1).toHaveBeenCalled();
+        expect(spy1).not.toHaveBeenCalled();
         expect(spy2).toHaveBeenCalledTimes(1);
 
         spy1.calls.reset();
         spy2.calls.reset();
 
-        bus.toggleChart = false;
-        seiyuuSvc.loadedSeiyuu$.next([new Seiyuu(loaded),new Seiyuu(loaded2)]);
+        service.toggleChart$.next(true);
 
         expect(spy1).toHaveBeenCalled();
-        expect(spy2).toHaveBeenCalledTimes(2);
+        expect(spy2).toHaveBeenCalledTimes(1);
+      }));
+
+  it('should turn off chart when under 2 seiyuu selected',
+    inject([SeiyuuService ],
+      (seiyuuSvc:SeiyuuService ) => {
+        let loaded = Object.assign({}, model);
+        let loaded2 = Object.assign({}, model2);
+        seiyuuSvc.loadedSeiyuu$.next([new Seiyuu(loaded),new Seiyuu(loaded2)]);
+
+        service.toggleChart$.subscribe(_=>x=_);
+
+        service.toggleChart$.next(true);
+        seiyuuSvc.loadedSeiyuu$.next([new Seiyuu(loaded)]);
+        expect(x).toBeFalsy();
+
       }));
 
 });
