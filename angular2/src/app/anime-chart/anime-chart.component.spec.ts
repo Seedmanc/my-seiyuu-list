@@ -33,11 +33,10 @@ describe('AnimeChartComponent', () => {
 
   it('should report results', inject([AnimeService, MessagesService],
     (service: AnimeService, msgSvc: MessagesService) => {
-      let spy = spyOn(msgSvc, 'blank');
       let spy2 = spyOn(msgSvc, 'status');
       service.displayChart$.next([[],[[<Anime>{}],[]]]);
 
-      expect(spy).toHaveBeenCalled();
+      expect(spy2).toHaveBeenCalledWith('highlight a seiyuu to view their characters on anime hover');
       service.displayChart$.next([[],[[],[]]]);
       expect(spy2).toHaveBeenCalled();
       expect(spy2.calls.mostRecent().args[0]).toBe('no shared anime found');

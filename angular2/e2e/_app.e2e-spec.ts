@@ -79,6 +79,30 @@ describe('my-seiyuu-list App', () => {
     });
   });
 
+  it('should only display chart toggle on anime page', () => {
+    page.tabs().get(0).click();
+    browser.wait(EC.presenceOf(page.toggleChart()), to);
+    expect(page.toggleChart().isDisplayed()).toBeTruthy();
+    page.tabs().get(1).click();
+    expect(page.toggleChart().isPresent()).toBeFalsy();
+    page.tabs().get(0).click();
+    expect(page.toggleChart().isPresent()).toBeTruthy();
+  });
+
+  it('should block chart toggle when under 2 seiyuu selected', () => {
+    page.tabs().get(0).click();
+    browser.wait(EC.presenceOf(page.toggleChart()), to);
+    expect(page.toggleChart().getAttribute("title")).toBeTruthy();
+
+    page.toggleChart().$('label').click().then(
+      () => {
+        fail("Element should not be clickable for Observer");
+      },
+      (err) => {
+        expect(err.message.toString()).toBeTruthy();
+      });
+  });
+
   it('should unlock input, hide spinner and display stats upon loading', () => {
     expect(page.searchInput().isEnabled()).toBeTruthy();
     expect(page.statusBar().getText()).toBeTruthy();

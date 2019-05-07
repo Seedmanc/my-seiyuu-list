@@ -24,7 +24,7 @@ export class AnimeChartComponent implements OnInit {
         let total = Utils.flattenDeep(chart);
 
         if (total.length) {
-          this.messageSvc.blank();
+          this.messageSvc.status('highlight a seiyuu to view their characters on anime hover');
         } else
           this.messageSvc.status('no shared anime found');
       });

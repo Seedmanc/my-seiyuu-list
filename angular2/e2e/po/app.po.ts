@@ -32,4 +32,8 @@ export class AppPage {
   tabs() {
     return element(by.css(`msl-tabs`)).$$('a');
   }
+
+  toggleChart() {
+    return element(by.css('.msl-toggle-chart'));
+  }
 }

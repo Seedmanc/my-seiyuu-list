@@ -1,4 +1,4 @@
-<div [class.disabled]="disabled" [title]="disabled ? 'Select at least two seiyuu' : ''">
+<div class="msl-toggle-chart" [class.disabled]="disabled" [title]="disabled ? 'Select at least two seiyuu' : ''">
   <input type="checkbox" id="toggleChart" #toggle>
   <label class="btn btn-default btn-block btn-sm toggle-chart" for="toggleChart">
     toggle anime {{toggle.checked ? 'list' : 'chart'}}
