@@ -64,6 +64,9 @@ form,.header {
   #msl-logo {
     margin-left: -4rem;
   }
+  #status {
+    margin-right: 2rem;
+  }
 }
 
 @media (max-width: 768px) {

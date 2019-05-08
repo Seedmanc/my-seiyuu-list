@@ -110,4 +110,26 @@ describe('MagazineService', () => {
     })
   );
 
+   it('should report errors',
+    inject([SeiyuuService, RestService, RoutingService, MessagesService],
+      (seiyuuSvc: SeiyuuService, rest: RestService,  routingSvc: RoutingService, msgSvc: MessagesService) => {
+        service.displayMagazines$.subscribe(data => x = data);
+        service.pending = true;
+
+        let spy = spyOn(rest, 'googleQueryCall').and
+          .returnValue(of(
+            {
+              errors: [{message:'test'}]
+            } ));
+        let spy2=spyOn(msgSvc,'error');
+
+        routingSvc.tab$.next('magazines');
+        seiyuuSvc.displayList$['next']([new Seiyuu({name: 'Maeda Konomi'})]);
+
+        expect(spy2).toHaveBeenCalledWith('test');
+        expect(x).toBeFalsy();
+        expect(service.pending).toBeFalsy();
+      })
+  );
+
 });

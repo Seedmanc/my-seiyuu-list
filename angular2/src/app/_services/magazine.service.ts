@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Observable} from "rxjs/Observable";
 import {of} from "rxjs/observable/of";
+import {_throw} from "rxjs/observable/throw";
 import {empty} from "rxjs/observable/empty";
 
 import {RestService} from "./rest.service";
@@ -50,11 +51,14 @@ export class MagazineService {
             if (err.error && err.error.message && err.error.message.includes('callback'))
               result = empty();
 
-            this.pending = false;
-
             return result;
           })
-          .map(({table: {rows}}) => {
+          .map(response => {
+            if (response.errors) {
+               throw(response.errors[0].message);
+            }
+
+            let  {table: {rows}} = response;
             let hashOfMagazines = {};
 
             rows.forEach(({c: [{v: issue}, {v: magazine}, {v: seiyuus}] }) =>
@@ -64,7 +68,13 @@ export class MagazineService {
             return Object.keys(hashOfMagazines)
               .map(name => new Magazine(name, hashOfMagazines[name]));
           })
-          .do(list => this.cache[names.join()] = list)
+           .do(list => this.cache[names.join()] = list)
+           .catch(err => {
+             this.pending = false;
+             this.messageSvc.error(err instanceof TypeError ? 'Incorrect response format' : err);
+
+             return _throw(err);
+           })
 
       : of(null);
   }

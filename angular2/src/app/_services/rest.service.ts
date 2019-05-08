@@ -99,7 +99,7 @@ $scope.debug += '\n\r' + JSON.stringify(error) + ' Error accessing database.';
     ).map(response => {
       if (!response.query || !response.query.count || !response.query.results.result[0] || !response.query.results)
         throw({message: 'Couldn\'t load the photos, try the koebooru link'});
-      //TODO global error reporting
+      //TODO global error reporting (sentry?)
       return {data: response.query.results.result[1], paging: response.query.results.result[2]};
     });
   }
@@ -111,7 +111,7 @@ $scope.debug += '\n\r' + JSON.stringify(error) + ' Error accessing database.';
     const document = '1C4mrBWJxPLrFQ4bp82UA2ICOr1e6ER47wF7YuElyoZg';
     const sheet = '1655460507';
 
-    // muh callback in not defined, muh CORS
+    // muh callback is not defined, muh CORS
     window['handleJsonp'] = x => subject.next(x);
     // because fuck you, that's why
 
