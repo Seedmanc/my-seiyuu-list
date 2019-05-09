@@ -4,13 +4,10 @@ import {env} from "../../environments/environment";
 import {Observable} from "rxjs/Observable";
 import {Subject} from "rxjs/Subject";
 
-interface YQLresponse {
-  query: {
-    count: number,
-    results: {
-      result: string[]
-    }
-  };
+interface ApifyResponse {
+  success: boolean;
+  thumbs: string;
+  paginator: string;
 }
 
 interface GoogleQresponse {
@@ -82,25 +79,18 @@ $scope.debug += '\n\r' + JSON.stringify(error) + ' Error accessing database.';
 
   }
 
-  yahooQueryCall(tags: string, pid: number): Observable<any> {
-    let koeurl = encodeURIComponent(`${env.koeurl}${tags}&pid=${pid}`);
+  apifyCall(tags: string, pid: number): Observable<any> {
+    let koeurl = `${env.koeurl}${tags}&pid=${pid}`;
 
-
-    return this.http.get<YQLresponse>([
-      'https://query.yahooapis.com/v1/public/yql?q=',
-        `SELECT * FROM htmlstring WHERE url = '${koeurl}' AND xpath IN (`,
-          `'//div[@id="tag_list"]//h5',`,
-          `'//div[@class = "content"]//span[@class = "thumb"]',`,
-          `'//div[@id="paginator"]'`,
-        ')',
-        '&format=json',
-        '&env=store://datatables.org/alltableswithkeys'
-      ].join('')
-    ).map(response => {
-      if (!response.query || !response.query.count || !response.query.results.result[0] || !response.query.results)
+    return this.http.post<ApifyResponse>(
+      'https://api.apify.com/v2/actor-tasks/seedmanc~cheerio-koebooru/run-sync?token=oHqw26JcyWpKugLcrdxRtNSdJ',
+      {url: koeurl}
+    )
+      .map(response => {
+      if (!response || !response.success || !response.thumbs)
         throw({message: 'Couldn\'t load the photos, try the koebooru link'});
       //TODO global error reporting (sentry?)
-      return {data: response.query.results.result[1], paging: response.query.results.result[2]};
+      return {data: response.thumbs, paging: response.paginator};
     });
   }
 

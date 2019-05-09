@@ -3,12 +3,12 @@ import {PhotosPage} from "./po/photos.po";
 import {AppPage} from "./po/app.po";
 import {SeiyuuPage} from "./po/seiyuu.po";
 
-xdescribe('photo lookups', () => {
+describe('photo lookups', () => {
   let page: PhotosPage;
   let app: AppPage;
   let seiyuu: SeiyuuPage;
   let EC = protractor.ExpectedConditions;
-  let to = 5000;
+  let to = 30000;
 
   beforeEach(() => {
     page = new PhotosPage();
@@ -18,6 +18,7 @@ xdescribe('photo lookups', () => {
   });
 
   it('should load photo when a seiyuu is selected from photo page', () => {
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
     AppPage.navigateTo('#/photos/9673');
     let panel = seiyuu.panel('Davidyuk Jenya');
     browser.wait(EC.presenceOf(page.spinner()), to);
@@ -28,10 +29,11 @@ xdescribe('photo lookups', () => {
     expect(page.prev().getAttribute('disabled')).toBeTruthy();
     expect(page.page().getText()).toBe('0');
     expect(app.statusBar().getText()).toBe('1 photo found');
-    expect(page.more().getAttribute('href')).toBe('http://koe.booru.org/index.php?page=post&s=list&tags=~davidyuk_jenya');
+    expect(page.more().getAttribute('href')).toBe('https://koe.booru.org/index.php?page=post&s=list&tags=~davidyuk_jenya');
   });
 
   it('should update list as seiyuu are added and removed', () => {
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
     let name = 'Chihara Minori';
     app.searchInput().sendKeys(name);
     let panel = seiyuu.panel(name);
@@ -50,7 +52,7 @@ xdescribe('photo lookups', () => {
     expect(page.next().getAttribute('disabled')).toBeTruthy();
 
     expect(app.statusBar().getText()).toContain('photos found');
-    expect(page.more().getAttribute('href')).toBe('http://koe.booru.org/index.php?page=post&s=list&tags=~chihara_minori+~koshimizu_ami');
+    expect(page.more().getAttribute('href')).toBe('https://koe.booru.org/index.php?page=post&s=list&tags=~chihara_minori+~koshimizu_ami');
     panel.close().click();
     expect(page.thumbs().count()).toBe(20);
 
@@ -60,6 +62,7 @@ xdescribe('photo lookups', () => {
   });
 
   it('should switch pages', () => {
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
     let name2 = 'Koshimizu Ami';
     let x = '0';
     let y = 0;

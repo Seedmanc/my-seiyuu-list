@@ -78,34 +78,36 @@ describe('RestService', () => {
     })
   );
 
-  it('yahooQueryCall should request photos for seiyuu',
+  it('apifyCall should request photos for seiyuu',
     inject([RestService, HttpClient], (service:RestService, http: HttpClient) => {
 
-    let spy = spyOn(http, 'get').and.returnValue(of(djresponse));
+    let spy = spyOn(http, 'post').and.returnValue(of(djresponse));
 
-    service.yahooQueryCall('davidyuk_jenya+solo', 0)
+    service.apifyCall('davidyuk_jenya+solo', 0)
       .subscribe(data => expect(JSON.stringify(data)).toBe(JSON.stringify({
         data: `<span class=\"thumb\">\n  <a href=\"index.php?page=post&amp;s=view&amp;id=8380\" id=\"p8380\">\n    <img alt=\"post\" border=\"0\" src=\"http://thumbs.booru.org/koe/thumbnails//8/thumbnail_c24401d03ee551e8a4e08eaafb24ad8fb5cca015.jpg\" title=\" davidyuk_jenya solo tagme  score:0 rating:Safe\"/>\n  </a>\n  &#13;\n    \n  <script type=\"text/javascript\">\n    <![CDATA[\n    //]]>\n    <![CDATA[<![CDATA[\n    posts[8380] = {'tags':'davidyuk_jenya solo tagme'.split(/ /g), 'rating':'Safe', 'score':0, 'user':'Seedmanc'}\n    //]]]]><![CDATA[>\n    ]]>\n  </script>\n</span>`,
         paging: `<div id=\"paginator\">\n  <script type=\"text/javascript\">\n    <![CDATA[\n   //]]>\n    <![CDATA[<![CDATA[\n   filterPosts(posts)\n   //]]]]><![CDATA[>\n   ]]>\n  </script>\n   \n  <b>1</b>\n   \n</div>`
       })));
 
-    expect(spy).toHaveBeenCalledWith(`https://query.yahooapis.com/v1/public/yql?q=SELECT * FROM htmlstring WHERE url = 'http%3A%2F%2Fkoe.booru.org%2Findex.php%3Fpage%3Dpost%26s%3Dlist%26tags%3Ddavidyuk_jenya%2Bsolo%26pid%3D0' AND xpath IN ('//div[@id="tag_list"]//h5','//div[@class = "content"]//span[@class = "thumb"]','//div[@id="paginator"]')&format=json&env=store://datatables.org/alltableswithkeys`);
+    expect(spy).toHaveBeenCalled();
+    expect(spy.calls.mostRecent().args[0]).toBe(`https://api.apify.com/v2/actor-tasks/seedmanc~cheerio-koebooru/run-sync?token=oHqw26JcyWpKugLcrdxRtNSdJ`);
+    expect(JSON.stringify(spy.calls.mostRecent().args[1])).toBe('{"url":"https://koe.booru.org/index.php?page=post&s=list&tags=davidyuk_jenya+solo&pid=0"}');
    })
   );
 
-  it('yahooQueryCall should handle errors',
+  it('apifyCall should handle errors',
     inject([RestService, HttpClient], (service:RestService, http: HttpClient) => {
     let erresponse: any = {...djresponse};
     erresponse.count = 0;
     erresponse.query.results.result[0] = null;
 
-    let spy = spyOn(http, 'get').and.returnValue(of(erresponse));
+    let spy = spyOn(http, 'post').and.returnValue(of(erresponse));
 
-    service.yahooQueryCall('whatever', 0)
+    service.apifyCall('whatever', 0)
       .subscribe(()=>{}, err => expect(JSON.stringify(err)).toBe(JSON.stringify({message: 'Couldn\'t load the photos, try the koebooru link'})));
 
-     expect(spy).toHaveBeenCalledWith(`https://query.yahooapis.com/v1/public/yql?q=SELECT * FROM htmlstring WHERE url = 'http%3A%2F%2Fkoe.booru.org%2Findex.php%3Fpage%3Dpost%26s%3Dlist%26tags%3Dwhatever%26pid%3D0' AND xpath IN ('//div[@id="tag_list"]//h5','//div[@class = "content"]//span[@class = "thumb"]','//div[@id="paginator"]')&format=json&env=store://datatables.org/alltableswithkeys`);
-   })
+     expect(spy).toHaveBeenCalled();
+    })
   );
 
   it('googleQueryCall should request magazine data',

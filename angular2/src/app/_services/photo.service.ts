@@ -58,7 +58,8 @@ export class PhotoService {
     let hasNames = !!names.length;
     if (names.length == 1) names.push('solo');
 
-    let tags = names.join('+').toLowerCase().replace(/\s+/g, '_');
+    let tags = names.map(n => encodeURIComponent(n.replace(/\s+/g, '_')).toLowerCase())
+      .join('+');
     let key = tags + '++' + this.page;
 
     this.messageSvc.blank();
@@ -73,20 +74,20 @@ export class PhotoService {
 
   private getPhotoPage(tags: string): Observable<PhotoPage> {
     this.pending = true;
+    this.messageSvc.status('please wait...');
 
-    return this.rest.yahooQueryCall(tags, this.page*20)                                            .do(Utils.lg('Photos requested', 'warn'))
+    return this.rest.apifyCall(tags, this.page*20)                                            .do(Utils.lg('Photos requested', 'warn'))
       .catch(error => {
         setTimeout(() => this.messageSvc.error(error.message));
         return of({data:'', paging:''});
       })
       .map(({data, paging}) => {
-        let rawhtml =  data.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
         let newDoc = document.implementation.createHTMLDocument('newDoc');
-        newDoc.documentElement.innerHTML = rawhtml;
+        newDoc.documentElement.innerHTML = data;
         let spans = newDoc.querySelectorAll('span.thumb');
         let total = 0;
 
-        [].slice.call(spans)
+        spans
           .forEach(span => {
             span.classList.add('img-thumbnail');
             let a = span.querySelector('a');
