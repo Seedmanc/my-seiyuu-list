@@ -5,7 +5,7 @@ import {RestService} from "../rest.service";
 import {env} from "../../../environments/environment";
 import {of} from "rxjs/observable/of";
 
-const djresponse = {"query":{"count":3,"created":"2018-05-01T12:46:06Z","lang":"ru-RU","results":{"result":["<h5>Tags</h5>","<span class=\"thumb\">\n  <a href=\"index.php?page=post&amp;s=view&amp;id=8380\" id=\"p8380\">\n    <img alt=\"post\" border=\"0\" src=\"http://thumbs.booru.org/koe/thumbnails//8/thumbnail_c24401d03ee551e8a4e08eaafb24ad8fb5cca015.jpg\" title=\" davidyuk_jenya solo tagme  score:0 rating:Safe\"/>\n  </a>\n  &#13;\n    \n  <script type=\"text/javascript\">\n    <![CDATA[\n    //]]>\n    <![CDATA[<![CDATA[\n    posts[8380] = {'tags':'davidyuk_jenya solo tagme'.split(/ /g), 'rating':'Safe', 'score':0, 'user':'Seedmanc'}\n    //]]]]><![CDATA[>\n    ]]>\n  </script>\n</span>","<div id=\"paginator\">\n  <script type=\"text/javascript\">\n    <![CDATA[\n   //]]>\n    <![CDATA[<![CDATA[\n   filterPosts(posts)\n   //]]]]><![CDATA[>\n   ]]>\n  </script>\n   \n  <b>1</b>\n   \n</div>"]}}};
+const djresponse = {"query":{"count":3,"created":"2018-05-01T12:46:06Z","lang":"ru-RU","results":{"result":["<h5>Tags</h5>","<span class=\"thumb\">\n  <a href=\"index.php?page=post&amp;s=view&amp;id=8380\" id=\"p8380\">\n    <img alt=\"post\" border=\"0\" src=\"http://thumbs.booru.org/koe/thumbnails//8/thumbnail_c24401d03ee551e8a4e08eaafb24ad8fb5cca015.jpg\" title=\" davidyuk_jenya solo tagme  score:0 rating:Safe\"/>\n  </a>\n  &#13;\n    \n  \n</span>","<div id=\"paginator\">\n  \n   \n  <b>1</b>\n   \n</div>"]}}};
 const mkresponse = /*'handleJsonp(*/{"version":"0.6","reqId":"0","status":"ok","sig":"229708994","table":{"cols":[{"id":"A","label":"","type":"string"},{"id":"B","label":"","type":"string"},{"id":"C","label":"","type":"string"}],"rows":[]}}/*)';*/
 
 describe('RestService', () => {
@@ -81,13 +81,9 @@ describe('RestService', () => {
   it('apifyCall should request photos for seiyuu',
     inject([RestService, HttpClient], (service:RestService, http: HttpClient) => {
 
-    let spy = spyOn(http, 'post').and.returnValue(of(djresponse));
+    let spy = spyOn(http, 'post').and.returnValue(of(''));
 
-    service.apifyCall('davidyuk_jenya+solo', 0)
-      .subscribe(data => expect(JSON.stringify(data)).toBe(JSON.stringify({
-        data: `<span class=\"thumb\">\n  <a href=\"index.php?page=post&amp;s=view&amp;id=8380\" id=\"p8380\">\n    <img alt=\"post\" border=\"0\" src=\"http://thumbs.booru.org/koe/thumbnails//8/thumbnail_c24401d03ee551e8a4e08eaafb24ad8fb5cca015.jpg\" title=\" davidyuk_jenya solo tagme  score:0 rating:Safe\"/>\n  </a>\n  &#13;\n    \n  <script type=\"text/javascript\">\n    <![CDATA[\n    //]]>\n    <![CDATA[<![CDATA[\n    posts[8380] = {'tags':'davidyuk_jenya solo tagme'.split(/ /g), 'rating':'Safe', 'score':0, 'user':'Seedmanc'}\n    //]]]]><![CDATA[>\n    ]]>\n  </script>\n</span>`,
-        paging: `<div id=\"paginator\">\n  <script type=\"text/javascript\">\n    <![CDATA[\n   //]]>\n    <![CDATA[<![CDATA[\n   filterPosts(posts)\n   //]]]]><![CDATA[>\n   ]]>\n  </script>\n   \n  <b>1</b>\n   \n</div>`
-      })));
+    service.apifyCall('davidyuk_jenya+solo', 0);
 
     expect(spy).toHaveBeenCalled();
     expect(spy.calls.mostRecent().args[0]).toBe(`https://api.apify.com/v2/actor-tasks/seedmanc~cheerio-koebooru/run-sync?token=oHqw26JcyWpKugLcrdxRtNSdJ`);

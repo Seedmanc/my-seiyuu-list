@@ -24,6 +24,7 @@ export interface PhotoPage {
 export class PhotoService {
   displayPhotos$: ReplaySubject<PhotoPage> = new ReplaySubject(1);
   pending: boolean;
+  pendingNext: boolean;
 
   private pageDelta: BehaviorSubject<number> = new BehaviorSubject(0);
   private page: number = 0;
@@ -41,8 +42,20 @@ export class PhotoService {
       .do(() => this.page = 0)
       .let(this.routingSvc.runOnTab<Seiyuu[]>('photos'))
       .map(seiyuus => seiyuus.map(seiyuu => seiyuu.displayName))
-      .combineLatest(this.pageDelta)                                                                   .do(Utils.lg('photoPage'))
-      .switchMap(([names,]) => this.wrapper(names))
+      .combineLatest(this.pageDelta, x=>x)                                                                   .do(Utils.lg('photoPage'))
+      .do(() => {
+        this.pending = true;
+        this.messageSvc.status('please wait...');
+      })
+      .switchMap(names => this.wrapper(names)
+        .do(photoPage => {  // request next page while user is viewing current one
+          if (photoPage && photoPage.next && !this.pendingNext) {
+            this.pendingNext = true;
+            this.wrapper(names, this.page+1)
+              .subscribe(() => this.pendingNext = false);
+          }
+        })
+      )
       .do(() => this.pending = false)
       .subscribe(this.displayPhotos$);
   }
@@ -54,29 +67,25 @@ export class PhotoService {
     this.pageDelta.next(-1);
   }
 
-  private wrapper(names: string[]): Observable<PhotoPage> {
+  private wrapper(names: string[], pageNum: number = this.page): Observable<PhotoPage> {
     let hasNames = !!names.length;
     if (names.length == 1) names.push('solo');
 
     let tags = names.map(n => encodeURIComponent(n.replace(/\s+/g, '_')).toLowerCase())
       .join('+');
-    let key = tags + '++' + this.page;
-
-    this.messageSvc.blank();
+    let key = tags + '++' + pageNum;
 
     return hasNames ?
       this.cache[key] ?
         of(this.cache[key]) :
-        this.getPhotoPage(tags)
+        this.getPhotoPage(tags, pageNum)
           .do(data => this.cache[key] = data) :
       of(null);
   }
 
-  private getPhotoPage(tags: string): Observable<PhotoPage> {
-    this.pending = true;
-    this.messageSvc.status('please wait...');
+  private getPhotoPage(tags: string, pageNum: number): Observable<PhotoPage> {
 
-    return this.rest.apifyCall(tags, this.page*20)                                            .do(Utils.lg('Photos requested', 'warn'))
+    return this.rest.apifyCall(tags, pageNum*20)                                            .do(Utils.lg('Photos requested', 'warn'))
       .catch(error => {
         setTimeout(() => this.messageSvc.error(error.message));
         return of({data:'', paging:''});
@@ -125,10 +134,10 @@ export class PhotoService {
 
         return {
           html,
-          pageNum: this.page,
+          pageNum,
           total,
           next: spans.length == 20,
-          prev: this.page > 0
+          prev: pageNum > 0
         };
       });
   }

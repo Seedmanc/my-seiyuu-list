@@ -1,4 +1,4 @@
-import {TestBed, inject, fakeAsync, tick} from '@angular/core/testing';
+import {TestBed, inject, fakeAsync, tick, discardPeriodicTasks} from '@angular/core/testing';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {RestService} from "../rest.service";
 import {MessagesService} from "../messages.service";
@@ -10,6 +10,7 @@ import { Seiyuu} from "../../_models/seiyuu.model";
 import {SeiyuuServiceMock} from "./seiyuu.service.mock";
 import {of} from "rxjs/observable/of";
 import {_throw} from "rxjs/observable/throw";
+import {Subject} from "rxjs/Rx";
 
 let x;
 let djresult = { html: `<span class="thumb img-thumbnail">
@@ -138,12 +139,56 @@ describe('PhotoService', () => {
       service.nextPage();
       expect(spy).toHaveBeenCalledWith('davidyuk_jenya+solo', 20);
       expect(JSON.stringify(x)).toBe(JSON.stringify({"pageNum":1,"total":20,"next":true,"prev":true}));
-      expect(spy).toHaveBeenCalledTimes(2);
+      expect(spy).toHaveBeenCalledTimes(3);
 
       service.prevPage();
-      expect(spy).toHaveBeenCalledTimes(2);
+      expect(spy).toHaveBeenCalledTimes(3);
       expect(JSON.stringify(x)).toBe(JSON.stringify({"pageNum":0,"total":20,"next":true,"prev":false}));
     })
+  );
+
+  it('should preload next page after current one if it exists',fakeAsync(
+    inject([SeiyuuService, RestService , RoutingService, MessagesService],
+       (seiyuuSvc: SeiyuuService, rest: RestService, routingSvc: RoutingService, msgSvc: MessagesService) => {
+      service.displayPhotos$.subscribe(page => {
+          x = page;
+      });
+      let spy = spyOn(rest, 'apifyCall').and.returnValue(of({
+        data: (new Array(20)).fill('<span class="thumb"><a><img/></a></span>').join(''),
+        paging: ''
+      }).delay(500));
+      let spy2= spyOn(msgSvc, 'status');
+
+      routingSvc.tab$.next('photos');
+      seiyuuSvc.displayList$['next']([new Seiyuu({name: 'test seiyuu'})]);
+      tick(500);
+      expect(spy).toHaveBeenCalledTimes(2);
+      expect(service.pendingNext).toBeTruthy();
+      tick(500) ;
+      expect(service.pendingNext).toBeFalsy();
+      expect(spy2).toHaveBeenCalledWith('please wait...');
+
+      discardPeriodicTasks();
+    }))
+  );
+
+  it('should not preload next page there\'s none',fakeAsync(
+    inject([SeiyuuService, RestService , RoutingService, MessagesService],
+       (seiyuuSvc: SeiyuuService, rest: RestService, routingSvc: RoutingService, msgSvc: MessagesService) => {
+      service.displayPhotos$.subscribe(page => {
+          x = page;
+      });
+      let spy = spyOn(rest, 'apifyCall').and.returnValue(of({
+        data: '<span class="thumb"><a><img/></a></span>',
+        paging: ''
+      }).delay(500));
+
+      routingSvc.tab$.next('photos');
+      seiyuuSvc.displayList$['next']([new Seiyuu({name: 'test seiyuu'})]);
+      tick(500);
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(service.pendingNext).toBeFalsy();
+    }))
   );
 
   it('should count images properly',
@@ -152,7 +197,6 @@ describe('PhotoService', () => {
       let djresult10 = {...djresult2};
       djresult10.data = (new Array(10)).fill(djresult10.data).join('');
       let spy = spyOn(rest, 'apifyCall').and.returnValue(of(djresult10));
-      let spy3 = spyOn(msgSvc, 'results');
 
        service.displayPhotos$.subscribe(page => {
          if (page) {
@@ -188,5 +232,65 @@ describe('PhotoService', () => {
        tick();
        expect(spy2).toHaveBeenCalledWith('errmsg');})
   ));
+
+   it('getPhotoPage()',
+    inject([SeiyuuService, RestService ],
+      (seiyuuSvc: SeiyuuService, rest: RestService ) => {
+        let spy = spyOn(rest,'apifyCall').and.returnValue(of({
+          data:(new Array(3)).fill('<span class="thumb"><a><img/></a></span>').join(''),
+          paging:'<div id="paginator"> <a href="?page=post&amp;s=list&amp;tags=koshimizu_ami+solo&amp;pid=0" alt="first page">&lt;&lt;</a><a href="?page=post&amp;s=list&amp;tags=koshimizu_ami+solo&amp;pid=0" alt="back">&lt;</a><a href="?page=post&amp;s=list&amp;tags=koshimizu_ami+solo&amp;pid=0">1</a> <b>2</b> <a href="?page=post&amp;s=list&amp;tags=koshimizu_ami+solo&amp;pid=40">3</a><a href="?page=post&amp;s=list&amp;tags=koshimizu_ami+solo&amp;pid=40" alt="next">&gt;</a><a href="?page=post&amp;s=list&amp;tags=koshimizu_ami+solo&amp;pid=40" alt="last page">&gt;&gt;</a></div>'
+        }));
+
+        service['getPhotoPage']('test_seiyuu+solo', 1)
+          .subscribe(response => x = response);
+
+        expect(spy).toHaveBeenCalledWith('test_seiyuu+solo', 20);
+        expect(x.html).toBe('<span class="thumb img-thumbnail"><a href="" target="_blank"><img></a></span><span class="thumb img-thumbnail"><a href="" target="_blank"><img></a></span><span class="thumb img-thumbnail"><a href="" target="_blank"><img></a></span><span class="thumb more img-thumbnail"><div>more at</div><b><a href="https://koe.booru.org/index.php?page=post&amp;s=list&amp;tags=~test_seiyuu" target="_blank">koe.booru.org</a></b></span>');
+        expect(x.pageNum).toBe(1);
+        expect(x.total).toBe(50);
+        expect(x.next).toBeFalsy();
+        expect(x.prev).toBeTruthy();
+      })
+  );
+
+  xit('wrapper()', // side effects
+    inject([SeiyuuService, RestService ],
+      ( ) => {
+    let r = {
+        html:'<span class="thumb img-thumbnail"><a href="" target="_blank"><img></a></span><span class="thumb img-thumbnail"><a href="" target="_blank"><img></a></span><span class="thumb img-thumbnail"><a href="" target="_blank"><img></a></span><span class="thumb more img-thumbnail"><div>more at</div><b><a href="https://koe.booru.org/index.php?page=post&amp;s=list&amp;tags=~test_seiyuu" target="_blank">koe.booru.org</a></b></span>',
+        pageNum: 1,
+        total: 50,
+        next: false,
+        prev: true
+      };
+        let spy = spyOn<any>(service,'getPhotoPage').and.returnValue(of(r));
+
+        service.cache = {};
+        this.page = 1;
+
+        let $ = new Subject();
+
+        $.flatMap(s => service['wrapper'](...s))
+          .subscribe(response => x = response);
+
+        $.next([]);
+        expect(x).toBeFalsy();
+        expect(spy).not.toHaveBeenCalled();
+
+        $.flatMap(s => service['wrapper'](...s))
+          .subscribe(response => x = response);
+        $.next([['test seiyuu'],2]);
+        expect(spy).toHaveBeenCalledWith('test_seiyuu+solo',2);
+        expect(x).toBe(r);
+        x=undefined;
+        spy.calls.reset();
+        $.flatMap(s => service['wrapper'](...s))
+          .subscribe(response => x = response);
+        $.next([['test seiyuu'],2]);
+        expect(spy).not.toHaveBeenCalled();
+        expect(x).toBe(r);
+      })
+  );
+
 
 });

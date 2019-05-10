@@ -21,8 +21,9 @@ describe('photo lookups', () => {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
     AppPage.navigateTo('#/photos/9673');
     let panel = seiyuu.panel('Davidyuk Jenya');
-    browser.wait(EC.presenceOf(page.spinner()), to);
+
     browser.wait(EC.presenceOf(panel.photo()), to);
+
     browser.wait(EC.presenceOf(element(by.css('#thumbContainer > span.thumb'))), to);
     expect(page.thumbs().count()).toBeTruthy();
     expect(page.next().getAttribute('disabled')).toBeTruthy();

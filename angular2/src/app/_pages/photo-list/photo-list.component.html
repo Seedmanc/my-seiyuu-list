@@ -13,8 +13,10 @@
         <button id="prev" class="btn btn-default btn-block glyphicon glyphicon-arrow-left"
            [disabled]="photoSvc.pending || !photoPage.prev" (click)="photoSvc.prevPage()"> </button>
         <span class="page">{{photoPage.pageNum}}</span>
-        <button id="next" class="btn btn-default btn-block glyphicon glyphicon-arrow-right"
-           [disabled]="photoSvc.pending || !photoPage.next" (click)="photoSvc.nextPage()"> </button>
+        <button id="next" class="btn btn-default btn-block glyphicon"
+           [disabled]="photoSvc.pending || !photoPage.next || photoSvc.pendingNext" (click)="photoSvc.nextPage()"
+                [class.glyphicon-arrow-right]=!photoSvc.pendingNext
+        ><msl-spinner *ngIf="photoSvc.pendingNext" size="16px"></msl-spinner></button>
       </div>
     </div>
   </div>
