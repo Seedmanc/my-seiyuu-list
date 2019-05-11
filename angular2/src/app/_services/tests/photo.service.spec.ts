@@ -265,26 +265,26 @@ describe('PhotoService', () => {
       };
         let spy = spyOn<any>(service,'getPhotoPage').and.returnValue(of(r));
 
-        service.cache = {};
+        service['cache'] = {};
         this.page = 1;
 
         let $ = new Subject();
 
-        $.flatMap(s => service['wrapper'](...s))
+        $.flatMap(s => service['wrapper'](s[0], s[1]))
           .subscribe(response => x = response);
 
         $.next([]);
         expect(x).toBeFalsy();
         expect(spy).not.toHaveBeenCalled();
 
-        $.flatMap(s => service['wrapper'](...s))
+        $.flatMap(s => service['wrapper'](s[0], s[1]))
           .subscribe(response => x = response);
         $.next([['test seiyuu'],2]);
         expect(spy).toHaveBeenCalledWith('test_seiyuu+solo',2);
         expect(x).toBe(r);
         x=undefined;
         spy.calls.reset();
-        $.flatMap(s => service['wrapper'](...s))
+        $.flatMap(s => service['wrapper'](s[0], s[1]))
           .subscribe(response => x = response);
         $.next([['test seiyuu'],2]);
         expect(spy).not.toHaveBeenCalled();

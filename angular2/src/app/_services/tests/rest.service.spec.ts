@@ -4,6 +4,7 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import {RestService} from "../rest.service";
 import {env} from "../../../environments/environment";
 import {of} from "rxjs/observable/of";
+import {empty} from "rxjs/observable/empty";
 
 const djresponse = {"query":{"count":3,"created":"2018-05-01T12:46:06Z","lang":"ru-RU","results":{"result":["<h5>Tags</h5>","<span class=\"thumb\">\n  <a href=\"index.php?page=post&amp;s=view&amp;id=8380\" id=\"p8380\">\n    <img alt=\"post\" border=\"0\" src=\"http://thumbs.booru.org/koe/thumbnails//8/thumbnail_c24401d03ee551e8a4e08eaafb24ad8fb5cca015.jpg\" title=\" davidyuk_jenya solo tagme  score:0 rating:Safe\"/>\n  </a>\n  &#13;\n    \n  \n</span>","<div id=\"paginator\">\n  \n   \n  <b>1</b>\n   \n</div>"]}}};
 const mkresponse = /*'handleJsonp(*/{"version":"0.6","reqId":"0","status":"ok","sig":"229708994","table":{"cols":[{"id":"A","label":"","type":"string"},{"id":"B","label":"","type":"string"},{"id":"C","label":"","type":"string"}],"rows":[]}}/*)';*/
@@ -91,16 +92,15 @@ describe('RestService', () => {
    })
   );
 
-  it('apifyCall should handle errors',
+   it('apifyCall should handle errors',
     inject([RestService, HttpClient], (service:RestService, http: HttpClient) => {
-    let erresponse: any = {...djresponse};
-    erresponse.count = 0;
-    erresponse.query.results.result[0] = null;
+    let erresponse: any = {success: false};
 
     let spy = spyOn(http, 'post').and.returnValue(of(erresponse));
 
     service.apifyCall('whatever', 0)
-      .subscribe(()=>{}, err => expect(JSON.stringify(err)).toBe(JSON.stringify({message: 'Couldn\'t load the photos, try the koebooru link'})));
+      .catch(err =>{expect(JSON.stringify(err)).toBe(JSON.stringify({message: 'Couldn\'t load the photos, try the koebooru link'}));return <any>empty;})
+      .subscribe( );
 
      expect(spy).toHaveBeenCalled();
     })

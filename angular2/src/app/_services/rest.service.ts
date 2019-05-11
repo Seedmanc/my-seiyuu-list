@@ -57,6 +57,7 @@ export class RestService {
       payload
     );
 
+    //TODO global error reporting (sentry?)
 /*        if ( failCount <= 2) {
         failCount++;
 $scope.debug += '\n\r' + JSON.stringify(error) + ' Error accessing database.';
@@ -87,9 +88,8 @@ $scope.debug += '\n\r' + JSON.stringify(error) + ' Error accessing database.';
       {url: koeurl}
     )
       .map(response => {
-      if (!response || !response.success || !response.thumbs)
+      if (!response || !response.success)
         throw({message: 'Couldn\'t load the photos, try the koebooru link'});
-      //TODO global error reporting (sentry?)
       return {data: response.thumbs, paging: response.paginator};
     });
   }

@@ -93,4 +93,12 @@ describe('photo lookups', () => {
     expect(page.thumbs().get(0).$('a').getAttribute('target')).toBe('_blank');
   });
 
+  it('should report no photos found', () => {
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
+    browser.get('/#/photos/578');
+    browser.wait(EC.presenceOf(seiyuu.panel('Maeda Konomi').photo()), to);
+
+    expect(app.statusBar().getText()).toContain('no');
+  });
+
 });
