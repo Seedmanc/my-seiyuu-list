@@ -221,6 +221,7 @@ describe('AnimeService', () => {
      Anime.activeSeiyuu = 22;
      expect(JSON.stringify(service['sharedAnime'](hashOfRoles))).toBe('[{"_id":1,"rolesBySeiyuu":{"11":[{"name":"character1","main":true,"_id":11}],"22":[{"name":"character5","main":false,"_id":22}]},"main":false,"link":"//myanimelist.net/anime/1","thumb":"","firstCharacter":"character5","characters":[{"name":"character5","main":false}],"title":"1"},{"_id":2,"rolesBySeiyuu":{"11":[{"name":"character2","main":true,"_id":11},{"name":"character3","main":false,"_id":11}],"22":[{"name":"character2","main":true,"_id":22},{"name":"character6","main":false,"_id":22}]},"main":true,"link":"//myanimelist.net/anime/2","thumb":"","firstCharacter":"character2","characters":[{"name":"character2","main":true},{"name":"character6","main":false}],"title":"2"}]');
 
+    expect(service['sharedAnime'](hashOfRoles)['total']).toBeFalsy();
      Anime.activeSeiyuu = 11;
      expect(JSON.stringify(service['sharedAnime'](hashOfRoles))).toBe('[{"_id":1,"rolesBySeiyuu":{"11":[{"name":"character1","main":true,"_id":11}],"22":[{"name":"character5","main":false,"_id":22}]},"main":true,"link":"//myanimelist.net/anime/1","thumb":"","firstCharacter":"character1","characters":[{"name":"character1","main":true}],"title":"1"},{"_id":2,"rolesBySeiyuu":{"11":[{"name":"character2","main":true,"_id":11},{"name":"character3","main":false,"_id":11}],"22":[{"name":"character2","main":true,"_id":22},{"name":"character6","main":false,"_id":22}]},"main":true,"link":"//myanimelist.net/anime/2","thumb":"","firstCharacter":"character2","characters":[{"name":"character2","main":true},{"name":"character3","main":false}],"title":"2"}]');
     }
@@ -236,6 +237,7 @@ describe('AnimeService', () => {
   );
   it('sharedAnime([...],"!main")', () => {
      Anime.activeSeiyuu = 11;
+     expect(service['sharedAnime'](hashOfRoles, "!main")['total']).toBe(2);
      expect(JSON.stringify(service['sharedAnime'](hashOfRoles, "!main"))).toBe('[{"_id":1,"rolesBySeiyuu":{"11":[{"name":"character1","main":true,"_id":11}],"22":[{"name":"character5","main":false,"_id":22}]},"main":true,"link":"//myanimelist.net/anime/1","thumb":"","firstCharacter":"character1","characters":[{"name":"character1","main":true}],"title":"1"}]');
      Anime.activeSeiyuu = 22;
      expect(JSON.stringify(service['sharedAnime'](hashOfRoles, "!main"))).toBe('[{"_id":1,"rolesBySeiyuu":{"11":[{"name":"character1","main":true,"_id":11}],"22":[{"name":"character5","main":false,"_id":22}]},"main":false,"link":"//myanimelist.net/anime/1","thumb":"","firstCharacter":"character5","characters":[{"name":"character5","main":false}],"title":"1"}]');
@@ -267,6 +269,12 @@ describe('AnimeService', () => {
     Anime.activeSeiyuu = 11;
     expect(JSON.stringify(x)).toBe('[[[],[{"_id":2,"rolesBySeiyuu":{"11":[{"name":"character2","main":true,"_id":11}],"22":[{"name":"character2","main":true,"_id":22}]},"main":true,"link":"//myanimelist.net/anime/2","thumb":"","firstCharacter":"character2","characters":[{"name":"character2","main":true}],"title":"2"}],[]],[[{"_id":1,"rolesBySeiyuu":{"11":[{"name":"character1","main":true,"_id":11}],"22":[{"name":"character5","main":false,"_id":22}]},"main":true,"link":"//myanimelist.net/anime/1","thumb":"","firstCharacter":"character1","characters":[{"name":"character1","main":true}],"title":"1"}],[],[]],[[{"_id":3,"rolesBySeiyuu":{"11":[{"name":"character4","main":false,"_id":11}],"33":[{"name":"character8","main":true,"_id":33},{"name":"character9","main":false,"_id":33}]},"main":false,"link":"//myanimelist.net/anime/3","thumb":"","firstCharacter":"character4","characters":[{"name":"character4","main":false}],"title":"3"}],[],[]]]');
     expect(spy).toHaveBeenCalledWith([ 2, 1, 3 ]);
+    expect(x[0][0].affinity).toBe(0);
+    expect(x[0][1].affinity).toBe(1);
+    expect(x[1][0].affinity).toBe(1);
+    expect(x[1][1].affinity).toBe(0);
+    expect(x[2][0].affinity).toBe(0.3333333333333333);
+    expect(x[2][2].affinity).toBe(0);
    })
   );
 
