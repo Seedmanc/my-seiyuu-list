@@ -1,5 +1,7 @@
 .cell > a {
   display: flex;
+  z-index: 1;
+
   max-width: 31px;
   height: 31px;
   overflow: hidden;
@@ -17,7 +19,7 @@
 }
 
 .cell.main > a {
-  border-width: 4px;
+  border-width: 3px;
   max-width: 33px;
   height: 33px;
 }
@@ -63,6 +65,8 @@
 }
 
 .cell {
+  position: relative;
+
   display: flex;
   height: 214px;
   overflow: hidden;
@@ -76,6 +80,23 @@
   margin-bottom: 0.5rem;
   margin-left: 0.5rem;
   padding: 0.7rem 1.4rem;
+}
+
+.cell .affinity {
+  position: absolute;
+
+  display: block;
+  width: 100%;
+  height: 100%;
+
+  background: #0a6;
+}
+.cell:not(.well) .affinity {
+  display: none;
+}
+
+.well {
+  border: none;
 }
 
 .side div {

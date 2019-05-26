@@ -1,9 +1,10 @@
 <div class="msl-toggle-chart" [class.disabled]="disabled" [title]="disabled ? 'Select at least two seiyuu' : ''">
   <input type="checkbox" id="toggleChart" #toggle>
-  <label class="btn btn-default btn-block btn-sm toggle-chart" for="toggleChart">
+  <label class="btn btn-default btn-block btn-sm toggle-chart" for="toggleChart"
+         [title]="toggle.checked ? 'anime where all selected seiyuu are in at once' : 'anime relations between all selected seiyuu'">
     toggle anime {{toggle.checked ? 'list' : 'chart'}}
   </label>
-  <div class="legend">
+  <div class="legend" title="color - seiyuu affinity, how often they're in anime together">
     <span class="top-left"> &ndash; main only</span> / <span class="bottom-right">rest &ndash; </span>
   </div>
 </div>

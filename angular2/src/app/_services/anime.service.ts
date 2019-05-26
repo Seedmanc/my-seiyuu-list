@@ -83,7 +83,7 @@ export class AnimeService {
 
   private sharedAnime(rolesByAnimeSets: HashOfRoles[], tier?: 'main'|'!main'): Anime[] {
     if (!rolesByAnimeSets.length) return null;
-    let sharedAnimeMain;
+    let sharedAnimeMain, result, sharedAnimeRest = [];
 
     rolesByAnimeSets = JSON.parse(JSON.stringify(rolesByAnimeSets)); //TODO what the fuck;
 
@@ -100,10 +100,14 @@ export class AnimeService {
       );
 
       if (tier == 'main')
-        return sharedAnimeMain
+        result = sharedAnimeMain
       else    // return anime where selected seiyuu don't have main roles all at the same time
-        return roleIntersection(rolesByAnimeSets)
+        result = sharedAnimeRest = roleIntersection(rolesByAnimeSets)
           .filter(anime => !sharedAnimeMain.find(sharedMain => sharedMain._id == anime._id));
+
+      result.total = sharedAnimeMain.length + sharedAnimeRest.length;
+
+      return result;
     }
 
     return roleIntersection(rolesByAnimeSets);
@@ -146,16 +150,41 @@ export class AnimeService {
   }
 
   private makeChart(rolesByAnimeSets: HashOfRoles[]) {
+    let total:any = rolesByAnimeSets.map(seiyuu => Object.values(seiyuu));
+    total = total.map(seiyuu => seiyuu.length);
+
      let chart: Anime[][][] = rolesByAnimeSets.map((seiyuuX, x) => {
         return rolesByAnimeSets.map((seiyuuY, y) => {
+          let result;
           if (x < y) {
-            return this.sharedAnime([seiyuuX, seiyuuY], 'main');
+            result = this.sharedAnime([seiyuuX, seiyuuY], 'main');
+            // common titles to a combined pool of titles (excluding dupes)
+            result.affinity =  result.length /  [...new Set( [...Object.entries(seiyuuX), ...Object.entries(seiyuuY)].filter(([k,s]) => s.some(role => role.main)).map(([k,s]) => k) )]  .length;
+            // common titles to one seiyuu's total # of titles (asymmetrical)
+            //result.affinity =  result.length /  Object.values(seiyuuX).filter(s => s.some(r => r.main)).length;
+            // ser.melipharo's algo
+            //let mx = Object.entries(seiyuuX).filter(([k,s]) => s.some(r => r.main)).map(([k]) => k);
+            //let my = Object.entries(seiyuuY).filter(([k,s]) => s.some(r => r.main)).map(([k]) => k);
+           // result.affinity =  (result.length/ mx.filter(kx => !my.find(y => y==kx)).length + result.length/ my.filter(ky => !mx.find(x => x == ky)).length)/2;
+            // symmetrical version of 2nd algo
+            //result.affinity = (result.length / mx.length + result.length / my.length)/2
           } else if (x > y) {
-            return this.sharedAnime([seiyuuX, seiyuuY], '!main');
+            result = this.sharedAnime([seiyuuX, seiyuuY], '!main');
+            result.affinity =  result.total/ [...new Set([...Object.keys(seiyuuX),...Object.keys(seiyuuY)])].length;
+            //result.affinity =  result.total/ Object.keys(seiyuuX).length;
+            //result.affinity =  (result.total/ Object.keys(seiyuuX).filter(kx => !seiyuuY[kx]).length + result.total/ Object.keys(seiyuuY).filter(ky => !seiyuuX[ky]).length)/2;
+            //result.affinity =  (result.total / Object.keys(seiyuuX).length + result.total / Object.keys(seiyuuY).length)/2;
           } else
-            return [];
+            result = [];
+          return result;
         })
       });
+
+     let affinities: number[] = Utils.flattenDeep(chart.map(row => row.map(col => col['affinity'] || 0)));
+     let max = Math.max(...affinities);
+     let min = Math.min(...affinities.filter(a => !!a))/2;
+
+      chart.forEach(row => row.forEach((col:any) => col.affinity = (col.affinity-min)/(max-min) || 0));
 
      let animeIds = Utils.unique(Utils.flattenDeep<Anime>(chart), '_id')
        .map(a => +a._id);

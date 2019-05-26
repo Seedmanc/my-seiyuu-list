@@ -11,6 +11,7 @@
     </div>
     <div *ngFor="let col of row.slice().reverse(); let y = index" [style.width]="'calc('+(100/seiyuus.length-1) + '% - 0.5rem)'"
          class="cell c{{x}}-{{y}}" [ngClass]="{well: x != seiyuus.length-y-1, short:col.length <= 5, main:x < seiyuus.length-y-1}">
+      <div class="affinity" [style.opacity]="col.affinity"></div>
       <a *ngFor="let anime of col" [title]="anime.title + (anime.firstCharacter ? (':\n' + anime.firstCharacter) : '')"
          [href]="anime.link">
         <img class="anime-thumb" [src]="anime.thumb" *ngIf="anime.thumb"/>
