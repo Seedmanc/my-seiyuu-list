@@ -4,7 +4,7 @@ import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {BasicSeiyuu} from "../_models/seiyuu.model";
 
 export class MessagesService {
-  message$: Subject<{isError?:boolean, data?: string}> = new BehaviorSubject({});
+  message$: BehaviorSubject<{isError?:boolean, data?: string}> = new BehaviorSubject({});
   resetSearch$ = new Subject();
 
   private counts: any = {};

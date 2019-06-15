@@ -45,7 +45,6 @@ export class PhotoService {
       .combineLatest(this.pageDelta, x=>x)                                                                   .do(Utils.lg('photoPage'))
       .do(() => {
         this.pending = true;
-        this.messageSvc.status('please wait...');
       })
       .switchMap(names => this.wrapper(names)
         .do(photoPage => {  // request next page while user is viewing current one

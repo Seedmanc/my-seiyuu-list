@@ -62,7 +62,7 @@ export class SeiyuuService {
       }).subscribe();
 
     // make the list of seiyuu to display out of both selected seiyuu and namesakes
-    this.routeId$                                                                      .do(Utils.asrt('S routeId to displayList'))
+    this.routeId$                                                                                           .do(Utils.asrt('S routeId to displayList'))
       .map(ids => ids.map(id => this.cachedSeiyuu[id]))
       .do(seiyuus => {
         this.messageSvc.title(seiyuus);

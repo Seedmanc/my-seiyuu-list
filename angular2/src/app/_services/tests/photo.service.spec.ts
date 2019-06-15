@@ -157,7 +157,6 @@ describe('PhotoService', () => {
         data: (new Array(20)).fill('<span class="thumb"><a><img/></a></span>').join(''),
         paging: ''
       }).delay(500));
-      let spy2= spyOn(msgSvc, 'status');
 
       routingSvc.tab$.next('photos');
       seiyuuSvc.displayList$['next']([new Seiyuu({name: 'test seiyuu'})]);
@@ -166,7 +165,6 @@ describe('PhotoService', () => {
       expect(service.pendingNext).toBeTruthy();
       tick(500) ;
       expect(service.pendingNext).toBeFalsy();
-      expect(spy2).toHaveBeenCalledWith('please wait...');
 
       discardPeriodicTasks();
     }))

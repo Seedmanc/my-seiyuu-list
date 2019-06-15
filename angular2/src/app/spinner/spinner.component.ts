@@ -1,4 +1,5 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {MessagesService} from "../_services/messages.service";
 
 @Component({
   selector: 'msl-spinner',
@@ -20,14 +21,21 @@ import {Component, Input, OnInit} from '@angular/core';
     }
   `]
 })
-export class SpinnerComponent implements OnInit {
-
+export class SpinnerComponent implements OnInit, OnDestroy {
   @Input() size?: string = '28px';
   @Input() float?: string = 'none';
+  @Input() setStatus?: boolean;
 
-  constructor() { }
+  constructor(private messageService: MessagesService) { }
 
   ngOnInit() {
+    if (this.setStatus)
+      this.messageService.status('loading...')
+  }
+
+  ngOnDestroy() {
+    if (this.setStatus && this.messageService.message$.getValue() == 'loading...')
+      this.messageService.blank();
   }
 
 }

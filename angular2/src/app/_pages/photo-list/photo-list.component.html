@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-sm-12 text-center">
         <div id="photos-spinner" *ngIf="photoSvc.pending">
-          <msl-spinner size="calc(15vmin)"></msl-spinner>
+          <msl-spinner size="calc(15vmin)" [setStatus]="true"></msl-spinner>
         </div>
         <div id="thumbContainer" [innerHTML]="photoPage?.html" *ngIf="!photoSvc.pending && photoPage"></div>
       </div>

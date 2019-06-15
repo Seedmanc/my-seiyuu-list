@@ -17,7 +17,7 @@
       </tr>
       <tr>
         <td colspan=2>
-          <msl-spinner size="5rem" *ngIf="seiyuu.pending"></msl-spinner>
+          <msl-spinner size="5rem" *ngIf="seiyuu.pending" [setStatus]="true"></msl-spinner>
           <img class="vapic img-rounded" [src]="seiyuu.photo" *ngIf="!seiyuu.pending"/>
         </td>
       </tr>

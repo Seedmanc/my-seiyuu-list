@@ -1,5 +1,5 @@
 <div id="magazines-spinner" *ngIf="magazineSvc.pending">
-  <msl-spinner size="calc(15vmin)"></msl-spinner>
+  <msl-spinner size="calc(15vmin)" [setStatus]="true"></msl-spinner>
 </div>
 
 <div id="magazines" *ngIf="!magazineSvc.pending">
