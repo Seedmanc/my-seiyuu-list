@@ -18,7 +18,7 @@ describe('photo lookups', () => {
   });
 
   it('should load photo when a seiyuu is selected from photo page', () => {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 60000;
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
     AppPage.navigateTo('#/photos/9673');
     let panel = seiyuu.panel('Davidyuk Jenya');
 

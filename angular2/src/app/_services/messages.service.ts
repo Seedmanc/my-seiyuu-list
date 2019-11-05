@@ -2,6 +2,7 @@ import {Subject} from "rxjs/Subject";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
 
 import {BasicSeiyuu} from "../_models/seiyuu.model";
+import {Utils} from "./utils.service";
 
 export class MessagesService {
   message$: BehaviorSubject<{isError?:boolean, data?: string}> = new BehaviorSubject({});
@@ -37,14 +38,20 @@ export class MessagesService {
       ''}`;
   }
 
-  results(list: any, template: ((number) => string), singular?: boolean) { //TODO do I need the singular param?
+  results(list: any, template: ((number) => string)) {
     if (list) {
       let text = template(list);
-      let type = text.match(/\[(.+?)\]/g)[0] + (singular ? '' : 's');
-      let result = (list.length || list.total) ?
-        text :
-        'no '+type;
-      this.status(result.replace(/[\[\]]/g,'') + ' found');
+      let count = list.length || list.total || 0;
+      let match = text.match(/\[(.+?)\]/g);
+
+      if (!count)
+        text = match ?
+          ('no ' + match) :
+          text;
+      if (match) {
+        text = text + Utils.pluralize(count);
+      }
+      this.status(text.replace(/^0\s/,'no ').replace(/[\[\]]/g, '') + ' found');
     } else {
       this.totals();
     }

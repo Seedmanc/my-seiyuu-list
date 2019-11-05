@@ -70,12 +70,13 @@ describe('MessagesService', () => {
 
     service.results([], ()=>'a [derp] 7');
     expect(spy).toHaveBeenCalledWith('no derps found');
+    spy.calls.reset();
 
-    service.results([], ()=>'a [derp] 7', true);
-    expect(spy).toHaveBeenCalledWith('no derp found');
+    service.results([], ()=>'a derp 7');
+    expect(spy).toHaveBeenCalledWith('a derp 7 found');
 
-    service.results([1,2], () => '[hurr]');
-    expect(spy.calls.mostRecent().args[0]).toBe('hurr found');
+    service.results([1,2], (n) => `${n.length} [hurr]`);
+    expect(spy.calls.mostRecent().args[0]).toBe('2 hurrs found');
    })
   );
 

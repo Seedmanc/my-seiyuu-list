@@ -33,7 +33,7 @@ export class MagazineListComponent extends PageComponent implements OnInit {
           magazines,
           magazines => {
             let iss = magazines.reduce((p, c) => p + c.issues.length, 0);
-            return `${iss} issue${Utils.pluralize(iss)} in ${magazines.length} [magazine]${Utils.pluralize(magazines.length)}`;
+            return `${iss} issue${Utils.pluralize(iss)} in ${magazines.length} [magazine]`;
           }
         )
       )

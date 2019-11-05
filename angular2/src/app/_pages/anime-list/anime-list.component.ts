@@ -53,8 +53,7 @@ export class AnimeListComponent extends PageComponent implements OnInit {
 
         this.messageSvc.results(
           anime,
-          anime => `${anime.length} [${entity}]`,
-          true
+          anime => `${anime.length} ${entity}`
         );
       })
       .subscribe(anime => {

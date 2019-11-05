@@ -30,7 +30,7 @@ export class PhotoListComponent extends PageComponent implements OnInit {
       .do(page =>
         this.messageSvc.results(
           page,
-          page => `${page.total} [photo]${Utils.pluralize(page.total)}` //TODO do I need pluralize if I have singular param?
+          page => `${page.total} [photo]`
         )
       )
       .subscribe(result => this.photoPage = result);

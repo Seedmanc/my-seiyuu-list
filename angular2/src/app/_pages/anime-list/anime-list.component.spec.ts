@@ -67,8 +67,7 @@ describe('AnimeListComponent', () => {
 
       expect(spy).toHaveBeenCalled();
       expect(spy.calls.mostRecent().args[0]).toBe(l);
-      expect(spy.calls.mostRecent().args[1].toString()).toBe('anime => `${anime.length} [${entity}]`');
-      expect(spy.calls.mostRecent().args[2]).toBe(true);
+      expect(spy.calls.mostRecent().args[1].toString()).toBe('anime => `${anime.length} ${entity}`');
     })
   );
 
