@@ -1,5 +1,5 @@
 import {TestBed, inject, fakeAsync, tick, discardPeriodicTasks, getTestBed} from '@angular/core/testing';
-
+import {of} from "rxjs/observable/of";
 import { SeiyuuService } from '../seiyuu.service';
 import {MessagesService} from "../messages.service";
 import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
@@ -7,28 +7,33 @@ import {env} from "../../../environments/environment";
 import {RoutingServiceMock} from "./routing.service.mock";
 import {RoutingService} from "../routing.service";
 import {basicList, mockList} from "./seiyuu.service.spec";
+import {PhotoService} from "../photo.service";
+import {RestService} from "../rest.service";
+import {Subject} from "rxjs/Rx";
 
-describe('zSeiyuuService', () => {
+xdescribe('zSeiyuuService', () => {
   let x;
   let injector: TestBed;
   let service: SeiyuuService;
   let backend: HttpTestingController;
+  let photoService: PhotoService;
 
   beforeEach(() => {
     x = undefined;
     TestBed.configureTestingModule({
-      providers: [ MessagesService, {provide: RoutingService, useClass: RoutingServiceMock} ],
+      providers: [ MessagesService, PhotoService, {provide: RoutingService, useClass: RoutingServiceMock} ],
       imports:[HttpClientTestingModule ]
     });
     injector = getTestBed();
     service = injector.get(SeiyuuService);
+    photoService = injector.get(PhotoService);
     backend = injector.get(HttpTestingController);
   });
   afterEach(() => {
-    backend.verify({ ignoreCancelled: true});
+    //backend.verify({ ignoreCancelled: true});
   });
 
-   xit('should report if loading the brief list fails with 404',
+  it('should report if loading the brief list fails with 404',
      inject([ MessagesService],
        ( msgSvc:MessagesService) => {
          let spy = spyOn(msgSvc, 'error');
@@ -45,7 +50,7 @@ describe('zSeiyuuService', () => {
        })
    );
 
-  xit('should report if loading the brief list fails with a network error',
+  it('should report if loading the brief list fails with a network error',
      inject([ MessagesService],
        (  msgSvc:MessagesService) => {
          let spy = spyOn(msgSvc, 'error');
@@ -83,4 +88,43 @@ describe('zSeiyuuService', () => {
          discardPeriodicTasks();
        })
    ));
+
+  it('wrapper()', // side effects
+    inject([SeiyuuService, RestService ],
+      ( ) => {
+        let r = {
+          html:'<span class="thumb img-thumbnail"><a href="" target="_blank"><img></a></span><span class="thumb img-thumbnail"><a href="" target="_blank"><img></a></span><span class="thumb img-thumbnail"><a href="" target="_blank"><img></a></span><span class="thumb more img-thumbnail"><div>more at</div><b><a href="https://koe.booru.org/index.php?page=post&amp;s=list&amp;tags=~test_seiyuu" target="_blank">koe.booru.org</a></b></span>',
+          pageNum: 1,
+          total: 50,
+          next: false,
+          prev: true
+        };
+        let spy = spyOn<any>(photoService,'getPhotoPage').and.returnValue(of(r));
+
+        photoService['cache'] = {};
+        this.page = 1;
+
+        let $ = new Subject();
+
+        $.flatMap(s => photoService['wrapper'](s[0], s[1]))
+          .subscribe(response => x = response);
+
+        $.next([]);
+        expect(x).toBeFalsy();
+        expect(spy).not.toHaveBeenCalled();
+
+        $.flatMap(s => photoService['wrapper'](s[0], s[1]))
+          .subscribe(response => x = response);
+        $.next([['test seiyuu'],2]);
+        expect(spy).toHaveBeenCalledWith('test_seiyuu+solo',2);
+        expect(x).toBe(r);
+        x=undefined;
+        spy.calls.reset();
+        $.flatMap(s => photoService['wrapper'](s[0], s[1]))
+          .subscribe(response => x = response);
+        $.next([['test seiyuu'],2]);
+        expect(spy).not.toHaveBeenCalled();
+        expect(x).toBe(r);
+      })
+  );
 });
