@@ -7,6 +7,7 @@ import {AnimeService} from "../../_services/anime.service";
 import {SorterService} from "../../_services/sorter.service";
 import {MessagesService} from "../../_services/messages.service";
 import {SeiyuuService} from "../../_services/seiyuu.service";
+import {BehaviorSubject} from "rxjs/Rx";
 
 @Component({
   selector: 'msl-anime-list',
@@ -27,6 +28,7 @@ export class AnimeListComponent extends PageComponent implements OnInit {
   ];
   tierOrder: boolean = true;
   mainOnly: boolean = false;
+  tierGrouping$ = new BehaviorSubject(true);
 
   constructor(protected route: ActivatedRoute,
               protected routingSvc: RoutingService,
@@ -56,10 +58,17 @@ export class AnimeListComponent extends PageComponent implements OnInit {
           anime => `${anime.length} ${entity}`
         );
       })
-      .subscribe(anime => {
+      .combineLatest(this.tierGrouping$)
+      .subscribe(([anime, group]) => {
         anime = anime || [];
-        this.output[0].list = anime.filter(a => a.main);
-        this.output[1].list = anime.filter(a => !a.main);
+
+        if (group) {
+          this.output.find(o => o.type == 'main').list = anime.filter(a => a.main);
+          this.output.find(o => o.type != 'main').list = anime.filter(a => !a.main);
+        } else {
+          this.output.find(o => o.type == 'main').list = anime;
+          this.output.find(o => o.type != 'main').list = [];
+        }
       });
 
     if (localStorage.mainOnly) {
@@ -71,6 +80,13 @@ export class AnimeListComponent extends PageComponent implements OnInit {
   onMainOnlyChange(value) {
     localStorage.mainOnly = value;
     this.animeSvc.mainOnly$.next(value);
+  }
+
+  toggleTierGrouping() {
+    if (this.tierGrouping$.getValue())
+      this.tierOrder = !this.tierOrder;
+    if (this.tierOrder)
+      this.tierGrouping$.next(!this.tierGrouping$.getValue());
   }
 
 }

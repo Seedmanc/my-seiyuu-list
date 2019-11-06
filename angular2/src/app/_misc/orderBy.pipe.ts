@@ -10,7 +10,11 @@ export class OrderByPipe implements PipeTransform {
       let dif = asc ? 1:-1;
 
       return fields.reduce((prev, curr) =>
-          e1[curr] > e2[curr] ? dif : e1[curr] == e2[curr] ? prev : -dif,
+          e1[curr] > e2[curr] ?
+            dif :
+            e1[curr] == e2[curr] ?
+              prev :
+              -dif,
         0);
     });
   }

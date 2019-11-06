@@ -96,6 +96,4 @@ describe('RoutingService', () => {
     service.tab$.next('notphoto');
     expect(result).toBeFalsy();
   }));
-
-  //TODO routeId$ can't be properly tested it seems as it requires a real Router
 });

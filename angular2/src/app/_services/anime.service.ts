@@ -85,7 +85,7 @@ export class AnimeService {
     if (!rolesByAnimeSets.length) return null;
     let sharedAnimeMain, result, sharedAnimeRest = [];
 
-    rolesByAnimeSets = JSON.parse(JSON.stringify(rolesByAnimeSets)); //TODO what the fuck;
+    rolesByAnimeSets = JSON.parse(JSON.stringify(rolesByAnimeSets)); //decoupling
 
     if (tier) { // prefilter the role sets by main tier
       sharedAnimeMain = roleIntersection(

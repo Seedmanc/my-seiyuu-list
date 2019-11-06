@@ -1,6 +1,7 @@
 export class SorterService {
   ascending: boolean = true;
   orderByField: string;
+  fixed: string;
 
   constructor() { }
 

@@ -42,11 +42,10 @@ export class MagazineService {
     return names.length ?
 
       this.cache[names.join()] ?
-
-        of(this.cache[names.join()])
-        : this.rest.googleQueryCall(names)                                                      .do(Utils.lg('Magazines requested', 'warn'))
+        of(this.cache[names.join()]) :
+        this.rest.googleQueryCall(names)                                                      .do(Utils.lg('Magazines requested', 'warn'))
           .catch(err => {
-            let result = of(err); //TODO test?
+            let result = of(err);
 
             if (err.error && err.error.message && err.error.message.includes('callback'))
               result = empty();

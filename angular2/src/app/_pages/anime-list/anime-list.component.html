@@ -35,8 +35,8 @@
         <th class="text-right char">
           <msl-sort-link field="firstCharacter">character</msl-sort-link>
         </th>
-        <th class="text-center tier" [class.locked]="mainOnly">
-          <a href="javascript:void(0)" (click)="tierOrder=!tierOrder">role tier</a>
+        <th class="text-center tier" [class.locked]="mainOnly" [class.inactive]="!(tierGrouping$ | async)">
+          <msl-sort-link field="main" fixed (onSort)="toggleTierGrouping($event)">role tier</msl-sort-link>
         </th>
       </tr>
     </thead>
@@ -54,7 +54,7 @@
           <td class="text-center">{{idx + 1}}</td>
           <td class="anime-title">
             <a [href]="anime.link">
-              <img class="anime-thumb" *ngIf="anime.thumb" [src]="anime.thumb" /> <!--TODO fallback-->
+              <img class="anime-thumb" *ngIf="anime.thumb" [src]="anime.thumb" /> <!--TO DO fallback?-->
             </a>
             &nbsp;
             <a [href]="anime.link">{{anime.title}}</a>

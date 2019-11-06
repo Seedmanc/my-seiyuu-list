@@ -121,6 +121,14 @@ th.tier {
   overflow-x: hidden;
 }
 
+/deep/ .inactive .content::before,
+/deep/ .inactive *,
+/deep/ .inactive .content::after {
+  content: ''!important;
+  opacity: 0.9;
+  text-decoration: none!important;
+}
+
 @media (max-width: 768px) {
   .wrapper {
     max-height: calc(100vh - 520px);

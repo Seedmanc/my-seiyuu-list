@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {SorterService} from "../_services/sorter.service";
 
 @Component({
@@ -8,21 +8,30 @@ import {SorterService} from "../_services/sorter.service";
 })
 export class SortLinkComponent implements OnInit {
   @ViewChild('content') content;
+
   @Input() field: string;
   @Input() default;
+  @Input() fixed;
+
+  @Output() onSort = new EventEmitter();
 
   constructor(public sorter: SorterService) {  }
 
   ngOnInit() {
+    this.fixed = (typeof this.fixed != 'undefined');
     this.field = this.field || this.content.nativeElement.textContent;
 
-    if (typeof this.default != 'undefined') {
-      this.sorter.orderByField = this.field;
+    if (this.fixed) {
+      this.sorter.fixed = this.field;
     }
+    if (typeof this.default != 'undefined')
+        this.sort();
   }
 
   sort() {
-    this.sorter.sort(this.field);
+    if (!this.fixed)
+      this.sorter.sort(this.field);
+    this.onSort.next(this.sorter.ascending);
   }
 
 }
