@@ -2,7 +2,7 @@ import {Magazine} from "../magazine.model";
 
 describe('Magazine model', () => {
   it('should work, duh', () => {
-    let magazine = new Magazine('hm3 Spe cial:', [{issue: '22 2005', seiyuus:'Maeda Konomi , "test", Chihara Minori'}]);
+    let magazine = new Magazine('hm3 Spe cial:', [{issue: '22 2005', seiyuus:'Maeda Konomi , "test1", Chihara Minori'}]);
 
     expect(magazine.magazine).toBe('hm3 Spe cial');
     expect(magazine.logo).toBe('assets/hm3_spe_cial.png');

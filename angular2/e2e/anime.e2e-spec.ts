@@ -126,4 +126,34 @@ describe('anime lookups', () => {
     page.searchInput().sendKeys(mn);
     expect(anime.tbody('main').$$('tr').count()).toBeGreaterThanOrEqual(1);
   });
+
+  it('should toggle grouping anime by tier', () => {
+    page.searchInput().sendKeys(cm );
+    page.searchInput().clear();
+    page.searchInput().sendKeys(ka);
+
+
+    expect(anime.tbody('main').isPresent()).toBeTruthy();
+    expect(anime.rolesTable().$('tbody tr td:nth-child(4)').getText()).toBe('main');
+    expect(anime.tbody('main').element(by.cssContainingText('tr td:nth-child(4)', 'supporting')).isPresent()).toBeFalsy();
+
+    seiyuu.panel(cm).container.click();
+
+    expect(anime.tbody('supporting').element(by.cssContainingText('tr td:nth-child(4)', 'main')).isPresent()).toBeFalsy();
+
+    anime.tier().click();
+    expect(anime.rolesTable().$('tbody tr td:nth-child(4)').getText()).toBe('supporting');
+    seiyuu.panel(ka).container.click();
+    expect(anime.rolesTable().$('tbody tr td:nth-child(4)').getText()).toBe('supporting');
+    seiyuu.panel(cm).container.click();
+
+    anime.tier().click();
+    expect(anime.inactive().isPresent()).toBeTruthy();
+    expect(anime.rolesTable().$('tbody tr:nth-child(1) td:nth-child(4)').getText()).toBe('main');
+    expect(anime.rolesTable().$('tbody tr:nth-child(2) td:nth-child(4)').getText()).toBe('supporting');
+    let title = anime.rolesTable().$('tbody tr:nth-child(2) td:nth-child(2)').getText();
+    seiyuu.panel(ka).container.click();
+    expect(anime.rolesTable().$('tbody tr:nth-child(2) td:nth-child(4)').getText()).toBe('main');
+    expect(anime.rolesTable().$('tbody tr:nth-child(2) td:nth-child(2)').getText()).toBe(title);
+  });
 });

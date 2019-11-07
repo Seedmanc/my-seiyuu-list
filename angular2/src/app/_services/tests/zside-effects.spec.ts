@@ -10,27 +10,28 @@ import {basicList, mockList} from "./seiyuu.service.spec";
 import {PhotoService} from "../photo.service";
 import {RestService} from "../rest.service";
 import {Subject} from "rxjs/Rx";
+import {Seiyuu} from "../../_models/seiyuu.model";
+import {MagazineService} from "../magazine.service";
 
-xdescribe('zSeiyuuService', () => {
+xdescribe('errored services', () => {
   let x;
   let injector: TestBed;
   let service: SeiyuuService;
   let backend: HttpTestingController;
   let photoService: PhotoService;
+  let magazineService: MagazineService;
 
   beforeEach(() => {
     x = undefined;
     TestBed.configureTestingModule({
-      providers: [ MessagesService, PhotoService, {provide: RoutingService, useClass: RoutingServiceMock} ],
+      providers: [MagazineService, MessagesService, PhotoService, {provide: RoutingService, useClass: RoutingServiceMock} ],
       imports:[HttpClientTestingModule ]
     });
     injector = getTestBed();
     service = injector.get(SeiyuuService);
     photoService = injector.get(PhotoService);
+    magazineService = TestBed.get(MagazineService);
     backend = injector.get(HttpTestingController);
-  });
-  afterEach(() => {
-    //backend.verify({ ignoreCancelled: true});
   });
 
   it('should report if loading the brief list fails with 404',
@@ -47,6 +48,7 @@ xdescribe('zSeiyuuService', () => {
          expect(x).toBeFalsy();
          expect(service.pending).toBeFalsy();
          expect(spy).toHaveBeenCalledWith('Error getting cached list: 404');
+         backend.verify({ ignoreCancelled: true});
        })
    );
 
@@ -66,6 +68,7 @@ xdescribe('zSeiyuuService', () => {
          expect(x).toBeFalsy();
          expect(service.pending).toBeFalsy();
          expect(spy).toHaveBeenCalledWith('Error getting cached list: 0');
+         backend.verify({ ignoreCancelled: true});
        })
    );
 
@@ -86,6 +89,7 @@ xdescribe('zSeiyuuService', () => {
 
          expect(spy).toHaveBeenCalledWith('Error loading seiyuu details: 500');
          discardPeriodicTasks();
+         backend.verify({ ignoreCancelled: true});
        })
    ));
 
@@ -125,6 +129,28 @@ xdescribe('zSeiyuuService', () => {
         $.next([['test seiyuu'],2]);
         expect(spy).not.toHaveBeenCalled();
         expect(x).toBe(r);
+      })
+  );
+
+  it('should report errors',
+    inject([SeiyuuService, RestService, RoutingService, MessagesService],
+      (seiyuuSvc: SeiyuuService, rest: RestService,  routingSvc: RoutingService, msgSvc: MessagesService) => {
+        magazineService.displayMagazines$.subscribe(data => x = data);
+        magazineService.pending = true;
+
+        spyOn(rest, 'googleQueryCall').and
+          .returnValue(of(
+            {
+              errors: [{message:'test4'}]
+            } ));
+        let spy2=spyOn(msgSvc,'error');
+
+        routingSvc.tab$.next('magazines');
+        seiyuuSvc.displayList$['next']([new Seiyuu({name: 'Maeda Konomi'})]);
+
+        expect(spy2).toHaveBeenCalledWith('test4');
+        expect(x).toBeFalsy();
+        expect(magazineService.pending).toBeFalsy();
       })
   );
 });

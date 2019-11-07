@@ -34,7 +34,7 @@ describe('photo lookups', () => {
   });
 
   it('should update list as seiyuu are added and removed', () => {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 60000;
     let name = 'Chihara Minori';
     app.searchInput().sendKeys(name);
     let panel = seiyuu.panel(name);

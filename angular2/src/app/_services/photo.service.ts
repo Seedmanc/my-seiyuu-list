@@ -67,7 +67,8 @@ export class PhotoService {
   }
 
   private wrapper(names: string[], pageNum: number = this.page): Observable<PhotoPage> {
-    let hasNames = !!names.length;
+    if (!names) return of(null);
+    let hasNames = !!(names && names.length);
     if (names.length == 1) names.push('solo');
 
     let tags = names.map(n => encodeURIComponent(n.replace(/\s+/g, '_')).toLowerCase())

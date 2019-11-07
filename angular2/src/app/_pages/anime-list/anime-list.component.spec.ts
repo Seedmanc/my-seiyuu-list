@@ -14,6 +14,7 @@ import {SorterService} from "../../_services/sorter.service";
 import {ToggleChartComponent} from "../../toggle-chart/toggle-chart.component";
 import {AnimeChartComponent} from "../../anime-chart/anime-chart.component";
 import {SpinnerComponent} from "../../spinner/spinner.component";
+import {Anime} from "../../_models/anime.model";
 
 describe('AnimeListComponent', () => {
   let component: AnimeListComponent;
@@ -68,6 +69,27 @@ describe('AnimeListComponent', () => {
       expect(spy).toHaveBeenCalled();
       expect(spy.calls.mostRecent().args[0]).toBe(l);
       expect(spy.calls.mostRecent().args[1].toString()).toBe('anime => `${anime.length} ${entity}`');
+    })
+  );
+
+  it('should toggle role tier grouping', inject([AnimeService, SeiyuuService],
+    (service: AnimeService) => {
+      let l = [{main: true}, {main: false}, {main: false}];
+      let x;
+
+      service.displayAnime$.next(<Anime[]>l);
+      component.tierGrouping$.subscribe(_ => x=_);
+
+      component.toggleTierGrouping();
+      expect(component.output.find(o=>o.type=='main').list.length).toBe(1);
+      expect(component.output.find(o=>o.type!='main').list.length).toBe(2);
+      expect(component.tierOrder).toBeFalsy();
+      component.toggleTierGrouping();
+      expect(component.output.find(o=>o.type=='main').list.length).toBe(3);
+      expect(component.output.find(o=>o.type!='main').list.length).toBe(0);
+      expect(component.tierOrder).toBeTruthy();
+      component.toggleTierGrouping();
+      expect(x).toBe(true);
     })
   );
 

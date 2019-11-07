@@ -29,4 +29,7 @@ export class AnimePage {
     return element(by.css('.char a'));
   }
 
+  inactive() {
+    return element(by.css('.inactive'));
+  }
 }

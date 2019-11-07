@@ -40,9 +40,9 @@ describe('HeaderComponent', () => {
   });
 
   it('should display messages', inject([MessagesService], (msgSvc: MessagesService) => {
-    msgSvc.message$.next({data:'test'});
+    msgSvc.message$.next({data:'test6'});
     fixture.detectChanges();
-    expect(fixture.nativeElement.querySelector('#status').textContent).toContain('test');
+    expect(fixture.nativeElement.querySelector('#status').textContent).toContain('test6');
     msgSvc.message$.next({data:'error', isError: true});
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('#status').textContent).toContain('error');
