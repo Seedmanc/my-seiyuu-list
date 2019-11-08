@@ -59,7 +59,7 @@ export class AnimeService {
             .subscribe();
         }
       })
-      .combineLatest(this.seiyuuSvc.selected$.distinctUntilChanged(), x => x)                      .do(Utils.asrt('Anime results'))   // TODO toggle grouping by role tier
+      .combineLatest(this.seiyuuSvc.selected$.distinctUntilChanged(), x => x)                      .do(Utils.asrt('Anime results'))
       .subscribe(this.displayAnime$);
   }
 
