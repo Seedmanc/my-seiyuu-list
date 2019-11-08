@@ -67,4 +67,12 @@ describe('magazine lookups', () => {
     expect(app.statusBar().getText()).toContain(`no magazines found`);
   });
 
+  it('should pick seiyuu from magazine list', () => {
+    AppPage.navigateTo('#/magazines/53');
+
+    browser.wait(EC.presenceOf(element(by.css('#magazines'))), to);
+    page.magazines().$('.seiyuu.available').click();
+    expect(seiyuu.containers().count()).toBe(2);
+  });
+
 });

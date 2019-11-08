@@ -94,6 +94,7 @@
 }
 
 .seiyuu:last-of-type::after {
+  display: inline-block;
   content: '.';
 }
 

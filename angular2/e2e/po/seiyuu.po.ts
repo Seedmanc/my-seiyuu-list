@@ -6,7 +6,7 @@ export class SeiyuuPage {
   }
 
   containers() {
-    return element.all(by.css('.seiyuu'));
+    return element.all(by.css('.seiyuu.well'));
   }
 
   panel(name: string, namesake?:boolean) {
