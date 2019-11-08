@@ -85,10 +85,12 @@
 
 .seiyuu {
   font-size: 80%;
+  pointer-events: none;
 }
 
 .seiyuu + .seiyuu::before {
-  content: ', ';
+  margin-right: 0.5rem;
+  content: ',';
 }
 
 .seiyuu:last-of-type::after {
@@ -102,4 +104,13 @@
 .img {
   max-width: 120px;
   min-height: 30px;
+}
+
+.available {
+  pointer-events: all;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.available:hover {
+  color: #00aa66;
 }

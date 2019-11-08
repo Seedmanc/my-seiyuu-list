@@ -1,20 +1,7 @@
 .container {
-  position: relative;
   min-width: 320px;
 }
 
 #list-wrapper {
   z-index: 1;
-}
-
-#footer-wrapper {
-  position: absolute;
-  width: 100%;
-  top: calc(100vh - 4.1rem);
-}
-
-@media (max-width: 768px) {
-  #footer-wrapper {
-    top: calc(100vh - 7.7rem);
-  }
 }

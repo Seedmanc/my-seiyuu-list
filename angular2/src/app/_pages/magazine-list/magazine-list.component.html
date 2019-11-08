@@ -11,7 +11,8 @@
       <div class="issue-row" *ngFor="let i of m.issues">
         <div class="issue">{{i.issue}}</div>
         <div class="seiyuus">
-          <span class="seiyuu" *ngFor="let s of i.seiyuus" [class.selected]="isSelected(s)">{{s}}</span>
+          <span class="seiyuu" *ngFor="let s of i.seiyuus" (click)="addSeiyuu(s)" [class.available]="isAvailable(s)"
+                [class.selected]="isSelected(s)">{{s}}</span>
         </div>
       </div>
     </div>

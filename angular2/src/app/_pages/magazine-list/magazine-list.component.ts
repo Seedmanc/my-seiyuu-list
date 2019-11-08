@@ -7,6 +7,7 @@ import {MagazineService} from "../../_services/magazine.service";
 import {Utils} from "../../_services/utils.service";
 import {MessagesService} from "../../_services/messages.service";
 import {Magazine} from "../../_models/magazine.model";
+import {SeiyuuService} from "../../_services/seiyuu.service";
 
 @Component({
   selector: 'msl-magazine-list',
@@ -17,6 +18,7 @@ export class MagazineListComponent extends PageComponent implements OnInit {
   list: Magazine[];
 
   constructor(public magazineSvc: MagazineService,
+              private seiyuuSvc: SeiyuuService,
               private messageSvc: MessagesService,
               protected route: ActivatedRoute,
               protected routingSvc: RoutingService) {
@@ -40,8 +42,21 @@ export class MagazineListComponent extends PageComponent implements OnInit {
       .subscribe(x => this.list = x);
   }
 
-  isSelected(s: string): boolean {
-    return this.magazineSvc.selectedSeiyuu.includes(s);
+  isSelected(name: string): boolean {
+    return this.magazineSvc.selectedSeiyuu.includes(name);
+  }
+
+  isAvailable(name: string): boolean {
+    return this.seiyuuSvc.isAvailable(name) && !this.isSelected(name);
+  }
+
+  addSeiyuu(name: string) {
+    let search:HTMLInputElement = document.querySelector('#searchQuery'); //hax
+    let evt = document.createEvent("HTMLEvents");
+
+    search.value = name;
+    evt.initEvent("change", false, true);
+    search.dispatchEvent(evt);
   }
 
 }

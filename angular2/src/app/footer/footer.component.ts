@@ -1,4 +1,4 @@
-import {Component, ElementRef, Renderer2, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnInit, Renderer2, ViewChild} from '@angular/core';
 import {RankingComponent} from "../ranking/ranking.component";
 import {SeiyuuService} from "../_services/seiyuu.service";
 
@@ -7,18 +7,19 @@ import {SeiyuuService} from "../_services/seiyuu.service";
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.css']
 })
-export class FooterComponent {
+export class FooterComponent implements OnInit {
   @ViewChild(RankingComponent) mslRanking: RankingComponent;
 
   disqusVisible: boolean;
 
   constructor(private el: ElementRef, private renderer: Renderer2, public seiyuuSvc: SeiyuuService) { }
 
+  ngOnInit() {
+  }
+
   toggleDisqus() {
     this.disqusVisible = !this.disqusVisible;
 
-    if (this.disqusVisible)
-      setTimeout(() => window.scrollTo(0,document.body.scrollHeight), 250);
     if (window['DISQUS']) return;
 
     const script = this.renderer.createElement('script');

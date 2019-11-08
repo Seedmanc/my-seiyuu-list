@@ -28,6 +28,8 @@ export class SeiyuuService {
   private updateRequest$: Subject<number> = new Subject();
   private namesake$: BehaviorSubject<BasicSeiyuu[]> = new BehaviorSubject([]);
   private cachedSeiyuu: {[key: number]: BasicSeiyuu} = {};
+  private totalHash: {[key: string]: boolean} = {};
+
 
 
   constructor(private rest: RestService,
@@ -38,6 +40,11 @@ export class SeiyuuService {
     this.totalList$ = this.getTotalList()                                                                  .do(Utils.lg('Seiyuu list requested', 'warn'))
       .do(() => this.pending = false)
       .publishLast().refCount();
+
+    this.totalList$.subscribe(list => {
+      this.totalHash = {};
+      list.forEach(bs => this.totalHash[bs.displayName] = true);
+    });
 
     // ensure ids received from routing correspond to real values when they're ready
     this.routeId$ = this.routingSvc.routeId$.skip(1)
@@ -180,6 +187,10 @@ export class SeiyuuService {
 
         throw err;
       });
+  }
+
+  isAvailable(name: string):boolean {
+    return this.totalHash[name];
   }
 
   getRanking(pending): Observable<BasicSeiyuu[]> {
