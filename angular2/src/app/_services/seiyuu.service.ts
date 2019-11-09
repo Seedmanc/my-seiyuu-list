@@ -12,8 +12,9 @@ import {MessagesService} from "./messages.service";
 import {Utils} from "./utils.service";
 import {RoutingService} from "./routing.service";
 import {env} from "../../environments/environment";
+import {EMPTY} from "rxjs/index";
 
-@Injectable({providedIn:'root'})
+@Injectable({providedIn: 'root'})
 export class SeiyuuService {
   totalList$: Observable<BasicSeiyuu[]>;
   displayList$: BehaviorSubject<BasicSeiyuu[]> = new BehaviorSubject([]);
@@ -72,7 +73,7 @@ export class SeiyuuService {
     this.routeId$                                                                                           .do(Utils.asrt('S routeId to displayList'))
       .map(ids => ids.map(id => this.cachedSeiyuu[id]))
       .do(seiyuus => {
-        this.messageSvc.title(seiyuus);
+        MessagesService.title(seiyuus);
 
         if (seiyuus.every(seiyuu => !seiyuu.pending)) {
           this.loadedSeiyuu$.next(seiyuus);
@@ -147,6 +148,37 @@ export class SeiyuuService {
       .subscribe(([,search]) => this.messageSvc.error(`"${search}" is not found`));
   }
 
+  isAvailable(name: string): boolean {
+    return this.totalHash[name];
+  }
+
+  getRanking(pending): Observable<BasicSeiyuu[]> {
+    pending.is = true;
+
+    return this.totalList$
+      .do(list => {
+        if (!this.rankingLoaded)
+          this.rest.mongoCall({
+            coll: env.seiyuuDB,
+            mode: 'GET',
+            query: {
+              f: {hits: 1, accessed: 1}
+            }
+          })
+            .do(newList => {
+              newList.forEach(newSeiyuu => {
+                let oldSeiyuu = list.find(seiyuu => seiyuu._id == newSeiyuu._id);
+                oldSeiyuu && oldSeiyuu.upgrade(newSeiyuu);
+              });
+
+              this.rankingLoaded = true;
+            })
+            .finally(() => pending.is = false)
+            .subscribe()
+        else
+          pending.is = false;
+      });
+  }
 
   private loadByIds(ids: number[]): Observable<Seiyuu[]> {
     return this.rest.mongoCall({
@@ -159,7 +191,7 @@ export class SeiyuuService {
       }
     }).map(list => list.map(el => new Seiyuu(el)))
       .catch(err => {
-        this.messageSvc.error('Error loading seiyuu details: '+err.status);
+        this.messageSvc.error('Error loading seiyuu details: ' + err.status);
 
         console.warn(err.message, err.error && err.error.message);
         ids.forEach(id => this.removeById(id));
@@ -180,44 +212,13 @@ export class SeiyuuService {
       .do(list => list.forEach(seiyuu => this.cachedSeiyuu[seiyuu._id] = seiyuu))
       .do(list => this.messageSvc.setTotals({seiyuu: list.length}))
       .catch(err => {
-        this.messageSvc.error('Error getting cached list: '+err.status);
+        this.messageSvc.error('Error getting cached list: ' + err.status);
 
         console.warn(err.message, err.error && err.error.message);
         this.pending = false;
 
+        if (env.emptyInCatch) return EMPTY;
         throw err;
-      });
-  }
-
-  isAvailable(name: string):boolean {
-    return this.totalHash[name];
-  }
-
-  getRanking(pending): Observable<BasicSeiyuu[]> {
-    pending.is = true;
-
-     return this.totalList$
-      .do(list => {
-        if (!this.rankingLoaded)
-          this.rest.mongoCall({
-            coll: env.seiyuuDB,
-            mode: 'GET',
-            query: {
-              f: {hits: 1, accessed: 1}
-            }
-          })
-            .do(newList => {
-              newList.forEach(newSeiyuu => {
-                let oldSeiyuu = list.find(seiyuu => seiyuu._id == newSeiyuu._id);
-                oldSeiyuu && oldSeiyuu.upgrade(newSeiyuu);
-              });
-
-              this.rankingLoaded = true;
-            })
-            .finally(() =>pending.is = false)
-            .subscribe()
-        else
-          pending.is = false;
       });
   }
 

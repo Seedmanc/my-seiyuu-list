@@ -2,7 +2,6 @@ import {Injectable} from '@angular/core';
 import {Observable} from "rxjs/Observable";
 import {of} from "rxjs/observable/of";
 import {_throw} from "rxjs/observable/throw";
-import {empty} from "rxjs/observable/empty";
 
 import {RestService} from "./rest.service";
 import {MessagesService} from "./messages.service";
@@ -12,6 +11,8 @@ import {Magazine} from "../_models/magazine.model";
 import {Utils} from "./utils.service";
 import {Seiyuu} from "../_models/seiyuu.model";
 import {ReplaySubject} from "rxjs/ReplaySubject";
+import {EMPTY} from "rxjs/index";
+import {env} from "../../environments/environment";
 
 @Injectable()
 export class MagazineService {
@@ -26,7 +27,7 @@ export class MagazineService {
               private routingSvc: RoutingService,
               private seiyuuSvc: SeiyuuService) {
 
-    this.seiyuuSvc.displayList$                                                                   .do(Utils.asrt('M displayList', x => Array.isArray(x)))
+    this.seiyuuSvc.displayList$                                                               .do(Utils.asrt('M displayList', x => Array.isArray(x)))
       .do(seiyuus => this.selectedSeiyuu = seiyuus.map(s => s.displayName))
       .let(this.routingSvc.runOnTab<Seiyuu[]>('magazines'))
       .map(seiyuus => seiyuus.map(seiyuu => seiyuu.displayName).sort())
@@ -47,8 +48,8 @@ export class MagazineService {
           .catch(err => {
             let result = of(err);
 
-            if (err.error && err.error.message && err.error.message.includes('callback'))
-              result = empty();
+            if (env.emptyInCatch || err.error && err.error.message && err.error.message.includes('callback'))
+              result = EMPTY;
 
             return result;
           })

@@ -36,7 +36,7 @@ export class PhotoService {
               private messageSvc: MessagesService) {
 
     this.pageDelta
-      .subscribe(delta => this.page = Math.max(0, this.page+delta));
+      .subscribe(delta => this.page = Math.max(0, this.page + delta));
 
     this.seiyuuSvc.displayList$
       .do(() => this.page = 0)
@@ -50,7 +50,7 @@ export class PhotoService {
         .do(photoPage => {  // request next page while user is viewing current one
           if (photoPage && photoPage.next && !this.pendingNext) {
             this.pendingNext = true;
-            this.wrapper(names, this.page+1)
+            this.wrapper(names, this.page + 1)
               .subscribe(() => this.pendingNext = false);
           }
         })
@@ -128,8 +128,8 @@ export class PhotoService {
           let pagenums: any = newDoc.querySelector('a[alt="last page"],b:last-child');
 
           total = pagenums.href ?
-            10+Number(pagenums.href.split('pid=')[1]) :
-            (Number(pagenums.textContent)-1)*20 + spans.length;
+            10 + Number(pagenums.href.split('pid=')[1]) :
+            (Number(pagenums.textContent) - 1)*20 + spans.length;
         }
 
         return {

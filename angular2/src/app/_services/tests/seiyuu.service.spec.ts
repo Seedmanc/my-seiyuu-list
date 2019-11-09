@@ -22,6 +22,7 @@ export const mockList = (backend, returned, opts?) => {
   if (opts) r.error(new ErrorEvent(''), opts)
   else r.flush(returned);
 };
+
 export const basicList = [
   basicModel,
   basicModel2

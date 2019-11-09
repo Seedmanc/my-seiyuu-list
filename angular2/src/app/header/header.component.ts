@@ -12,24 +12,23 @@ import {Utils} from "../_services/utils.service";
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
-
   @ViewChild('search') searchInput: ElementRef;
-  status$;
-  name$: Observable<string[]>;
-  search$: Subject<string> = new Subject();
-
   searchQuery: string = '';
 
-  constructor(public seiyuuSvc: SeiyuuService, private messageSvc: MessagesService) { }
+  name$: Observable<string[]>;
+  private search$: Subject<string> = new Subject();
+
+
+  constructor(public seiyuuSvc: SeiyuuService,
+              public messageSvc: MessagesService) { }
 
   ngOnInit() {
-    this.status$ = this.messageSvc.message$;
     this.name$ = this.seiyuuSvc.totalList$.map(seiyuus => seiyuus.map(seiyuu => seiyuu.name));
 
     const input = fromEvent(this.searchInput.nativeElement, 'input')
       .debounceTime(500)
       .withLatestFrom(this.seiyuuSvc.totalList$)
-      .filter(([event,list]) => list.some(el => el.name.toLowerCase() === event['target'].value.toLowerCase()))
+      .filter(([event, list]) => list.some(el => el.name.toLowerCase() === event['target'].value.toLowerCase()))
       .map(([event]) => event);
 
     fromEvent(this.searchInput.nativeElement, 'change')

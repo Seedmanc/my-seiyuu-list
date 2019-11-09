@@ -1,5 +1,5 @@
-import {Utils} from "../_services/utils.service";
 import {Role} from "./anime.model";
+import {env} from "../../environments/environment";
 
 export class BasicSeiyuu {
   _id?: number;
@@ -33,7 +33,7 @@ export class BasicSeiyuu {
   }
 
   get link(): string {
-    return `//${Utils.theSite}/people/${this._id}`;
+    return `//${env.theSite}/people/${this._id}`;
   }
 
   get displayName() {
@@ -56,7 +56,7 @@ export class BasicSeiyuu {
   }
 
   protected get photo(): string {
-    return this['pic'] && `//${Utils.theSite}${this['pic']}`;
+    return this['pic'] && `//${env.theSite}${this['pic']}`;
   }
   protected get thumb(): string {
     return this.photo && this.photo.replace('.jp', 'v.jp');

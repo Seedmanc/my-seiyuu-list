@@ -1,4 +1,5 @@
 import {Utils} from "../_services/utils.service";
+import {env} from "../../environments/environment";
 
 export interface Role {
   _id?: number;
@@ -23,7 +24,7 @@ export class Anime {
   get title(): string {
     return Anime.detailsCache[this._id] ?
       Anime.detailsCache[this._id].title :
-      this._id+'';
+      this._id + '';
   }
 
   get main(): boolean {
@@ -40,11 +41,11 @@ export class Anime {
 
   get thumb(): string {
     return Anime.detailsCache[this._id] ?
-      `//${Utils.theSite}${Anime.detailsCache[this._id].pic}`.replace(/(\d)\.(\w{3,4})$/, '$1v.$2') :
+      `//${env.theSite}${Anime.detailsCache[this._id].pic}`.replace(/(\d)\.(\w{3,4})$/, '$1v.$2') :
       '';
   }
   get link(): string {
-    return `//${Utils.theSite}/anime/${this._id}`;
+    return `//${env.theSite}/anime/${this._id}`;
   }
 
 

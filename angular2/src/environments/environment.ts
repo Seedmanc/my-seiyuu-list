@@ -9,5 +9,7 @@ export const env = {
   seiyuuDB: 'seiyuu-test',
   apiKey: 'R4jg8qqhpTI68lRYfYjEJoM5aRiJnrLK', // pls no steal
   koeurl: 'https://koe.booru.org/index.php?page=post&s=list&tags=',
-  loglevel: 2
+  loglevel: 2,
+  theSite: 'myanimelist.net',
+  emptyInCatch: false
 };

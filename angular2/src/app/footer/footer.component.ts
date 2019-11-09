@@ -7,15 +7,14 @@ import {SeiyuuService} from "../_services/seiyuu.service";
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.css']
 })
-export class FooterComponent implements OnInit {
+export class FooterComponent {
   @ViewChild(RankingComponent) mslRanking: RankingComponent;
 
   disqusVisible: boolean;
 
-  constructor(private el: ElementRef, private renderer: Renderer2, public seiyuuSvc: SeiyuuService) { }
-
-  ngOnInit() {
-  }
+  constructor(public seiyuuSvc: SeiyuuService,
+              private el: ElementRef,
+              private renderer: Renderer2) { }
 
   toggleDisqus() {
     this.disqusVisible = !this.disqusVisible;

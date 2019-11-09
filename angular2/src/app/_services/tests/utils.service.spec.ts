@@ -2,9 +2,6 @@ import {Utils} from "../utils.service";
 import {Subject} from "rxjs/Subject";
 
 describe('Utils', () => {
-  it('should provide correct MAL link', ()=>{
-    expect(Utils.theSite).toBe('myanimelist.net');
-  });
 
   it('should make a simple numeric list unique', ()=>{
     expect(JSON.stringify(Utils.unique([3,1,5,6,5,0])))

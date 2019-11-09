@@ -1,9 +1,7 @@
 import {env} from "../../environments/environment";
 
-export class Utils {
+export abstract class Utils {
   private static readonly parser = document.createElement("textarea");
-
-  static readonly theSite: string = 'myanimelist.net';
 
   static unorderedCompare(input: string, name: string): string {
     if (name) {
@@ -34,9 +32,9 @@ export class Utils {
       (...data) => {
         let result = assertion(...data);
         result && env.loglevel > 1 ?
-          console.info(`(${title}) `, ...data):
-          console.assert(result, `(${title})  ${assertion.toString()}`, ...data)
-      }:
+          console.info(`(${title}) `, ...data) :
+          console.assert(result, `(${title})  ${assertion.toString()}`, ...data);
+      } :
       ()=>{};
   }
   static lg(msg: any, mode: string = 'info') {

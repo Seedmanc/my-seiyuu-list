@@ -38,7 +38,7 @@ describe('PhotoListComponent', () => {
 
       expect(spy).toHaveBeenCalled();
       expect(spy.calls.mostRecent().args[0]).toBe(l);
-      expect(spy.calls.mostRecent().args[1].toString()).toBe('page => `${page.total} [photo]`');
+      expect(spy.calls.mostRecent().args[1].toString()).toBe('p => `${p.total} [photo]`');
       expect(spy.calls.mostRecent().args[2]).toBe(undefined);
     })
   );

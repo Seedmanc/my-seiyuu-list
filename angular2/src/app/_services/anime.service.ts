@@ -11,6 +11,8 @@ import {Anime, HashOfRoles} from "../_models/anime.model";
 import {SeiyuuService} from "./seiyuu.service";
 import {RoutingService} from "./routing.service";
 import {Seiyuu} from "../_models/seiyuu.model";
+import {env} from "../../environments/environment";
+import {EMPTY} from "rxjs/index";
 
 @Injectable()
 export class AnimeService {
@@ -47,7 +49,7 @@ export class AnimeService {
       .map(seiyuus => this.animePerSeiyuu(seiyuus))                                                 .do(Utils.asrt('A roles by anime sets'))
       .combineLatest(this.toggleChart$.distinctUntilChanged(), x => x)
       .do(rolesByAnimeSets => {
-        if (this.toggleChart$.getValue()) this.makeChart(rolesByAnimeSets)
+        if (this.toggleChart$.getValue()) this.makeChart(rolesByAnimeSets);
       })
       .map(rolesByAnimeSets => this.sharedAnime(rolesByAnimeSets,
         this.mainOnly$.getValue() ? 'main' : null)
@@ -95,7 +97,7 @@ export class AnimeService {
             if (roleList.length)
               acc[cur] = roleList;
             return acc;
-          }, {})
+          }, {});
         })
       );
 
@@ -157,34 +159,34 @@ export class AnimeService {
         return rolesByAnimeSets.map((seiyuuY, y) => {
           let result;
           if (x < y) {
-            result = this.sharedAnime([seiyuuX, seiyuuY], 'main');
+            result = this.sharedAnime([seiyuuX, seiyuuY], 'main'); //TODO choose one algo
             // common titles to a combined pool of titles (excluding dupes)
-            result.affinity =  result.length /  [...new Set( [...Object.entries(seiyuuX), ...Object.entries(seiyuuY)].filter(([k,s]) => s.some(role => role.main)).map(([k,s]) => k) )]  .length;
+            result.affinity =  result.length / [...new Set( [...Object.entries(seiyuuX), ...Object.entries(seiyuuY)].filter(([k,s]) => s.some(role => role.main)).map(([k,s]) => k) )]  .length;
             // common titles to one seiyuu's total # of titles (asymmetrical)
             //result.affinity =  result.length /  Object.values(seiyuuX).filter(s => s.some(r => r.main)).length;
             // ser.melipharo's algo
             //let mx = Object.entries(seiyuuX).filter(([k,s]) => s.some(r => r.main)).map(([k]) => k);
             //let my = Object.entries(seiyuuY).filter(([k,s]) => s.some(r => r.main)).map(([k]) => k);
-           // result.affinity =  (result.length/ mx.filter(kx => !my.find(y => y==kx)).length + result.length/ my.filter(ky => !mx.find(x => x == ky)).length)/2;
+            //result.affinity =  (result.length/ mx.filter(kx => !my.find(y => y==kx)).length + result.length/ my.filter(ky => !mx.find(x => x == ky)).length)/2;
             // symmetrical version of 2nd algo
             //result.affinity = (result.length / mx.length + result.length / my.length)/2
           } else if (x > y) {
             result = this.sharedAnime([seiyuuX, seiyuuY], '!main');
-            result.affinity =  result.total/ [...new Set([...Object.keys(seiyuuX),...Object.keys(seiyuuY)])].length;
+            result.affinity =  result.total / [...new Set([...Object.keys(seiyuuX), ...Object.keys(seiyuuY)])].length;
             //result.affinity =  result.total/ Object.keys(seiyuuX).length;
             //result.affinity =  (result.total/ Object.keys(seiyuuX).filter(kx => !seiyuuY[kx]).length + result.total/ Object.keys(seiyuuY).filter(ky => !seiyuuX[ky]).length)/2;
             //result.affinity =  (result.total / Object.keys(seiyuuX).length + result.total / Object.keys(seiyuuY).length)/2;
           } else
             result = [];
           return result;
-        })
+        });
       });
 
      let affinities: number[] = Utils.flattenDeep(chart.map(row => row.map(col => col['affinity'] || 0)));
      let max = Math.max(...affinities);
-     let min = Math.min(...affinities.filter(a => !!a))/2;
+     let min = Math.min(...affinities.filter(a => !!a)) / 2;
 
-      chart.forEach(row => row.forEach((col:any) => col.affinity = (col.affinity-min)/(max-min) || 0));
+     chart.forEach(row => row.forEach((col:any) => col.affinity = (col.affinity-min) / (max-min) || 0));
 
      let animeIds = Utils.unique(Utils.flattenDeep<Anime>(chart), '_id')
        .map(a => +a._id);
@@ -192,7 +194,7 @@ export class AnimeService {
        .subscribe();
 
     this.displayChart$.next(chart);
-  };
+  }
 
   private loadDetails(ids: number[]): Observable<any[]> {
     ids = ids.filter(id => !Anime.detailsCache[id]).sort();
@@ -207,7 +209,10 @@ export class AnimeService {
         }
       })                                                                                       .do(Utils.lg('Anime requested', 'warn')) :
       of([])
-     )
+     ).catch(err => {
+       if (env.emptyInCatch) return EMPTY;
+       throw err
+    })
       .do(details => details.forEach(detail => Anime.detailsCache[detail._id] = detail));
   }
 

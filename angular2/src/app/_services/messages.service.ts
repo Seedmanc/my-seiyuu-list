@@ -5,12 +5,18 @@ import {BasicSeiyuu} from "../_models/seiyuu.model";
 import {Utils} from "./utils.service";
 
 export class MessagesService {
-  message$: BehaviorSubject<{isError?:boolean, data?: string}> = new BehaviorSubject({});
+  message$: BehaviorSubject<{isError?:boolean, data?:string}> = new BehaviorSubject({});
   resetSearch$ = new Subject();
 
   private counts: any = {};
 
   constructor() { }
+
+  static title(seiyuus: BasicSeiyuu[]) {
+    document.title = `My Seiyuu List ${seiyuus.length ?
+      ' - ' + seiyuus.map(seiyuu => seiyuu.name).join(', ') :
+      ''}`;
+  }
 
   error(text) {
     this.message$.next({isError: true, data: text});
@@ -25,17 +31,11 @@ export class MessagesService {
     if (this.counts.seiyuu === 0) {
       this.error('no cached records found');
     } else if (this.counts.seiyuu || this.counts.anime)
-      this.status(this.counts.seiyuu + ` seiyuu ${this.counts.anime ? '& ' + this.counts.anime + ' anime ' : ''}records cached`)
+      this.status(this.counts.seiyuu + ` seiyuu ${this.counts.anime ? '& ' + this.counts.anime + ' anime ' : ''}records cached`);
   }
 
   blank() {
     this.message$.next({});
-  }
-
-  title(seiyuus: BasicSeiyuu[]) {
-    document.title = `My Seiyuu List ${seiyuus.length ? 
-      ' - ' + seiyuus.map(seiyuu => seiyuu.name).join(', ') :
-      ''}`;
   }
 
   results(list: any, template: ((number) => string)) {
@@ -51,7 +51,7 @@ export class MessagesService {
       if (match) {
         text = text + Utils.pluralize(count);
       }
-      this.status(text.replace(/^0\s/,'no ').replace(/[\[\]]/g, '') + ' found');
+      this.status(text.replace(/^0\s/, 'no ').replace(/[\[\]]/g, '') + ' found');
     } else {
       this.totals();
     }

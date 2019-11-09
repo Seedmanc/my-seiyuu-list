@@ -16,9 +16,9 @@ export class PhotoListComponent extends PageComponent implements OnInit {
   photoPage: PhotoPage;
 
   constructor(public photoSvc: PhotoService,
-              private messageSvc: MessagesService,
               protected route: ActivatedRoute,
-              protected routingSvc: RoutingService) {
+              protected routingSvc: RoutingService,
+              private messageSvc: MessagesService) {
     super(route, routingSvc);
   }
 
@@ -30,7 +30,7 @@ export class PhotoListComponent extends PageComponent implements OnInit {
       .do(page =>
         this.messageSvc.results(
           page,
-          page => `${page.total} [photo]`
+          p => `${p.total} [photo]`
         )
       )
       .subscribe(result => this.photoPage = result);

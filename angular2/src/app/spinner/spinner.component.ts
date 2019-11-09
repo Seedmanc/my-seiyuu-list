@@ -30,7 +30,7 @@ export class SpinnerComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     if (this.setStatus)
-      this.messageService.status('loading...')
+      this.messageService.status('loading...');
   }
 
   ngOnDestroy() {

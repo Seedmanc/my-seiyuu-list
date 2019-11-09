@@ -7,7 +7,7 @@ export class OrderByPipe implements PipeTransform {
 
   transform(value: any[], fields: string[], asc?: boolean): any[] {
     return (value||[]).sort((e1, e2) => {
-      let dif = asc ? 1:-1;
+      let dif = asc ? 1 : -1;
 
       return fields.reduce((prev, curr) =>
           e1[curr] > e2[curr] ?

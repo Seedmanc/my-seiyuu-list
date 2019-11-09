@@ -17,7 +17,7 @@ export class RankingComponent {
   rankingList: BasicSeiyuu[];
   pending = {is: false};
 
-  constructor(public seiyuuSvc: SeiyuuService, public sorter: SorterService) {  }
+  constructor(public sorter: SorterService, private seiyuuSvc: SeiyuuService) {  }
 
   open() {
     this.visible = true;
@@ -28,7 +28,7 @@ export class RankingComponent {
     });
 
     this.seiyuuSvc.getRanking(this.pending)
-      .subscribe(list => this.rankingList = list)
+      .subscribe(list => this.rankingList = list);
   }
 
   close(event) {

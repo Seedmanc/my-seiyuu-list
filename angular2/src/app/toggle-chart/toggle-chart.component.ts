@@ -7,11 +7,11 @@ import {AnimeService} from "../_services/anime.service";
   templateUrl: './toggle-chart.component.html',
   styleUrls: ['./toggle-chart.component.css']
 })
-export class ToggleChartComponent implements OnInit{
+export class ToggleChartComponent implements OnInit {
   @Input() disabled: boolean;
   @ViewChild('toggle') toggle: ElementRef<HTMLInputElement>;
 
-  constructor(public animeSvc: AnimeService) {  }
+  constructor(private animeSvc: AnimeService) {  }
 
   ngOnInit() {
     fromEvent(this.toggle.nativeElement, 'change')

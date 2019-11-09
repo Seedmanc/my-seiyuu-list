@@ -11,12 +11,13 @@ interface ApifyResponse {
 }
 
 interface GoogleQresponse {
-  status: string,
-  table?: {cols: any[],
+  status: string;
+  table?: {
+    cols: any[];
     rows: {
       c: {v: string}[]
     }[]
-  },
+  };
   error?: any
 }
 

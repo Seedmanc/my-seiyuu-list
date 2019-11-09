@@ -52,6 +52,7 @@ describe('HeaderComponent', () => {
   it('should emit search query on input and change', fakeAsync( ()=> {
     let x;
     fixture.detectChanges();
+    // @ts-ignore
     component.search$.subscribe(r => x=r);
     component.searchInput.nativeElement.value = ' Test ';
     component.searchInput.nativeElement.dispatchEvent(new Event('change'));

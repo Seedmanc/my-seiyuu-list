@@ -4,5 +4,6 @@ export const env = {
   seiyuuDB: 'seiyuu',
   apiKey: 'R4jg8qqhpTI68lRYfYjEJoM5aRiJnrLK', // pls no steal
   koeurl: 'http://koe.booru.org/index.php?page=post&s=list&tags=',
-  loglevel: 0
+  loglevel: 0,
+  theSite: 'myanimelist.net'
 };

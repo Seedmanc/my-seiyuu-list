@@ -13,7 +13,7 @@ import {Subject} from "rxjs/Rx";
 import {Seiyuu} from "../../_models/seiyuu.model";
 import {MagazineService} from "../magazine.service";
 
-xdescribe('errored services', () => {
+describe('errored services', () => {
   let x;
   let injector: TestBed;
   let service: SeiyuuService;
@@ -32,7 +32,10 @@ xdescribe('errored services', () => {
     photoService = injector.get(PhotoService);
     magazineService = TestBed.get(MagazineService);
     backend = injector.get(HttpTestingController);
+
   });
+  beforeAll(() => env.emptyInCatch = true);
+  afterAll(() => env.emptyInCatch = false);
 
   it('should report if loading the brief list fails with 404',
      inject([ MessagesService],
@@ -132,7 +135,7 @@ xdescribe('errored services', () => {
       })
   );
 
-  it('should report errors',
+  xit('should report errors',
     inject([SeiyuuService, RestService, RoutingService, MessagesService],
       (seiyuuSvc: SeiyuuService, rest: RestService,  routingSvc: RoutingService, msgSvc: MessagesService) => {
         magazineService.displayMagazines$.subscribe(data => x = data);

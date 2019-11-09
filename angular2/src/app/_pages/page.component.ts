@@ -4,7 +4,7 @@ import {OnDestroy, OnInit} from '@angular/core';
 import {Subject} from "rxjs/Subject";
 
 export class PageComponent implements OnInit, OnDestroy {
-  unsubscribe$ = new Subject();
+  protected unsubscribe$ = new Subject();
 
   constructor(protected route: ActivatedRoute, protected routingSvc: RoutingService) {}
 

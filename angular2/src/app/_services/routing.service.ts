@@ -6,12 +6,12 @@ import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {Utils} from "./utils.service";
 import {Observable} from "rxjs/Observable";
 
-@Injectable({providedIn:'root'})
+@Injectable({providedIn: 'root'})
 export class RoutingService {
   routeId$: BehaviorSubject<number[]> = new BehaviorSubject([]);
   paramMap$ = new Subject<any>();
-  tab$ = new Subject<string>();
 
+  /*private*/ tab$ = new Subject<string>();
   private tab: string = '';
 
   constructor(private router: Router) {
@@ -49,7 +49,7 @@ export class RoutingService {
       return source
         .combineLatest(this.tab$)
         .filter(([,tab]) => tab == tabName)
-        .map(([seiyuus,]) => seiyuus)                                               //  .do(Utils.asrt(`runOnTab[${tabName}]`, x => !x[0] || x[0].displayName));
+        .map(([seiyuus,]) => seiyuus);
     }
   }
 }

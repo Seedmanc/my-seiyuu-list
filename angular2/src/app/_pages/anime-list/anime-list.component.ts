@@ -7,7 +7,7 @@ import {AnimeService} from "../../_services/anime.service";
 import {SorterService} from "../../_services/sorter.service";
 import {MessagesService} from "../../_services/messages.service";
 import {SeiyuuService} from "../../_services/seiyuu.service";
-import {BehaviorSubject} from "rxjs/Rx";
+import {BehaviorSubject} from "rxjs/BehaviorSubject";
 
 @Component({
   selector: 'msl-anime-list',
@@ -30,12 +30,12 @@ export class AnimeListComponent extends PageComponent implements OnInit {
   mainOnly: boolean = false;
   tierGrouping$ = new BehaviorSubject(true);
 
-  constructor(protected route: ActivatedRoute,
-              protected routingSvc: RoutingService,
-              private messageSvc: MessagesService,
+  constructor(public animeSvc: AnimeService,
+              public sorter: SorterService,
               public seiyuuSvc: SeiyuuService,
-              public animeSvc: AnimeService,
-              public sorter: SorterService) {
+              protected route: ActivatedRoute,
+              protected routingSvc: RoutingService,
+              private messageSvc: MessagesService) {
       super(route, routingSvc);
     }
 
@@ -55,7 +55,7 @@ export class AnimeListComponent extends PageComponent implements OnInit {
 
         this.messageSvc.results(
           anime,
-          anime => `${anime.length} ${entity}`
+          animes => `${animes.length} ${entity}`
         );
       })
       .combineLatest(this.tierGrouping$)

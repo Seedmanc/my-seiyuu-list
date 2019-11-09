@@ -20,7 +20,7 @@ export class Magazine {
           .split(', ')
           .filter(seiyuu => seiyuu && !seiyuu.includes('"'))
           .map(s => s.trim())
-          .sort((s1,s2) => s1.localeCompare(s2))
+          .sort((s1, s2) => s1.localeCompare(s2))
       })
     );
   }
