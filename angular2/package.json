@@ -21,6 +21,8 @@
     "@angular/platform-browser": "7.0.3",
     "@angular/platform-browser-dynamic": "7.0.3",
     "@angular/router": "7.0.3",
+    "@sentry/browser": "^5.9.0",
+    "@sentry/integrations": "^5.8.0",
     "bootstrap": "^3.3.7",
     "core-js": "^2.5.7",
     "rxjs": "^6.3.3",

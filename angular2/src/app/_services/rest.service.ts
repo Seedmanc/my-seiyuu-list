@@ -34,6 +34,7 @@ interface MongoCall {
   payload?: any;
 }
 
+
 @Injectable({providedIn:'root'})
 export class RestService {
 
@@ -57,42 +58,6 @@ export class RestService {
       `${env.mongoUrl}/${path}?apiKey=${env.apiKey}${options}`,
       payload
     );
-
-    //TODO global error reporting (sentry?)
-/*        if ( failCount <= 2) {
-        failCount++;
-$scope.debug += '\n\r' + JSON.stringify(error) + ' Error accessing database.';
-        mongoCall(
-          'errors',
-          'POST',
-          {
-            date: new Date(),
-
-            source: 'mongoCall',
-            args:   {coll: coll, mode: mode, data: data, query: query},
-
-            browser: navigator.userAgent,
-
-            error:   error,
-            comment: 'ajax call fail ' + failCount
-          }
-        );
-      }*/
-
-  }
-
-  apifyCall(tags: string, pid: number): Observable<any> {
-    let koeurl = `${env.koeurl}${tags}&pid=${pid}`;
-
-    return this.http.post<ApifyResponse>(
-      'https://api.apify.com/v2/actor-tasks/seedmanc~cheerio-koebooru/run-sync?token=oHqw26JcyWpKugLcrdxRtNSdJ',
-      {url: koeurl}
-    )
-      .map(response => {
-      if (!response || !response.success)
-        throw({message: 'Couldn\'t load the photos, try the koebooru link'});
-      return {data: response.thumbs, paging: response.paginator};
-    });
   }
 
   googleQueryCall(names: string[]): Observable<GoogleQresponse> {
@@ -116,4 +81,15 @@ $scope.debug += '\n\r' + JSON.stringify(error) + ' Error accessing database.';
     ).merge(subject);
   }
 
+  apifyCall(tags: string, pid: number): Observable<any> {
+    let koeurl = `${env.koeurl}${tags}&pid=${pid}`;
+
+    return this.http.post<ApifyResponse>(
+      'https://api.apify.com/v2/actor-tasks/seedmanc~cheerio-koebooru/run-sync?token=oHqw26JcyWpKugLcrdxRtNSdJ',
+      {url: koeurl}
+    )
+      .map(response => {
+        return {data: response.thumbs, paging: response.paginator};
+      });
+  }
 }

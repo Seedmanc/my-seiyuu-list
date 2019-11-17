@@ -11,5 +11,6 @@ export const env = {
   koeurl: 'https://koe.booru.org/index.php?page=post&s=list&tags=',
   loglevel: 2,
   theSite: 'myanimelist.net',
-  emptyInCatch: false
+  emptyInCatch: false,
+  sentryDsn: "https://b377e6724d8848deb1fc68970c0f27ae@sentry.io/1823789"
 };

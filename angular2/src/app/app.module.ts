@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import {ErrorHandler, NgModule} from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import {Router} from "@angular/router";
@@ -24,6 +24,10 @@ import {UniqPipe} from "./_misc/uniq.pipe";
 import { SortLinkComponent } from './sort-link/sort-link.component';
 import {ExternalLinkDirective} from "./_misc/externalLink.directive";
 import {ToggleChartComponent} from "./toggle-chart/toggle-chart.component";
+import {SentryErrorHandler} from "./_misc/sentryProcessor";
+
+import * as Sentry from "@sentry/browser";
+import * as Integrations from '@sentry/integrations';
 
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/filter';
@@ -74,11 +78,20 @@ import "rxjs/add/operator/takeUntil";
     FormsModule,
     RouterModule
   ],
-  providers: [MessagesService],
+  providers: [MessagesService, { provide: ErrorHandler, useClass: SentryErrorHandler }],
   bootstrap: [AppComponent]
 })
 export class AppModule {
   constructor(router: Router) {
     env.loglevel > 2 && console.log('Routes: ', JSON.stringify(router.config, undefined, 2));
+
+    Sentry.init({
+      dsn: env.sentryDsn,
+      integrations: [
+        new Integrations.CaptureConsole({
+          levels: ['error', 'assert']
+        })
+      ]
+    });
   }
 }

@@ -210,6 +210,9 @@ export class AnimeService {
       })                                                                                       .do(Utils.lg('Anime requested', 'warn')) :
       of([])
      ).catch(err => {
+       this.messageSvc.error('Error loading anime details: ' + err.status);
+       console.error(err.message, err.error && (err.error.message || err.error.text));
+
        if (env.emptyInCatch) return EMPTY;
        throw err
     })

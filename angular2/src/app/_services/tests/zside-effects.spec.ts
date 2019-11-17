@@ -34,8 +34,6 @@ describe('errored services', () => {
     backend = injector.get(HttpTestingController);
 
   });
-  beforeAll(() => env.emptyInCatch = true);
-  afterAll(() => env.emptyInCatch = false);
 
   it('should report if loading the brief list fails with 404',
      inject([ MessagesService],
@@ -90,6 +88,7 @@ describe('errored services', () => {
            method:'GET'
          }, 'GET to load seiyuu details').flush('', {status: 500, statusText: 'Bad Request'});
 
+         tick(10);
          expect(spy).toHaveBeenCalledWith('Error loading seiyuu details: 500');
          discardPeriodicTasks();
          backend.verify({ ignoreCancelled: true});
@@ -135,7 +134,7 @@ describe('errored services', () => {
       })
   );
 
-  xit('should report errors',
+  it('should report errors',
     inject([SeiyuuService, RestService, RoutingService, MessagesService],
       (seiyuuSvc: SeiyuuService, rest: RestService,  routingSvc: RoutingService, msgSvc: MessagesService) => {
         magazineService.displayMagazines$.subscribe(data => x = data);

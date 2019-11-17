@@ -218,7 +218,7 @@ describe('PhotoService', () => {
          }
        });
 
-      let spy = spyOn(rest, 'apifyCall').and.returnValue(_throw({message:'errmsg'}));
+      let spy = spyOn(rest, 'apifyCall').and.returnValue(_throw({message:'errmsg', status: 123}));
 
        routingSvc.tab$.next('photos');
        seiyuuSvc.displayList$['next']([new Seiyuu({name: 'Davidyuk Jenya'})]);
@@ -227,7 +227,7 @@ describe('PhotoService', () => {
        expect(JSON.stringify(x)).toBe(JSON.stringify({"html":"<span class=\"thumb more img-thumbnail\"><div>more at</div><b><a href=\"https://koe.booru.org/index.php?page=post&amp;s=list&amp;tags=~davidyuk_jenya\" target=\"_blank\">koe.booru.org</a></b></span>","pageNum":0,"total":0,"next":false,"prev":false}));
 
        tick();
-       expect(spy2).toHaveBeenCalledWith('errmsg');})
+       expect(spy2).toHaveBeenCalledWith('Error loading photos: 123');})
   ));
 
    it('getPhotoPage()',

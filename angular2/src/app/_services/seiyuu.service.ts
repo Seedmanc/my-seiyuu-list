@@ -191,9 +191,8 @@ export class SeiyuuService {
       }
     }).map(list => list.map(el => new Seiyuu(el)))
       .catch(err => {
-        this.messageSvc.error('Error loading seiyuu details: ' + err.status);
-
-        console.warn(err.message, err.error && err.error.message);
+        setTimeout(() =>  this.messageSvc.error('Error loading seiyuu details: ' + err.status));
+        console.error(err.message, err.error && (err.error.message || err.error.text));
         ids.forEach(id => this.removeById(id));
 
         return of([]);
@@ -214,7 +213,7 @@ export class SeiyuuService {
       .catch(err => {
         this.messageSvc.error('Error getting cached list: ' + err.status);
 
-        console.warn(err.message, err.error && err.error.message);
+        console.error(err.message, err.error && (err.error.message || err.error.text));
         this.pending = false;
 
         if (env.emptyInCatch) return EMPTY;

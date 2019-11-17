@@ -86,8 +86,10 @@ export class PhotoService {
   private getPhotoPage(tags: string, pageNum: number): Observable<PhotoPage> {
 
     return this.rest.apifyCall(tags, pageNum*20)                                            .do(Utils.lg('Photos requested', 'warn'))
-      .catch(error => {
-        setTimeout(() => this.messageSvc.error(error.message));
+      .catch(response => {
+        setTimeout(() => this.messageSvc.error('Error loading photos: ' + response.status));
+        console.error(response.error && response.error.error.message);
+
         return of({data:'', paging:''});
       })
       .map(({data, paging}) => {

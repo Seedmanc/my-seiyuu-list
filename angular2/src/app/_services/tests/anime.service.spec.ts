@@ -302,6 +302,25 @@ describe('AnimeService', () => {
    })
   );
 
+  it('loadDetails() should report errors',
+    inject([SeiyuuService, MessagesService, RestService],
+      (seiyuuSvc:SeiyuuService,msgSvc:MessagesService, rest: RestService) => {
+        let spy = spyOn(msgSvc, 'error');
+
+        let loaded = Object.assign({}, model);
+        loaded.roles.push(...roles);
+
+        seiyuuSvc.loadedSeiyuu$.next([new Seiyuu(loaded)]);
+        mockList(backend, [basicModel,basicModel]);
+
+        backend.expectOne({
+          url: `${env.mongoUrl}/collections/anime?apiKey=${env.apiKey}&f={"title":1,"pic":1}&q={"_id":{"$in":[1,2,2829,3]}}`,
+          method:'GET'
+        }, 'GET to load details from anime DB').flush('', {status: 500, statusText: 'Bad Request'});
+
+        expect(spy).toHaveBeenCalledWith('Error loading anime details: 500');
+    })
+  );
 
   it('should call makeChart and load details if chart is enabled w/o redundant calls',
     inject([SeiyuuService ],

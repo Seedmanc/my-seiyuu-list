@@ -73,7 +73,7 @@ export class MagazineService {
              this.pending = false;
              this.messageSvc.error(err instanceof TypeError ? 'Incorrect response format' : err);
 
-             return _throw(err);
+             return env.emptyInCatch ? EMPTY : _throw(err);
            })
 
       : of(null);
