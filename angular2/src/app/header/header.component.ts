@@ -3,7 +3,6 @@ import {SeiyuuService} from "../_services/seiyuu.service";
 import {MessagesService} from "../_services/messages.service";
 import {Observable} from "rxjs/Observable";
 import {fromEvent} from "rxjs/observable/fromEvent";
-import {Subject} from "rxjs/Subject";
 import {Utils} from "../_services/utils.service";
 
 @Component({
@@ -14,9 +13,13 @@ import {Utils} from "../_services/utils.service";
 export class HeaderComponent implements OnInit {
   @ViewChild('search') searchInput: ElementRef;
   searchQuery: string = '';
+  hideTry: boolean;
+
+  get displaySuggestion(): boolean {
+    return this.seiyuuSvc.displayList$.getValue().length < 2;
+  }
 
   name$: Observable<string[]>;
-  private search$: Subject<string> = new Subject();
 
 
   constructor(public seiyuuSvc: SeiyuuService,
@@ -24,6 +27,7 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit() {
     this.name$ = this.seiyuuSvc.totalList$.map(seiyuus => seiyuus.map(seiyuu => seiyuu.name));
+    this.hideTry = !!localStorage.hideTry;
 
     const input = fromEvent(this.searchInput.nativeElement, 'input')
       .debounceTime(500)
@@ -39,13 +43,20 @@ export class HeaderComponent implements OnInit {
         .do(() => this.searchInput.nativeElement.value = ''))
       .distinctUntilChanged()
       .do(() => this.selectAll())
-      .subscribe(this.search$);
-
-    this.seiyuuSvc.addSearch(this.search$);
+      .subscribe(this.seiyuuSvc.search$);
   }
 
   selectAll() {
     setTimeout(() => this.searchInput.nativeElement.select());
+  }
+
+  isSelected(name: string): boolean {
+    return this.seiyuuSvc.selectedSeiyuu.includes(name);
+  }
+
+  hide() {
+    localStorage.hideTry = true;
+    this.hideTry = true;
   }
 
 }

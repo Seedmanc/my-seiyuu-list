@@ -1,3 +1,7 @@
+.msl-toggle-chart {
+  margin-top: 4px;
+}
+
 #toggleChart {
   display: none;
 }

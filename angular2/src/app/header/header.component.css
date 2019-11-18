@@ -60,6 +60,27 @@ form,.header {
   padding: 0 6px;
 }
 
+.try {
+  position: absolute;
+  top: 4rem;
+  font-size: 0.75em;
+  margin-left: 0.8rem;
+  color: gray;
+  z-index: 2;
+  background: rgba(255,255,255,0.7);
+  padding: 0 0.5rem;
+  border-radius: 2px;
+}
+.try a {
+  cursor: pointer;
+}
+.try .suggestion {
+  color: #0a6;
+}
+.try a + a {
+  margin-left: 0.4rem;
+}
+
 @media (min-width: 1200px) {
   #msl-logo {
     margin-left: -4rem;

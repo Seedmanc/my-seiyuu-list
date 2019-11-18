@@ -1,6 +1,7 @@
 import {Subject} from "rxjs/Rx";
 import {ErrorHandler, Injectable} from "@angular/core";
 import * as Sentry from "@sentry/browser";
+import {env} from "../../environments/environment";
 
 @Injectable()
 export class SentryErrorHandler implements ErrorHandler {
@@ -25,9 +26,11 @@ export class SentryErrorHandler implements ErrorHandler {
   }
 
   private doHandle(error) {
-    console.log(error);
-    const eventId = Sentry.captureException(error.originalError || error);
-    if (this.first)
-      Sentry.showReportDialog({ eventId })
+    if (env.loglevel > 2)
+      console.log(error);
+    /*const eventId = */
+      Sentry.captureException(error.originalError || error);
+    //if (this.first)
+      //Sentry.showReportDialog({ eventId })
   }
 }

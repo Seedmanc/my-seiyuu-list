@@ -91,11 +91,13 @@
 .seiyuu + .seiyuu::before {
   margin-right: 0.5rem;
   content: ',';
+  color: black;
 }
 
 .seiyuu:last-of-type::after {
   display: inline-block;
   content: '.';
+  color: black;
 }
 
 .selected {

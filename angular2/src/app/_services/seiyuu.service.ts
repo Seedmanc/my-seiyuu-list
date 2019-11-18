@@ -5,6 +5,7 @@ import {Subject} from "rxjs/Subject";
 import {timer} from "rxjs/observable/timer";
 import {of} from "rxjs/observable/of";
 import 'rxjs/add/operator/do';
+import {EMPTY} from "rxjs/index";
 
 import {BasicSeiyuu,  Seiyuu} from "../_models/seiyuu.model";
 import {RestService} from "./rest.service";
@@ -12,7 +13,6 @@ import {MessagesService} from "./messages.service";
 import {Utils} from "./utils.service";
 import {RoutingService} from "./routing.service";
 import {env} from "../../environments/environment";
-import {EMPTY} from "rxjs/index";
 
 @Injectable({providedIn: 'root'})
 export class SeiyuuService {
@@ -23,6 +23,12 @@ export class SeiyuuService {
 
   pending: boolean = true;
 
+  get selectedSeiyuu(): string[] {
+    return this.displayList$.getValue()
+      .map(({displayName}) => displayName);
+  }
+
+  readonly search$ = new Subject<string>();
   private rankingLoaded = false;
   private routeId$: Observable<number[]>;
   private picked$: Subject<number> = new Subject();
@@ -30,7 +36,6 @@ export class SeiyuuService {
   private namesake$: BehaviorSubject<BasicSeiyuu[]> = new BehaviorSubject([]);
   private cachedSeiyuu: {[key: number]: BasicSeiyuu} = {};
   private totalHash: {[key: string]: boolean} = {};
-
 
 
   constructor(private rest: RestService,
@@ -92,6 +97,8 @@ export class SeiyuuService {
         } else
           this.messageSvc.totals();
       });
+
+    this.addSearch();
   }
 
   requestUpdate(id: number) {
@@ -110,8 +117,8 @@ export class SeiyuuService {
     this.namesake$.next(this.namesake$.getValue().filter(nmsk => nmsk.displayName !== name));
   }
 
-  addSearch(search$: Observable<string>) { //hax
-    const [found$, notFound$] = search$                                                                    .do(Utils.lg('Search'))
+  private addSearch() {
+    const [found$, notFound$] = this.search$                                                               .do(Utils.lg('Search'))
       .filter(value => !!value)
       .withLatestFrom(this.totalList$)
       .map(([name, list]) => list
@@ -144,7 +151,7 @@ export class SeiyuuService {
       .subscribe();
 
     notFound$                                                                                              .do(Utils.lg('S notFound'))
-      .withLatestFrom(search$)
+      .withLatestFrom(this.search$)
       .subscribe(([,search]) => this.messageSvc.error(`"${search}" is not found`));
   }
 
@@ -180,6 +187,10 @@ export class SeiyuuService {
       });
   }
 
+  addSeiyuu(name: string) {
+    this.search$.next(name);
+  }
+
   private loadByIds(ids: number[]): Observable<Seiyuu[]> {
     return this.rest.mongoCall({
       coll: env.seiyuuDB,
@@ -190,9 +201,11 @@ export class SeiyuuService {
         }
       }
     }).map(list => list.map(el => new Seiyuu(el)))
-      .catch(err => {
-        setTimeout(() =>  this.messageSvc.error('Error loading seiyuu details: ' + err.status));
-        console.error(err.message, err.error && (err.error.message || err.error.text));
+      .catch(response => {
+        setTimeout(() =>  this.messageSvc.error('Error loading seiyuu details: ' + response.status));
+        let error = response.error && (response.error.message || response.error.text) || response.message;
+
+        console.error(error);
         ids.forEach(id => this.removeById(id));
 
         return of([]);
@@ -210,14 +223,16 @@ export class SeiyuuService {
     }).map(list => list.map(el => new BasicSeiyuu(el)))
       .do(list => list.forEach(seiyuu => this.cachedSeiyuu[seiyuu._id] = seiyuu))
       .do(list => this.messageSvc.setTotals({seiyuu: list.length}))
-      .catch(err => {
-        this.messageSvc.error('Error getting cached list: ' + err.status);
+      .catch(response => {
+         setTimeout(() => //TODO no timeouts
+           this.messageSvc.error('Error getting cached list: ' + response.status), 250
+         );
+        let error = response.error && (response.error.message || response.error.text) || response.message;
 
-        console.error(err.message, err.error && (err.error.message || err.error.text));
+        console.error(error);
         this.pending = false;
 
-        if (env.emptyInCatch) return EMPTY;
-        throw err;
+        return EMPTY;
       });
   }
 

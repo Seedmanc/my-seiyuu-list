@@ -25,7 +25,7 @@ describe('RestService', () => {
     })
    );
 
-  it('mongoCall should make a runCommand to the specified DB',
+  xit('mongoCall should make a runCommand to the specified DB',
     inject([RestService, HttpTestingController], (service:RestService, backend:HttpTestingController) => {
       let date = +(new Date());
       let model = {

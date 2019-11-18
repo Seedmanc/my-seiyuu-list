@@ -88,7 +88,7 @@ export class PhotoService {
     return this.rest.apifyCall(tags, pageNum*20)                                            .do(Utils.lg('Photos requested', 'warn'))
       .catch(response => {
         setTimeout(() => this.messageSvc.error('Error loading photos: ' + response.status));
-        console.error(response.error && response.error.error.message);
+        console.error(response.error && response.error.error.message || response.message);
 
         return of({data:'', paging:''});
       })

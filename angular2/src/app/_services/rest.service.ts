@@ -68,7 +68,13 @@ export class RestService {
     const sheet = '1655460507';
 
     // muh callback is not defined, muh CORS
-    window['handleJsonp'] = x => subject.next(x);
+    window['handleJsonp'] = x => {
+      if (x && x.status == 'error') {
+        console.error(x.errors && x.errors.map(e => JSON.stringify(e)), names);
+        subject.error(x)
+      } else
+        subject.next(x);
+    };
     // because fuck you, that's why
 
     return this.http.jsonp<GoogleQresponse>([

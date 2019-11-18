@@ -43,7 +43,7 @@ export class MagazineListComponent extends PageComponent implements OnInit {
   }
 
   isSelected(name: string): boolean {
-    return this.magazineSvc.selectedSeiyuu.includes(name);
+    return this.seiyuuSvc.selectedSeiyuu.includes(name);
   }
 
   isAvailable(name: string): boolean {
@@ -51,12 +51,7 @@ export class MagazineListComponent extends PageComponent implements OnInit {
   }
 
   addSeiyuu(name: string) {
-    let search:HTMLInputElement = document.querySelector('#searchQuery'); //hax
-    let evt = document.createEvent("HTMLEvents");
-
-    search.value = name;
-    evt.initEvent("change", false, true);
-    search.dispatchEvent(evt);
+    this.seiyuuSvc.addSeiyuu(name);
   }
 
 }

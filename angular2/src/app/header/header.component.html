@@ -9,6 +9,13 @@
       <i class="glyphicon glyphicon-search form-control-feedback" id="search-icon"></i>
     </div>
   </form>
+  <div class="try" *ngIf="displaySuggestion && !hideTry">try:
+    <a class="suggestion" *ngIf="!isSelected('Chihara Minori')"
+       (click)="seiyuuSvc.addSeiyuu($event.target.textContent)">Chihara Minori</a>
+    <a class="suggestion" *ngIf="!isSelected('Hirano Aya')"
+       (click)="seiyuuSvc.addSeiyuu($event.target.textContent)">Hirano Aya</a>
+    <a class="remove" (click)="hide()">&times;</a>
+  </div>
   <datalist id="vanames">
     <option [value]="name" *ngFor="let name of name$ | async | uniq"></option>
   </datalist>
