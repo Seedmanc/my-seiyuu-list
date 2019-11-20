@@ -162,7 +162,7 @@ export const basicList = [
 
         mockList(backend, basicList);
 
-        service.addSearch(of('derp'));
+        service.search$.next('derp');
         expect(spy).toHaveBeenCalledWith(`"derp" is not found`);
       })
   );
@@ -173,7 +173,7 @@ export const basicList = [
 
         mockList(backend, basicList);
 
-        service.addSearch(of('Maeda Konomi'));
+        service.search$.next('Maeda Konomi');
         expect(JSON.stringify(x)).toBe(JSON.stringify([new BasicSeiyuu(basicModel)]));
       }
   );
@@ -186,7 +186,7 @@ export const basicList = [
 
         mockList(backend, basicList);
 
-        service.addSearch(of('Maeda Konomi'));
+        service.search$.next('Maeda Konomi');
         service.removeById(578);
 
         expect(spy).toHaveBeenCalledWith(578);
@@ -200,7 +200,7 @@ export const basicList = [
 
         mockList(backend, [basicModel,basicModel]);
 
-        service.addSearch(of('Maeda Konomi'));
+        service.search$.next('Maeda Konomi');
         service.removeByName('Maeda Konomi');
 
         expect(JSON.stringify(x)).toBe(JSON.stringify([]));
@@ -214,9 +214,8 @@ export const basicList = [
 
         mockList(backend, basicList);
 
-        service.addSearch(search.asObservable());
-        search.next('Test Name');
-        search.next('Maeda Konomi');
+        service.search$.next('Test Name');
+        service.search$.next('Maeda Konomi');
         expect(x.length).toBe(2);
       }
   );
@@ -229,7 +228,7 @@ export const basicList = [
 
         mockList(backend, [basicModel,basicModel]);
 
-        service.addSearch(of('Maeda Konomi'));
+        service.search$.next('Maeda Konomi');
         expect(JSON.stringify(x)).toBe(JSON.stringify([new BasicSeiyuu({namesakes: [new BasicSeiyuu(basicModel), new BasicSeiyuu(basicModel)]})]
         ));
       })
@@ -246,7 +245,7 @@ export const basicList = [
 
         mockList(backend, [basicModel,bm2]);
 
-        service.addSearch(of('Maeda Konomi'));
+        service.search$.next('Maeda Konomi');
 
         expect(JSON.stringify(x)).toBe(JSON.stringify([new BasicSeiyuu({namesakes: [new BasicSeiyuu(basicModel), new BasicSeiyuu(bm2)]})]));
         service.pickNamesake(bm2._id);
@@ -258,7 +257,6 @@ export const basicList = [
   it('should limit selections to 4',
       ( ) => {
         service.displayList$.subscribe(data => x=data);
-        let search = new BehaviorSubject('');
         let list = basicList.slice();
 
         for (let i=0;i<3;i++) {
@@ -270,13 +268,22 @@ export const basicList = [
 
         mockList(backend, list);
 
-        service.addSearch(search);
-        search.next('Test Name');
-        search.next('Maeda Konomi');
-        search.next('Maeda Konomi0');
-        search.next('Maeda Konomi1');
-        search.next('Maeda Konomi2');
+        service.search$.next('Test Name');
+        service.search$.next('Maeda Konomi');
+        service.search$.next('Maeda Konomi0');
+        service.search$.next('Maeda Konomi1');
+        service.search$.next('Maeda Konomi2');
         expect(x.length).toBe(4);
+      }
+  );
+
+   it('should report the available & selected seiyuu',
+      ( ) => {
+        mockList(backend, basicList);
+        expect(service.isAvailable('Maeda Konomi')).toBeTruthy();
+        service.addSeiyuu('Maeda Konomi');
+        service.addSeiyuu('Test Name');
+        expect(JSON.stringify(service.selectedSeiyuu)).toBe(JSON.stringify(['Maeda Konomi','Test Name']));
       }
   );
 });

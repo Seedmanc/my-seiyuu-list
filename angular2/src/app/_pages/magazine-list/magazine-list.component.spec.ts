@@ -44,14 +44,12 @@ describe('MagazineListComponent', () => {
   it('should add seiyuu', inject([MagazineService, SeiyuuService],
     (service: MagazineService, seiyuuSvc: SeiyuuService) => {
       let spy = spyOn(seiyuuSvc, 'isAvailable');
-      let x;
+      let spy2 = spyOn(seiyuuSvc, 'addSeiyuu');
+
       component.isAvailable('test');
       expect(spy).toHaveBeenCalledWith('test');
-      document.body.appendChild(document.createElement('input')).setAttribute('id','searchQuery')
-
-      document.querySelector('#searchQuery')['onchange'] = evt => x = evt.target.value;
       component.addSeiyuu('test');
-      expect(x).toBe('test');
+      expect(spy2).toHaveBeenCalledWith( 'test' );
     })
   );
 });

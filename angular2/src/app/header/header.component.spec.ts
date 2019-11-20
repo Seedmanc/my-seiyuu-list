@@ -32,6 +32,7 @@ describe('HeaderComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
+  beforeAll(() => localStorage.clear());
 
   it('should list names',() => {
     let x;
@@ -49,11 +50,11 @@ describe('HeaderComponent', () => {
     expect(fixture.nativeElement.querySelector('#status').classList).toContain('error');
    }));
 
-  it('should emit search query on input and change', fakeAsync( ()=> {
+  it('should emit search query on input and change', fakeAsync( inject([SeiyuuService], (seiSvc: SeiyuuService) => {
     let x;
     fixture.detectChanges();
-    // @ts-ignore
-    component.search$.subscribe(r => x=r);
+
+    seiSvc.search$.subscribe(r => x=r);
     component.searchInput.nativeElement.value = ' Test ';
     component.searchInput.nativeElement.dispatchEvent(new Event('change'));
     expect(x).toBe('test');
@@ -62,5 +63,26 @@ describe('HeaderComponent', () => {
     tick(500);
     expect(x).toBe('maeda konomi');
     discardPeriodicTasks()
-  }));
+  }))
+ );
+
+  it('should detect selected seiyuu', fakeAsync( () => {
+    let x;
+
+    component.searchInput.nativeElement.value = 'Maeda Konomi';
+    component.searchInput.nativeElement.dispatchEvent(new Event('input'));
+    tick(500);
+    expect(component.isSelected('Maeda Konomi')).toBeTruthy();
+  })
+ );
+
+  it('should save hint visibility to localstorage', () => {
+    expect(component.hideTry).toBeFalsy();
+    component.hide();
+    expect(component.hideTry).toBeTruthy();
+  });
+
+  it('should load hint visibility from localstorage', () => {
+    expect(component.hideTry).toBeTruthy();
+  });
 });

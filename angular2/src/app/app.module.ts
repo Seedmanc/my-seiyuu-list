@@ -24,7 +24,6 @@ import {UniqPipe} from "./_misc/uniq.pipe";
 import { SortLinkComponent } from './sort-link/sort-link.component';
 import {ExternalLinkDirective} from "./_misc/externalLink.directive";
 import {ToggleChartComponent} from "./toggle-chart/toggle-chart.component";
-import {SentryErrorHandler} from "./_misc/sentryProcessor";
 
 import * as Sentry from "@sentry/browser";
 import * as Integrations from '@sentry/integrations';
@@ -50,6 +49,7 @@ import "rxjs/add/operator/let";
 import "rxjs/add/operator/finally";
 import "rxjs/add/operator/skip";
 import "rxjs/add/operator/takeUntil";
+import {SentryErrorHandler} from "./_services/sentry.service";
 
 @NgModule({
   declarations: [

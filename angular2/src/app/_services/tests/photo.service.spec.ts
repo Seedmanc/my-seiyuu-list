@@ -10,6 +10,7 @@ import { Seiyuu} from "../../_models/seiyuu.model";
 import {SeiyuuServiceMock} from "./seiyuu.service.mock";
 import {of} from "rxjs/observable/of";
 import {_throw} from "rxjs/observable/throw";
+import {Subject} from "rxjs/Rx";
 
 let x;
 let djresult = { html: `<span class="thumb img-thumbnail">
@@ -247,6 +248,45 @@ describe('PhotoService', () => {
         expect(x.total).toBe(50);
         expect(x.next).toBeFalsy();
         expect(x.prev).toBeTruthy();
+      })
+  );
+
+  it('wrapper()', // side effects
+    inject([SeiyuuService, RestService ],
+      ( ) => {
+        let r = {
+          html:'<span class="thumb img-thumbnail"><a href="" target="_blank"><img></a></span><span class="thumb img-thumbnail"><a href="" target="_blank"><img></a></span><span class="thumb img-thumbnail"><a href="" target="_blank"><img></a></span><span class="thumb more img-thumbnail"><div>more at</div><b><a href="https://koe.booru.org/index.php?page=post&amp;s=list&amp;tags=~test_seiyuu" target="_blank">koe.booru.org</a></b></span>',
+          pageNum: 1,
+          total: 50,
+          next: false,
+          prev: true
+        };
+        let spy = spyOn<any>(service,'getPhotoPage').and.returnValue(of(r));
+
+        service['cache'] = {};
+        this.page = 1;
+
+        let $ = new Subject();
+
+        $.flatMap(s => service['wrapper'](s[0], s[1]))
+          .subscribe(response => x = response);
+
+        $.next([]);
+        expect(x).toBeFalsy();
+        expect(spy).not.toHaveBeenCalled();
+
+        $.flatMap(s => service['wrapper'](s[0], s[1]))
+          .subscribe(response => x = response);
+        $.next([['test seiyuu'],2]);
+        expect(spy).toHaveBeenCalledWith('test_seiyuu+solo',2);
+        expect(x).toBe(r);
+        x=undefined;
+        spy.calls.reset();
+        $.flatMap(s => service['wrapper'](s[0], s[1]))
+          .subscribe(response => x = response);
+        $.next([['test seiyuu'],2]);
+        expect(spy).not.toHaveBeenCalled();
+        expect(x).toBe(r);
       })
   );
 
