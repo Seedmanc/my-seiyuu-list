@@ -304,21 +304,23 @@ describe('AnimeService', () => {
 
   it('loadDetails() should report errors',
     inject([SeiyuuService, MessagesService, RestService],
-      (seiyuuSvc:SeiyuuService,msgSvc:MessagesService, rest: RestService) => {
+      (seiyuuSvc:SeiyuuService,msgSvc:MessagesService) => {
         let spy = spyOn(msgSvc, 'error');
+        let spy2 = spyOn(console, 'error');
 
         let loaded = Object.assign({}, model);
         loaded.roles.push(...roles);
 
         seiyuuSvc.loadedSeiyuu$.next([new Seiyuu(loaded)]);
-        mockList(backend, [basicModel,basicModel]);
+        mockList(backend, [basicModel, basicModel]);
 
         backend.expectOne({
           url: `${env.mongoUrl}/collections/anime?apiKey=${env.apiKey}&f={"title":1,"pic":1}&q={"_id":{"$in":[1,2,2829,3]}}`,
-          method:'GET'
+          method: 'GET'
         }, 'GET to load details from anime DB').flush('', {status: 500, statusText: 'Bad Request'});
 
         expect(spy).toHaveBeenCalledWith('Error loading anime details: 500');
+        expect(spy2).toHaveBeenCalled();
     })
   );
 

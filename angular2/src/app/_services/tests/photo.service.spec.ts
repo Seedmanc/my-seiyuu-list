@@ -219,7 +219,7 @@ describe('PhotoService', () => {
          }
        });
 
-      let spy = spyOn(rest, 'apifyCall').and.returnValue(_throw({message:'errmsg', status: 123}));
+       spyOn(rest, 'apifyCall').and.returnValue(_throw({message:'errmsg', status: 123}));
 
        routingSvc.tab$.next('photos');
        seiyuuSvc.displayList$['next']([new Seiyuu({name: 'Davidyuk Jenya'})]);

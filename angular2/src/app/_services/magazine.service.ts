@@ -43,13 +43,14 @@ export class MagazineService {
       this.cache[names.join()] ?
         of(this.cache[names.join()]) :
         this.rest.googleQueryCall(names)                                                      .do(Utils.lg('Magazines requested', 'warn'))
-          .catch(err => {
-            let result = of(err);
+          .catch(response => {
+            let error = response.error && response.error.message || response.message;
 
-            if (env.emptyInCatch || err.error && err.error.message && err.error.message.includes('callback'))
-              result = EMPTY;
+            this.messageSvc.error('Could not load magazines: '+ response.status);
+            if (error)
+              console.error(error);
 
-            return result;
+            return EMPTY;
           })
           .map(response => {
             if (response.errors) {
@@ -73,6 +74,7 @@ export class MagazineService {
 
              return env.emptyInCatch ? EMPTY : _throw(err);
            })
+          .finally(() => this.pending = false)
 
       : of(null);
   }

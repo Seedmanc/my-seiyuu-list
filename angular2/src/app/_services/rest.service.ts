@@ -3,6 +3,8 @@ import {HttpClient} from "@angular/common/http";
 import {env} from "../../environments/environment";
 import {Observable} from "rxjs/Observable";
 import {Subject} from "rxjs/Subject";
+import {EMPTY} from "rxjs/index";
+import {_throw} from "rxjs/observable/throw";
 
 interface ApifyResponse {
   success: boolean;
@@ -84,7 +86,13 @@ export class RestService {
       '&tqx=responseHandler:handleJsonp'
       ].join(''),
       ''
-    ).merge(subject);
+    ) .catch(response => {
+      if (response.error.message && response.error.message.indexOf('did not invoke callback'))
+        return EMPTY
+      else
+        return _throw(response);
+    })
+      .merge(subject);
   }
 
   apifyCall(tags: string, pid: number): Observable<any> {

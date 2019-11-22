@@ -286,4 +286,73 @@ export const basicList = [
         expect(JSON.stringify(service.selectedSeiyuu)).toBe(JSON.stringify(['Maeda Konomi','Test Name']));
       }
   );
+
+   it('should report if loading the brief list fails with 404', fakeAsync(
+     inject([ MessagesService ],
+       ( msgSvc:MessagesService ) => {
+         let spy = spyOn(msgSvc, 'error');
+         let spy2 = spyOn(console, 'error');
+
+         expect(service.pending).toBeTruthy();
+
+         service.totalList$.subscribe(data => x = data);
+
+         mockList(backend, '', {status: 404, statusText: 'Not Found'});
+
+         expect(x).toBeFalsy();
+         expect(service.pending).toBeFalsy();
+         tick(251);
+         expect(spy).toHaveBeenCalledWith('Error getting cached list: 404');
+         expect(spy2).toHaveBeenCalledWith('Http failure response for https://api.mongolab.com/api/1/databases/myseiyuulist/collections/seiyuu-test?apiKey=R4jg8qqhpTI68lRYfYjEJoM5aRiJnrLK&f={"name":1,"count":1,"updated":1,"alternate_name":1}&s={"name":1}: 404 Not Found');
+         backend.verify({ ignoreCancelled: true});
+       })
+     )
+   );
+
+   it('should report if loading the brief list fails with a network error', fakeAsync(
+     inject([ MessagesService],
+       (  msgSvc:MessagesService) => {
+         let spy = spyOn(msgSvc, 'error');
+         let x;
+
+         expect(service.pending).toBeTruthy();
+
+         service.totalList$
+           .subscribe(r => x=r);
+
+         mockList(backend, null, { });
+
+         expect(x).toBeFalsy();
+         expect(service.pending).toBeFalsy();
+         tick(251);
+         expect(spy).toHaveBeenCalledWith('Error getting cached list: 0');
+         backend.verify({ ignoreCancelled: true});
+       })
+     )
+   );
+
+   it('should report if loading details fails with 500', fakeAsync(
+     inject([ MessagesService],
+       (  msgSvc:MessagesService) => {
+         let spy = spyOn(msgSvc, 'error');
+         let spy2 = spyOn(console, 'error');
+
+         mockList(backend, basicList);
+         service.addSeiyuu('Chihara Minori');
+         service.requestUpdate(53);
+         tick(200);
+
+         backend.expectOne({
+           url: `${env.mongoUrl}/collections/seiyuu-test?apiKey=${env.apiKey}&q={"_id":{"$in":[53]}}`,
+           method:'GET'
+         }, 'GET to load seiyuu details').flush('', {status: 500, statusText: 'Bad Request'});
+
+         tick(10);
+         expect(spy).toHaveBeenCalledWith('Error loading seiyuu details: 500');
+         expect(spy2).toHaveBeenCalledWith('Http failure response for https://api.mongolab.com/api/1/databases/myseiyuulist/collections/seiyuu-test?apiKey=R4jg8qqhpTI68lRYfYjEJoM5aRiJnrLK&q={"_id":{"$in":[53]}}: 500 Bad Request');
+         expect(service.selectedSeiyuu.length).toBe(0);
+         discardPeriodicTasks();
+         backend.verify({ ignoreCancelled: true});
+       })
+   ));
 });

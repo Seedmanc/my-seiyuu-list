@@ -9,6 +9,7 @@ import { Seiyuu} from "../../_models/seiyuu.model";
 import {of} from "rxjs/observable/of";
 import {SeiyuuServiceMock} from "./seiyuu.service.mock";
 import {MagazineService} from "../magazine.service";
+import {_throw} from "rxjs/observable/throw";
 
 let x;
 
@@ -108,6 +109,69 @@ describe('MagazineService', () => {
       seiyuuSvc.displayList$['next']([new Seiyuu({name: 'Maeda Konomi'}), new Seiyuu({name: 'Chihara Minori'})]);
       expect(spy).toHaveBeenCalledTimes(2);
     })
+  );
+
+
+
+  it('should report errors',
+    inject([SeiyuuService, RestService, RoutingService, MessagesService],
+      (seiyuuSvc: SeiyuuService, rest: RestService,  routingSvc: RoutingService, msgSvc: MessagesService) => {
+        service.displayMagazines$.subscribe(data => x = data);
+        service.pending = true;
+
+        spyOn(rest, 'googleQueryCall').and
+          .returnValue(of(
+            {
+              errors: [{message:'test4'}]
+            } ));
+        let spy2=spyOn(msgSvc,'error');
+
+        routingSvc.tab$.next('magazines');
+        seiyuuSvc.displayList$['next']([new Seiyuu({name: 'Maeda Konomi'})]);
+
+        expect(spy2).toHaveBeenCalledWith('test4');
+        expect(x).toBeFalsy();
+        expect(service.pending).toBeFalsy();
+      })
+  );
+
+  it('should catch & process errors',
+    inject([SeiyuuService, RestService, RoutingService, MessagesService],
+      (seiyuuSvc: SeiyuuService, rest: RestService,  routingSvc: RoutingService, msgSvc: MessagesService) => {
+        service.pending = true;
+
+        spyOn(rest, 'googleQueryCall').and
+          .returnValue(_throw(
+            {
+              error: {},
+              status: 0,
+              message: 'test5'
+            } ));
+        let spy2=spyOn(msgSvc,'error');
+        let spy3=spyOn(console,'error');
+
+        routingSvc.tab$.next('magazines');
+        seiyuuSvc.displayList$['next']([new Seiyuu({name: 'Maeda Konomi'})]);
+
+        expect(spy2).toHaveBeenCalledWith('Could not load magazines: 0');
+        expect(spy3).toHaveBeenCalledWith('test5');
+        expect(service.pending).toBeFalsy();
+      })
+  );
+  it('should catch & process errors',
+    inject([SeiyuuService, RestService, RoutingService, MessagesService],
+      (seiyuuSvc: SeiyuuService, rest: RestService,  routingSvc: RoutingService ) => {
+        spyOn(rest, 'googleQueryCall').and
+          .returnValue(_throw(
+            {
+              error: {message:'derp'}
+            } ));
+        let spy3=spyOn(console,'error');
+
+        routingSvc.tab$.next('magazines');
+        seiyuuSvc.displayList$['next']([new Seiyuu({name: 'Maeda Konomi'})]);
+        expect(spy3).toHaveBeenCalledWith('derp');
+      })
   );
 
 });
