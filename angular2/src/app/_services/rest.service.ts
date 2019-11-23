@@ -21,6 +21,7 @@ interface GoogleQresponse {
     }[]
   };
   error?: any
+  errors?: any[]
 }
 
 interface MongoCall {

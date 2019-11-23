@@ -6,23 +6,23 @@ import {PhotosPage} from "./po/photos.po";
 
 describe('my-seiyuu-list App', () => {
   let page: AppPage;
+  let seiyuu: SeiyuuPage;
   let EC = protractor.ExpectedConditions;
   const to = 5000;
 
   beforeEach(() => {
     page = new AppPage();
     AppPage.navigateTo();
+    seiyuu = new SeiyuuPage();
   });
 
   it('should only issue a request to load data when on its page', () => {
     AppPage.navigateTo('#/magazines/578').then(()=> {
-      let seiyuu = new SeiyuuPage();
-      let photo = new PhotosPage();
       let panel = seiyuu.panel('Maeda Konomi');
       let anime = new AnimePage();
 
       browser.wait(EC.presenceOf(panel.photo()), to);
-      browser.sleep(500);
+      browser.sleep(1000);
       browser.manage().logs().get('browser')
         .then(browserLog => {
           expect(browserLog.find(event => !!~event.message.indexOf('Anime requested'))).toBeFalsy();
@@ -116,6 +116,25 @@ describe('my-seiyuu-list App', () => {
     expect(page.disqusContainer().$('iframe').isPresent()).toBeTruthy();
     page.toggleDisqus().click();
     expect(page.disqusContainer().isDisplayed()).toBeFalsy();
+  });
+
+  it('should select seiyuu from the suggestion box, hiding the selected ones', () => {
+    expect( page.tryLink().count()).toBe(2);
+    page.tryLink(1).click();
+    let panel = seiyuu.panel('Chihara Minori');
+    expect(panel.container.isPresent()).toBeTruthy();
+    expect( page.tryLink().count()).toBe(1);
+    page.tryLink(1).click();
+    expect(seiyuu.panel('Hirano Aya').container.isPresent()).toBeTruthy();
+    expect( page.try().isPresent()).toBeFalsy();
+  });
+
+  it('should hide the suggestion box and store that state', () => {
+    expect( page.try().isPresent()).toBeTruthy();
+    page.try().$$('a.remove').click();
+    expect( page.try().isPresent()).toBeFalsy();
+    AppPage.navigateTo();
+    expect( page.try().isPresent()).toBeFalsy();
   });
 
 });

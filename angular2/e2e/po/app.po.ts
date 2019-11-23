@@ -33,6 +33,16 @@ export class AppPage {
     return element(by.css(`msl-tabs`)).$$('a');
   }
 
+  try() {
+    return element(by.css(`.try`));
+  }
+
+  tryLink(n?:number) {
+    return typeof n != 'undefined' ?
+      element(by.css(`.try`)).$$(`a.suggestion:nth-of-type(${n})`):
+      element(by.css(`.try`)).$$(`a.suggestion`);
+  }
+
   toggleChart() {
     return element(by.css('.msl-toggle-chart'));
   }
