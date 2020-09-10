@@ -82,7 +82,7 @@ export class PhotoService {
           .do(data => this.cache[key] = data) :
       of(null);
   }
-
+// TODO sort the cache keys so the combination hits the cache regardless of seiyuu order
   private getPhotoPage(tags: string, pageNum: number): Observable<PhotoPage> {
 
     return this.rest.apifyCall(tags, pageNum*20)                                            .do(Utils.lg('Photos requested', 'warn'))
