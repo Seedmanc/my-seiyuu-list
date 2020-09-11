@@ -303,7 +303,7 @@ export const basicList = [
          expect(service.pending).toBeFalsy();
          tick(251);
          expect(spy).toHaveBeenCalledWith('Error getting cached list: 404');
-         expect(spy2).toHaveBeenCalledWith('Http failure response for https://api.mongolab.com/api/1/databases/myseiyuulist/collections/seiyuu-test?apiKey=R4jg8qqhpTI68lRYfYjEJoM5aRiJnrLK&f={"name":1,"count":1,"updated":1,"alternate_name":1}&s={"name":1}: 404 Not Found');
+         expect(spy2).toHaveBeenCalledWith('Http failure response for '+env.mongoUrl+'/collections/seiyuu-test?apiKey='+env.apiKey+'&f={"name":1,"count":1,"updated":1,"alternate_name":1}&s={"name":1}: 404 Not Found');
          backend.verify({ ignoreCancelled: true});
        })
      )
@@ -349,7 +349,7 @@ export const basicList = [
 
          tick(10);
          expect(spy).toHaveBeenCalledWith('Error loading seiyuu details: 500');
-         expect(spy2).toHaveBeenCalledWith('Http failure response for https://api.mongolab.com/api/1/databases/myseiyuulist/collections/seiyuu-test?apiKey=R4jg8qqhpTI68lRYfYjEJoM5aRiJnrLK&q={"_id":{"$in":[53]}}: 500 Bad Request');
+         expect(spy2).toHaveBeenCalledWith('Http failure response for '+env.mongoUrl+'/collections/seiyuu-test?apiKey='+env.apiKey+'&q={"_id":{"$in":[53]}}: 500 Bad Request');
          expect(service.selectedSeiyuu.length).toBe(0);
          discardPeriodicTasks();
          backend.verify({ ignoreCancelled: true});

@@ -16,3 +16,7 @@
 .active.desc .content::after {
   opacity: 1;
 }
+
+a {
+  cursor: pointer;
+}

@@ -49,6 +49,7 @@ caption {
 }
 
 .close {
-  height: 0;
-  margin-right: 4px;
+  position: absolute;
+  right: 0;
+  margin-right: 3px;
 }

@@ -1,8 +1,8 @@
 export const env = {
   production: true,
-  mongoUrl: 'https://api.mongolab.com/api/1/databases/myseiyuulist',
+  mongoUrl: 'https://mlab-api.herokuapp.com/api/1/databases/myseiyuulist',
   seiyuuDB: 'seiyuu',
-  apiKey: 'R4jg8qqhpTI68lRYfYjEJoM5aRiJnrLK', // pls no steal
+  apiKey: 'GnealBC8Fn-qf03VHO8BAhQBiql-z6Q60', // pls no steal
   koeurl: 'https://koe.booru.org/index.php?page=post&s=list&tags=',
   loglevel: 0,
   emptyInCatch: false,
