@@ -2,16 +2,15 @@ import {Injectable} from '@angular/core';
 import {Observable} from "rxjs/Observable";
 import {of} from "rxjs/observable/of";
 import {_throw} from "rxjs/observable/throw";
-
+import {ReplaySubject} from "rxjs/ReplaySubject";
 import {RestService} from "./rest.service";
 import {MessagesService} from "./messages.service";
 import {SeiyuuService} from "./seiyuu.service";
 import {RoutingService} from "./routing.service";
 import {Magazine} from "../_models/magazine.model";
-import {Utils} from "./utils.service";
+import {Utils} from "./utils";
 import {Seiyuu} from "../_models/seiyuu.model";
-import {ReplaySubject} from "rxjs/ReplaySubject";
-import {EMPTY} from "rxjs/index";
+import {EMPTY} from "rxjs";
 import {env} from "../../environments/environment";
 
 @Injectable()

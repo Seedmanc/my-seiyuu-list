@@ -3,11 +3,10 @@ import {env} from "../../environments/environment";
 
 export class BasicSeiyuu {
   _id?: number;
+  count?: number;
 
   name: string;
   alternate_name: string[];
-
-  count?: number;
 
   updated?: Date;
   accessed?: Date;
@@ -16,7 +15,6 @@ export class BasicSeiyuu {
 
 
   constructor(obj) {
-
     const temp = obj.namesakes ?
       obj :
       {...obj,
@@ -64,7 +62,6 @@ export class BasicSeiyuu {
 }
 
 export class Seiyuu extends BasicSeiyuu {
-
   roles?: Role[];
   hits?: number;
 

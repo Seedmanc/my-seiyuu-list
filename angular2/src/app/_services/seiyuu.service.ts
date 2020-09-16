@@ -5,12 +5,11 @@ import {Subject} from "rxjs/Subject";
 import {timer} from "rxjs/observable/timer";
 import {of} from "rxjs/observable/of";
 import 'rxjs/add/operator/do';
-import {EMPTY} from "rxjs/index";
-
+import {EMPTY} from "rxjs";
 import {BasicSeiyuu,  Seiyuu} from "../_models/seiyuu.model";
 import {RestService} from "./rest.service";
 import {MessagesService} from "./messages.service";
-import {Utils} from "./utils.service";
+import {Utils} from "./utils";
 import {RoutingService} from "./routing.service";
 import {env} from "../../environments/environment";
 

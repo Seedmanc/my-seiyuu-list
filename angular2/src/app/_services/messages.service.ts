@@ -2,7 +2,7 @@ import {Subject} from "rxjs/Subject";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
 
 import {BasicSeiyuu} from "../_models/seiyuu.model";
-import {Utils} from "./utils.service";
+import {Utils} from "./utils";
 
 export class MessagesService {
   message$: BehaviorSubject<{isError?:boolean, data?:string}> = new BehaviorSubject({});
@@ -13,7 +13,10 @@ export class MessagesService {
   constructor() { }
 
   static title(seiyuus: BasicSeiyuu[]) {
-    document.title = `My Seiyuu List ${seiyuus.length ?
+    let base = seiyuus.length > 1 ?
+      'MSL' :
+      'My Seiyuu List'
+    document.title = `${base} ${seiyuus.length ?
       ' - ' + seiyuus.map(seiyuu => seiyuu.name).join(', ') :
       ''}`;
   }

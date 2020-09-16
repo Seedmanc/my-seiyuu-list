@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from "rxjs/Observable";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
 
-import {Utils} from "../utils.service";
+import {Utils} from "../utils";
 
 @Injectable()
 export class RoutingServiceMock {

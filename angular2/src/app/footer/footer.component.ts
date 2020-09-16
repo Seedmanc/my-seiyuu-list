@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit, Renderer2, ViewChild} from '@angular/core';
+import {Component, ElementRef, Renderer2, ViewChild} from '@angular/core';
 import {RankingComponent} from "../ranking/ranking.component";
 import {SeiyuuService} from "../_services/seiyuu.service";
 

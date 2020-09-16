@@ -1,4 +1,4 @@
-import {Utils} from "../_services/utils.service";
+import {Utils} from "../_services/utils";
 import {env} from "../../environments/environment";
 
 export interface Role {

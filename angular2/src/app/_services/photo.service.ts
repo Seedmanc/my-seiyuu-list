@@ -7,7 +7,7 @@ import {of} from "rxjs/observable/of";
 
 import {RestService} from "./rest.service";
 import {SeiyuuService} from "./seiyuu.service";
-import {Utils} from "./utils.service";
+import {Utils} from "./utils";
 import {RoutingService} from "./routing.service";
 import {MessagesService} from "./messages.service";
 import {Seiyuu} from "../_models/seiyuu.model";

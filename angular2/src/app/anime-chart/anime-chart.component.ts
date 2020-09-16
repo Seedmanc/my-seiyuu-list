@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import {AnimeService} from "../_services/anime.service";
 import {SeiyuuService} from "../_services/seiyuu.service";
 import {MessagesService} from "../_services/messages.service";
-import {Utils} from "../_services/utils.service";
+import {Utils} from "../_services/utils";
 
 @Component({
   selector: 'msl-anime-chart',

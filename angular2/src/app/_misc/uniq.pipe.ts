@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import {Utils} from "../_services/utils.service";
+import {Utils} from "../_services/utils";
 
 @Pipe({
   name: 'uniq'

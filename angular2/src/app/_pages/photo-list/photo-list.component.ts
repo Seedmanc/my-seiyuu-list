@@ -4,7 +4,7 @@ import {ActivatedRoute } from "@angular/router";
 import {PageComponent} from "../page.component";
 import {RoutingService} from "../../_services/routing.service";
 import {PhotoPage, PhotoService} from "../../_services/photo.service";
-import {Utils} from "../../_services/utils.service";
+import {Utils} from "../../_services/utils";
 import {MessagesService} from "../../_services/messages.service";
 
 @Component({

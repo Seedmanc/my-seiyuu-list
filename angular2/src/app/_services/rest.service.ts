@@ -3,8 +3,9 @@ import {HttpClient} from "@angular/common/http";
 import {env} from "../../environments/environment";
 import {Observable} from "rxjs/Observable";
 import {Subject} from "rxjs/Subject";
-import {EMPTY} from "rxjs/index";
+import {EMPTY} from "rxjs";
 import {_throw} from "rxjs/observable/throw";
+import * as jikanjs from "jikanjs";
 
 interface ApifyResponse {
   success: boolean;
@@ -43,9 +44,11 @@ export class RestService {
 
   constructor(private http: HttpClient) { }
 
+  //jikanCall() {return jikanjs.search("person", "水樹奈々") }
+
   mongoCall({coll, mode, payload={}, query={}}: MongoCall): Observable<any> {
     let path = "collections/" + coll;
-
+    //this.jikanCall().then(console.warn);
     if (JSON.stringify(payload) === '{}') {
       payload = undefined;
     }

@@ -4,7 +4,7 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import {RestService} from "../rest.service";
 import {env} from "../../../environments/environment";
 import {of} from "rxjs/observable/of";
-import {EMPTY} from "rxjs/index";
+import {EMPTY} from "rxjs";
 import {_throw} from "rxjs/observable/throw";
 
 const mkresponse = /*'handleJsonp(*/{"version":"0.6","reqId":"0","status":"ok","sig":"229708994","table":{"cols":[{"id":"A","label":"","type":"string"},{"id":"B","label":"","type":"string"},{"id":"C","label":"","type":"string"}],"rows":[]}}/*)';*/

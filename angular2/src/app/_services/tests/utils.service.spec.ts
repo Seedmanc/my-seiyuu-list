@@ -1,5 +1,4 @@
-import {Utils} from "../utils.service";
-import {Subject} from "rxjs/Subject";
+import {Utils} from "../utils";
 
 describe('Utils', () => {
 

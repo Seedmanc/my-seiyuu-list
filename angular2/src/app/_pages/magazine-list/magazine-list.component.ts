@@ -4,7 +4,7 @@ import {ActivatedRoute } from "@angular/router";
 import {RoutingService} from "../../_services/routing.service";
 import {PageComponent} from "../page.component";
 import {MagazineService} from "../../_services/magazine.service";
-import {Utils} from "../../_services/utils.service";
+import {Utils} from "../../_services/utils";
 import {MessagesService} from "../../_services/messages.service";
 import {Magazine} from "../../_models/magazine.model";
 import {SeiyuuService} from "../../_services/seiyuu.service";

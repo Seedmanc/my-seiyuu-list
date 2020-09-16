@@ -3,7 +3,7 @@ import {SeiyuuService} from "../_services/seiyuu.service";
 import {MessagesService} from "../_services/messages.service";
 import {Observable} from "rxjs/Observable";
 import {fromEvent} from "rxjs/observable/fromEvent";
-import {Utils} from "../_services/utils.service";
+import {Utils} from "../_services/utils";
 
 @Component({
   selector: 'msl-header',
